@@ -6,7 +6,7 @@ const axios = require('axios')
 
 const SALT_ROUNDS = 5
 
-const User = db.define('user', {
+const Teacher = db.define('teacher', {
     name: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -29,40 +29,40 @@ const User = db.define('user', {
     },
 })
 
-module.exports = User
+module.exports = Teacher
 
 /**
  * instanceMethods
  */
-User.prototype.correctPassword = function (candidatePwd) {
+Teacher.prototype.correctPassword = function (candidatePwd) {
     return bcrypt.compare(candidatePwd, this.password)
 }
 
-User.prototype.generateToken = function () {
+Teacher.prototype.generateToken = function () {
     return jwt.sign({ id: this.id }, process.env.JWT)
 }
 
 /**
  * classMethods
  */
-User.authenticate = async function ({ email, password }) {
-    const user = await this.findOne({ where: { email } })
-    if (!user || !(await user.correctPassword(password))) {
+Teacher.authenticate = async function ({ email, password }) {
+    const teacher = await this.findOne({ where: { email } })
+    if (!teacher || !(await teacher.correctPassword(password))) {
         const error = Error('Incorrect username/password')
         error.status = 401
         throw error
     }
-    return user.generateToken()
+    return teacher.generateToken()
 }
 
-User.findByToken = async function (token) {
+Teacher.findByToken = async function (token) {
     try {
         const { id } = await jwt.verify(token, process.env.JWT)
-        const user = User.findByPk(id)
-        if (!user) {
+        const teacher = Teacher.findByPk(id)
+        if (!teacher) {
             throw 'nooo'
         }
-        return user
+        return teacher
     } catch (ex) {
         const error = Error('bad token')
         error.status = 401
@@ -70,7 +70,7 @@ User.findByToken = async function (token) {
     }
 }
 
-User.authenticateGithub = async function (code) {
+Teacher.authenticateGithub = async function (code) {
     //step 1: exchange code for token
     let response = await axios.post(
         'https://github.com/login/oauth/access_token',
@@ -100,25 +100,25 @@ User.authenticateGithub = async function (code) {
     const { email, id } = response.data
 
     //step 3: either find user or create user
-    let user = await User.findOne({ where: { githubId: id, email } })
-    if (!user) {
-        user = await User.create({ email, githubId: id })
+    let teacher = await Teacher.findOne({ where: { githubId: id, email } })
+    if (!teacher) {
+        teacher = await Teacher.create({ email, githubId: id })
     }
     //step 4: return jwt token
-    return user.generateToken()
+    return teacher.generateToken()
 }
 
 /**
  * hooks
  */
-const hashPassword = async (user) => {
-    if (user.changed('password')) {
-        user.password = await bcrypt.hash(user.password, SALT_ROUNDS)
+const hashPassword = async (teacher) => {
+    if (teacher.changed('password')) {
+        teacher.password = await bcrypt.hash(teacher.password, SALT_ROUNDS)
     }
 }
 
-User.beforeCreate(hashPassword)
-User.beforeUpdate(hashPassword)
-User.beforeBulkCreate((users) => {
-    users.forEach(hashPassword)
+Teacher.beforeCreate(hashPassword)
+Teacher.beforeUpdate(hashPassword)
+Teacher.beforeBulkCreate((teachers) => {
+    teachers.forEach(hashPassword)
 })
