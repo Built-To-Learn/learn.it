@@ -1,15 +1,12 @@
-//this is the access point for all things database related!
+const {Sequelize, INTEGER} = require('sequelize')
 const db = require('./db')
 
 const User = require('./models/user')
 const Teacher = require('./models/Teacher')
 const Course = require('./models/Course')
 const Student = require('./models/Student')
-const { INTEGER } = require('sequelize')
 
-const Sequelize = require('sequelize')
-//associations could go here!
-
+// Through Table
 const Enrollment = db.define('enrollment', {
     courseId: INTEGER,
 })
@@ -22,7 +19,9 @@ Enrollment.findCourseByStudent = async function(studentId){
 
     return courses
 }
+//
 
+// Associations
 Course.belongsTo(Teacher)
 Course.belongsToMany(Student, {
     through: Enrollment
@@ -57,30 +56,55 @@ const syncAndSeed = async () => {
     ])
     const [cody, murphy, sal] = student
 
-    const [jake] = await Promise.all([
+    const [jake, prof] = await Promise.all([
         Teacher.create({
             name: 'Jake',
             username: 'jake123',
             email: 'jake@email.com',
             password: '123',
         }),
+        Teacher.create({
+            name: 'Prof',
+            username: 'profMan333',
+            email: 'prof@email.com',
+            password: '123',
+        })
     ])
 
-    const mathclass = await Course.create({
-        title: 'Math for fun',
-        subject: 'Math Subject',
-        category: 'Math Category',
-        teacherId: jake.id,
-    })
+    const [mathclass, woodWorking ] = await Promise.all([
+        Course.create({
+            title: 'Math for fun',
+            subject: 'Math Subject',
+            category: 'Math Category',
+            teacherId: jake.id,
+        }),
+        Course.create({
+            title: 'Building A Table',
+            subject: 'Woodworking',
+            category: 'Building',
+            teacherId: prof.id,
+        })
+    ])
 
     await Enrollment.create({
         studentId: cody.id,
         courseId: mathclass.id,
     })
 
+    await Enrollment.create({
+        studentId: cody.id,
+        courseId: woodWorking.id,
+    })
+
+    await Enrollment.create({
+        studentId: sal.id,
+        courseId: woodWorking.id,
+    })
+
     const jakesClasses = await Course.findByTeacher(jake.id)
     const codyCourses = await Enrollment.findCourseByStudent(cody.id)
-    console.log(JSON.stringify(codyCourses))
+    const salCourses = await Enrollment.findCourseByStudent(sal.id)
+
 
     return {
         students: {
