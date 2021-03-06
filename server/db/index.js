@@ -1,29 +1,37 @@
 //this is the access point for all things database related!
-
 const db = require('./db')
 
 const User = require('./models/user')
 const Teacher = require('./models/Teacher')
-const Class = require('./models/class')
+const Course = require('./models/Course')
 const Student = require('./models/Student')
 const { INTEGER } = require('sequelize')
 
 const Sequelize = require('sequelize')
 //associations could go here!
+
 const Enrollment = db.define('enrollment', {
-    classId: INTEGER,
+    courseId: INTEGER,
 })
 
-Class.belongsToMany(Student, {
-    through: Enrollment,
-    foreignKey: 'classId',
-})
-Student.belongsToMany(Class, {
-    through: Enrollment,
-    foreignKey: 'studentId',
-})
+Enrollment.findCourseByStudent = async function(studentId){
+    const courses = await Enrollment.findAll({
+        where: { studentId },
+        include: [ Course ]
+    })
 
-Class.belongsTo(Teacher)
+    return courses
+}
+
+Course.belongsTo(Teacher)
+Course.belongsToMany(Student, {
+    through: Enrollment
+})
+Student.belongsToMany(Course, {
+    through: Enrollment
+})
+Enrollment.belongsTo(Course)
+Enrollment.belongsTo(Student)
 
 const syncAndSeed = async () => {
     await db.sync({ force: true })
@@ -49,7 +57,7 @@ const syncAndSeed = async () => {
     ])
     const [cody, murphy, sal] = student
 
-    const teacher = await Promise.all([
+    const [jake] = await Promise.all([
         Teacher.create({
             name: 'Jake',
             username: 'jake123',
@@ -58,9 +66,7 @@ const syncAndSeed = async () => {
         }),
     ])
 
-    const [jake] = teacher
-
-    const mathclass = await Class.create({
+    const mathclass = await Course.create({
         title: 'Math for fun',
         subject: 'Math Subject',
         category: 'Math Category',
@@ -69,8 +75,12 @@ const syncAndSeed = async () => {
 
     await Enrollment.create({
         studentId: cody.id,
-        classId: mathclass.id,
+        courseId: mathclass.id,
     })
+
+    const jakesClasses = await Course.findByTeacher(jake.id)
+    const codyCourses = await Enrollment.findCourseByStudent(cody.id)
+    console.log(JSON.stringify(codyCourses))
 
     return {
         students: {
@@ -87,5 +97,6 @@ module.exports = {
     models: {
         Student,
         Teacher,
+        Enrollment
     },
 }
