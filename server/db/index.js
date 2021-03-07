@@ -23,13 +23,13 @@ Enrollment.findCourseByStudent = async function(studentId){
 
 // Associations
 Course.belongsTo(Teacher)
-Course.belongsToMany(Student, {
-    through: Enrollment
-})
-Student.belongsToMany(Course, {
-    through: Enrollment
-})
+
+Course.belongsToMany(Student, { through: Enrollment })
+Student.belongsToMany(Course, { through: Enrollment})
+
+Course.hasMany(Enrollment)
 Enrollment.belongsTo(Course)
+Student.hasMany(Enrollment)
 Enrollment.belongsTo(Student)
 
 const syncAndSeed = async () => {
@@ -101,10 +101,10 @@ const syncAndSeed = async () => {
         courseId: woodWorking.id,
     })
 
+    // method testing
     const jakesClasses = await Course.findByTeacher(jake.id)
     const codyCourses = await Enrollment.findCourseByStudent(cody.id)
     const salCourses = await Enrollment.findCourseByStudent(sal.id)
-
 
     return {
         students: {
