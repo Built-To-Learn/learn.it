@@ -1,12 +1,9 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-const axios = require('axios')
 
 const SALT_ROUNDS = 5
 
-const Class = db.define('class', {
+const Course = db.define('course', {
     title: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -21,4 +18,12 @@ const Class = db.define('class', {
     },
 })
 
-module.exports = Class
+Course.findByTeacher = async function (teacherId) {
+    const courses = await Course.findAll({
+        where: { teacherId },
+    })
+
+    return courses
+}
+
+module.exports = Course

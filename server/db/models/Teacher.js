@@ -45,6 +45,7 @@ Teacher.prototype.generateToken = function () {
 /**
  * classMethods
  */
+
 Teacher.authenticate = async function ({ email, password }) {
     const teacher = await this.findOne({ where: { email } })
     if (!teacher || !(await teacher.correctPassword(password))) {
@@ -107,6 +108,8 @@ Teacher.authenticateGithub = async function (code) {
     //step 4: return jwt token
     return teacher.generateToken()
 }
+
+
 
 /**
  * hooks

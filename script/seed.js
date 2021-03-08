@@ -5,6 +5,7 @@ const { db, syncAndSeed } = require('../server/db')
 async function seed() {
   console.log('seeding...')
   try {
+    await db.sync({force: true})
     await syncAndSeed()
   } catch (err) {
     console.error(err)
