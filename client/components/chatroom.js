@@ -3,13 +3,17 @@ import React, { Component } from 'react';
 
 const socket = io();
 
-window.onunload = window.onbeforeunload = () => {
-  socket.close();
-};
+// window.onunload = window.onbeforeunload = () => {
+//   socket.close();
+// };
+
+const room = 'room1';
 
 const typeGlobal = 'student';
 
-const peerConnections = {};
+let peerConnections = {};
+
+const initialState = { teacher: '', members: [], focus: '', room: '' };
 
 const config = {
   iceServers: [
@@ -34,22 +38,13 @@ const constraints = {
 class Chatroom extends Component {
   constructor(props) {
     super(props);
-    this.state = { teacher: '', members: [], focus: '' };
+    this.state = initialState;
     this.changeFocus = this.changeFocus.bind(this);
+    this.joinChat = this.joinChat.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
   }
   componentDidMount() {
-    // const video = this.selfVideo;
-    const video = document.getElementById('selfVideo');
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then((stream) => {
-        video.srcObject = stream;
-        socket.emit('broadcaster', socket.id, typeGlobal);
-      })
-      .catch((error) => console.error(error));
-
     socket.on('broadcaster', (id, type) => {
-      // const video = document.getElementById('self');
       const video = document.getElementById('selfVideo');
       const peerConnection = new RTCPeerConnection(config);
       let stream = video.srcObject;
@@ -148,6 +143,15 @@ class Chatroom extends Component {
         });
       }
     });
+
+    socket.on('disconnect', () => {
+      socket.emit('disconnected', this.state.room);
+      peerConnections = {};
+      this.state.members.forEach((member) => {
+        delete this[member];
+      });
+      this.setState(initialState);
+    });
   }
 
   componentDidUpdate() {
@@ -159,27 +163,42 @@ class Chatroom extends Component {
     if (this.state.focus !== '') {
       this.focus.srcObject = this[this.state.focus].srcObject;
     }
-
-    // if (this.state.focus !== '') {
-    //   console.log(this.state.focus);
-    //   peerConnections[this.state.focus].ontrack = (event) => {
-    //     this.focus.srcObject = event.streams[0];
-    //   };
-    // }
   }
 
   changeFocus(e) {
-    console.log(e.target);
-    // this.focus.srcObject = this[e.target.id].srcObject;
-    // peerConnections[e.target.id].ontrack = (event) => {
-    //   this.focus.srcObject = event.streams[0];
-    // };
-
     this.setState({ focus: e.target.id });
   }
+
+  joinChat(e) {
+    e.persist();
+    console.log(e.target);
+    const video = document.getElementById('selfVideo');
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then((stream) => {
+        video.srcObject = stream;
+        socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
+      })
+      .catch((error) => console.error(error));
+    this.setState({ room: e.target.id });
+  }
+
+  leaveChat(e) {
+    socket.emit('disconnected', this.state.room);
+    peerConnections = {};
+    this.state.members.forEach((member) => {
+      delete this[member];
+    });
+    this.setState(initialState);
+  }
+
   render() {
     return (
       <div id="videos">
+        <button id="room1" onClick={(e) => this.joinChat(e)}>
+          Join
+        </button>
+        <button onClick={(e) => this.leaveChat(e)}> Leave</button>
         <div>
           <video
             id="selfVideo"

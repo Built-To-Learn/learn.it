@@ -2083,14 +2083,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 
 
-const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)();
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)(); // window.onunload = window.onbeforeunload = () => {
+//   socket.close();
+// };
 
-window.onunload = window.onbeforeunload = () => {
-  socket.close();
-};
-
+const room = 'room1';
 const typeGlobal = 'student';
-const peerConnections = {};
+let peerConnections = {};
+const initialState = {
+  teacher: '',
+  members: [],
+  focus: '',
+  room: ''
+};
 const config = {
   iceServers: [{
     urls: 'stun:stun.l.google.com:19302'
@@ -2113,21 +2118,16 @@ const constraints = {
 class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      teacher: '',
-      members: [],
-      focus: ''
-    };
+    this.state = initialState;
     this.changeFocus = this.changeFocus.bind(this);
+    this.joinChat = this.joinChat.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
   }
 
   componentDidMount() {
     // const video = this.selfVideo;
-    const video = document.getElementById('selfVideo');
-    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-      video.srcObject = stream;
-      socket.emit('broadcaster', socket.id, typeGlobal);
-    }).catch(error => console.error(error));
+    //MOVE TO onclick
+    //ADD leave chat
     socket.on('broadcaster', (id, type) => {
       // const video = document.getElementById('self');
       const video = document.getElementById('selfVideo');
@@ -2212,6 +2212,14 @@ class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
         });
       }
     });
+    socket.on('disconnect', () => {
+      socket.emit('disconnected', this.state.room);
+      peerConnections = {};
+      this.state.members.forEach(member => {
+        delete this[member];
+      });
+      this.setState(initialState);
+    });
   }
 
   componentDidUpdate() {
@@ -2233,20 +2241,42 @@ class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
   }
 
   changeFocus(e) {
-    console.log(e.target); // this.focus.srcObject = this[e.target.id].srcObject;
-    // peerConnections[e.target.id].ontrack = (event) => {
-    //   this.focus.srcObject = event.streams[0];
-    // };
-
     this.setState({
       focus: e.target.id
     });
   }
 
+  joinChat(e) {
+    e.persist();
+    console.log(e.target);
+    const video = document.getElementById('selfVideo');
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      video.srcObject = stream;
+      socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
+    }).catch(error => console.error(error));
+    this.setState({
+      room: e.target.id
+    });
+  }
+
+  leaveChat(e) {
+    socket.emit('disconnected', this.state.room);
+    peerConnections = {};
+    this.state.members.forEach(member => {
+      delete this[member];
+    });
+    this.setState(initialState);
+  }
+
   render() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
       id: "videos"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinChat(e)
+    }, "Join"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      onClick: e => this.leaveChat(e)
+    }, " Leave"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
       id: "selfVideo",
       className: "video_player",
       playsInline: true,
@@ -2263,7 +2293,6 @@ class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
         className: "video_player",
         playsInline: true,
         autoPlay: true,
-        muted: true,
         ref: vid => {
           this[member] = vid;
         },

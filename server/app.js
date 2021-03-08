@@ -59,8 +59,10 @@ module.exports = httpServer;
 
 io.sockets.on('error', (e) => console.log(e));
 io.sockets.on('connection', (socket) => {
-  socket.on('broadcaster', (id, type) => {
-    socket.broadcast.emit('broadcaster', socket.id, type);
+  socket.on('broadcaster', (id, type, room) => {
+    socket.join(room);
+    //socket.broadcast.emit('broadcaster', socket.id, type);
+    socket.to(room).emit('broadcaster', socket.id, type);
   });
   socket.on('offer', (id, message, type) => {
     console.log('offer', id);
@@ -73,7 +75,11 @@ io.sockets.on('connection', (socket) => {
     console.log('candidate', id);
     socket.to(id).emit('candidate', socket.id, message);
   });
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('disconnectPeer', socket.id);
+  // socket.on('disconnect', () => {
+  //   socket.broadcast.emit('disconnectPeer', socket.id);
+  // });
+  socket.on('disconnected', (room) => {
+    socket.to(room).emit('disconnectPeer', socket.id);
+    socket.leave(room);
   });
 });
