@@ -201,7 +201,6 @@ class Chatroom extends Component {
                 className="video_player"
                 playsInline
                 autoPlay
-                muted
                 ref={(vid) => {
                   this[member] = vid;
                 }}
