@@ -18,9 +18,9 @@ const Course = db.define('course', {
     },
 })
 
-Course.findByTeacher = async function(teacherId){
+Course.findByTeacher = async function (teacherId) {
     const courses = await Course.findAll({
-        where: {teacherId}
+        where: { teacherId },
     })
 
     return courses
