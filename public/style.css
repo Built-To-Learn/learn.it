@@ -1,24 +1,53 @@
 body {
-  font-family: sans-serif;
+    font-family: sans-serif;
 }
 
 a {
-  text-decoration: none;
+    /* text-decoration: none; */
 }
 
 label {
-  display: block;
+    display: block;
 }
 
 nav a {
-  display: inline-block;
-  margin: 1em;
+    /* display: inline-block;
+    margin: 1em; */
 }
 
 form div {
-  margin: 1em;
-  display: inline-block;
+    margin: 1em;
+    display: inline-block;
 }
+<<<<<<< HEAD
+.parallax-container .parallax {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+/* .parallax-container {
+    min-height: 380px;
+    line-height: 0;
+    height: auto;
+    color: rgba(255, 255, 255, 0.9);
+} */
+/* .parallax-container .section {
+    width: 100%;
+}
+
+@media only screen and (max-width: 992px) {
+    .parallax-container .section {
+        position: absolute;
+        top: 40%;
+    }
+    #index-banner .section {
+        top: 10%;
+    }
+} */
+=======
 
 video {
   width: 20%;
@@ -34,3 +63,4 @@ video {
   width: 80%;
   height: 80%;
 }
+>>>>>>> master
