@@ -28,7 +28,7 @@ class Video extends Component {
       return data;
     };
 
-    const FPS = 60;
+    const FPS = 10;
 
     socket.on('connect', () => {
       console.log(socket.id);
