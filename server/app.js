@@ -53,16 +53,27 @@ app.use((err, req, res, next) => {
 
 const httpServer = require('http').createServer(app);
 
-const options = {
-  /* ... */
-};
 const io = require('socket.io')(httpServer);
 
-io.on('connection', (socket) => {
-  console.log(socket.id);
-  socket.on('stream', (stream) => {
-    socket.broadcast.emit('receiving', stream);
+module.exports = httpServer;
+
+io.sockets.on('error', (e) => console.log(e));
+io.sockets.on('connection', (socket) => {
+  socket.on('broadcaster', (id, type) => {
+    socket.broadcast.emit('broadcaster', socket.id, type);
+  });
+  socket.on('offer', (id, message, type) => {
+    console.log('offer', id);
+    socket.to(id).emit('offer', socket.id, message, type);
+  });
+  socket.on('answer', (id, message) => {
+    socket.to(id).emit('answer', socket.id, message);
+  });
+  socket.on('candidate', (id, message) => {
+    console.log('candidate', id);
+    socket.to(id).emit('candidate', socket.id, message);
+  });
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('disconnectPeer', socket.id);
   });
 });
-
-module.exports = httpServer;

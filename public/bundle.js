@@ -1968,7 +1968,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const App = () => {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components__WEBPACK_IMPORTED_MODULE_1__.Navbar, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_routes__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components__WEBPACK_IMPORTED_MODULE_1__.Video, null));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components__WEBPACK_IMPORTED_MODULE_1__.Navbar, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_routes__WEBPACK_IMPORTED_MODULE_2__.default, null));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
@@ -2067,6 +2067,226 @@ const Signup = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapSignup, m
 
 /***/ }),
 
+/***/ "./client/components/chatroom.js":
+/*!***************************************!*\
+  !*** ./client/components/chatroom.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)();
+
+window.onunload = window.onbeforeunload = () => {
+  socket.close();
+};
+
+const typeGlobal = 'student';
+const peerConnections = {};
+const config = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  } // {
+  //   "urls": "turn:TURN_IP?transport=tcp",
+  //   "username": "TURN_USERNAME",
+  //   "credential": "TURN_CREDENTIALS"
+  // }
+  ]
+}; // Media contrains
+
+const constraints = {
+  video: {
+    facingMode: 'user'
+  },
+  // Uncomment to enable audio
+  audio: true
+};
+
+class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      teacher: '',
+      members: [],
+      focus: ''
+    };
+    this.changeFocus = this.changeFocus.bind(this);
+  }
+
+  componentDidMount() {
+    // const video = this.selfVideo;
+    const video = document.getElementById('selfVideo');
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      video.srcObject = stream;
+      socket.emit('broadcaster', socket.id, typeGlobal);
+    }).catch(error => console.error(error));
+    socket.on('broadcaster', (id, type) => {
+      // const video = document.getElementById('self');
+      const video = document.getElementById('selfVideo');
+      const peerConnection = new RTCPeerConnection(config);
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnection.createOffer().then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('offer', id, peerConnection.localDescription, typeGlobal);
+      });
+      peerConnections[id] = peerConnection;
+
+      if (type === 'student') {
+        this.setState({
+          members: [...this.state.members, id]
+        });
+      } else if (type === 'teacher') {
+        this.setState({
+          teacher: id,
+          members: [...this.state.members, id]
+        });
+      }
+    });
+    socket.on('answer', (id, description) => {
+      peerConnections[id].setRemoteDescription(description);
+    });
+    socket.on('offer', (id, description, type) => {
+      const peerConnection = new RTCPeerConnection(config);
+      const video = document.getElementById('selfVideo'); // const video = this.selfVideo;
+
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+      peerConnection.setRemoteDescription(description).then(() => peerConnection.createAnswer()).then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('answer', id, peerConnection.localDescription);
+      });
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnections[id] = peerConnection;
+
+      if (type === 'student') {
+        this.setState({
+          members: [...this.state.members, id]
+        });
+      } else if (type === 'teacher') {
+        this.setState({
+          teacher: id,
+          members: [...this.state.members, id]
+        });
+      }
+    });
+    socket.on('candidate', (id, candidate) => {
+      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
+    });
+    socket.on('disconnectPeer', id => {
+      if (id === this.state.focus) {
+        this.focus.srcObject = this.selfVideo.srcObject;
+      }
+
+      peerConnections[id].close();
+      delete peerConnections[id];
+      delete this[id];
+
+      if (this.state.members.includes(id)) {
+        this.setState({
+          members: this.state.members.filter(peer => peer !== id)
+        });
+      } else {
+        this.setState({
+          teacher: '',
+          members: this.state.members.filter(peer => peer !== id)
+        });
+      }
+    });
+  }
+
+  componentDidUpdate() {
+    this.state.members.forEach(member => {
+      peerConnections[member].ontrack = event => {
+        this[member].srcObject = event.streams[0];
+      };
+    });
+
+    if (this.state.focus !== '') {
+      this.focus.srcObject = this[this.state.focus].srcObject;
+    } // if (this.state.focus !== '') {
+    //   console.log(this.state.focus);
+    //   peerConnections[this.state.focus].ontrack = (event) => {
+    //     this.focus.srcObject = event.streams[0];
+    //   };
+    // }
+
+  }
+
+  changeFocus(e) {
+    console.log(e.target); // this.focus.srcObject = this[e.target.id].srcObject;
+    // peerConnections[e.target.id].ontrack = (event) => {
+    //   this.focus.srcObject = event.streams[0];
+    // };
+
+    this.setState({
+      focus: e.target.id
+    });
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+      id: "videos"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+      id: "selfVideo",
+      className: "video_player",
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.selfVideo = vid;
+      },
+      onClick: e => this.changeFocus(e)
+    }), this.state.members.map(member => {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+        key: member,
+        id: member,
+        className: "video_player",
+        playsInline: true,
+        autoPlay: true,
+        muted: true,
+        ref: vid => {
+          this[member] = vid;
+        },
+        onClick: e => this.changeFocus(e)
+      });
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+      id: "focus",
+      key: this.state.focus,
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.focus = vid;
+      }
+    })));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chatroom);
+
+/***/ }),
+
 /***/ "./client/components/home.js":
 /*!***********************************!*\
   !*** ./client/components/home.js ***!
@@ -2120,18 +2340,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Navbar": () => /* reexport safe */ _navbar__WEBPACK_IMPORTED_MODULE_0__.default,
 /* harmony export */   "Home": () => /* reexport safe */ _home__WEBPACK_IMPORTED_MODULE_1__.default,
 /* harmony export */   "Video": () => /* reexport safe */ _video__WEBPACK_IMPORTED_MODULE_2__.default,
-/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_3__.Login,
-/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_3__.Signup
+/* harmony export */   "Chatroom": () => /* reexport safe */ _chatroom__WEBPACK_IMPORTED_MODULE_3__.default,
+/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Login,
+/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Signup
 /* harmony export */ });
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./client/components/navbar.js");
 /* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home */ "./client/components/home.js");
 /* harmony import */ var _video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./video */ "./client/components/video.js");
-/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
+/* harmony import */ var _chatroom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chatroom */ "./client/components/chatroom.js");
+/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
 /**
  * `components/index.js` exists simply as a 'central export' for our components.
  * This way, we can import all of our components from the same place, rather than
  * having to figure out which file they belong to!
  */
+
 
 
 
@@ -2243,7 +2466,7 @@ class Video extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
       return data;
     };
 
-    const FPS = 60;
+    const FPS = 10;
     socket.on('connect', () => {
       console.log(socket.id);
       setInterval(() => {
@@ -2371,6 +2594,9 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
       path: "/signup",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Signup
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+      path: "/videochat",
+      component: _components__WEBPACK_IMPORTED_MODULE_2__.Chatroom
     })));
   }
 
@@ -38732,6 +38958,29 @@ function plural(ms, msAbs, n, name) {
   var isPlural = msAbs >= n * 1.5;
   return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/socket.io-client/wrapper.mjs":
+/*!***************************************************!*\
+  !*** ./node_modules/socket.io-client/wrapper.mjs ***!
+  \***************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Manager": () => /* binding */ Manager,
+/* harmony export */   "io": () => /* reexport default export from named module */ _build_index_js__WEBPACK_IMPORTED_MODULE_0__,
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var _build_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./build/index.js */ "./node_modules/socket.io-client/build/index.js");
+
+
+const Manager = _build_index_js__WEBPACK_IMPORTED_MODULE_0__.Manager;
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_build_index_js__WEBPACK_IMPORTED_MODULE_0__);
 
 
 /***/ }),
