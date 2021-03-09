@@ -1,6 +1,6 @@
 import React from 'react';
+import { Navbar } from './components';
 
-import { Navbar, Video } from './components';
 import Routes from './routes';
 
 const App = () => {
@@ -8,7 +8,6 @@ const App = () => {
     <div>
       <Navbar />
       <Routes />
-      <Video />
     </div>
   );
 };

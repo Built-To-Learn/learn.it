@@ -27,6 +27,7 @@
         "express": "^4.16.4",
         "history": "^4.9.0",
         "jsonwebtoken": "^8.5.1",
+        "materialize-css": "^1.0.0-rc.2",
         "morgan": "^1.9.1",
         "pg": "^8.5.1",
         "sequelize": "^6.3.5",
