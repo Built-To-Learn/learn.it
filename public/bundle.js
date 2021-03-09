@@ -2630,6 +2630,98 @@ const mapDispatch = dispatch => {
 
 /***/ }),
 
+/***/ "./client/components/student-auth-form.js":
+/*!************************************************!*\
+  !*** ./client/components/student-auth-form.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "StudentLogin": () => /* binding */ StudentLogin,
+/* harmony export */   "StudentSignup": () => /* binding */ StudentSignup
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _store_student_auth_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/student-auth.js */ "./client/store/student-auth.js");
+
+
+
+/**
+ * COMPONENT
+ */
+
+const StudentAuthForm = props => {
+  const {
+    name,
+    displayName,
+    handleSubmit,
+    error
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+    onSubmit: handleSubmit,
+    name: name
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "email"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Student Email")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "email",
+    type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "password"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Password")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "password",
+    type: "password"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    type: "submit"
+  }, displayName)), error && error.response && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, " ", error.response.data, " ")), window.githubURL && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    href: window.githubURL
+  }, "Login / Register Via Github "));
+};
+/**
+ * CONTAINER
+ *   Note that we have two different sets of 'mapStateToProps' functions -
+ *   one for Login, and one for Signup. However, they share the same 'mapDispatchToProps'
+ *   function, and share the same Component. This is a good example of how we
+ *   can stay DRY with interfaces that are very similar to each other!
+ */
+
+
+const mapStudentLogin = state => {
+  return {
+    name: 'studentLogin',
+    displayName: 'Login',
+    error: state.auth.error
+  };
+};
+
+const mapStudentSignup = state => {
+  return {
+    name: 'studentSignup',
+    displayName: 'Sign Up',
+    error: state.auth.error
+  };
+};
+
+const mapStudentDispatch = dispatch => {
+  return {
+    handleSubmit(evt) {
+      evt.preventDefault();
+      const formName = evt.target.name;
+      const email = evt.target.email.value;
+      const password = evt.target.password.value;
+      dispatch((0,_store_student_auth_js__WEBPACK_IMPORTED_MODULE_2__.studentAuthenticate)(email, password, formName));
+    }
+
+  };
+};
+
+const StudentLogin = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapStudentLogin, mapStudentDispatch)(StudentAuthForm);
+const StudentSignup = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapStudentSignup, mapStudentDispatch)(StudentAuthForm);
+
+/***/ }),
+
 /***/ "./client/components/video.js":
 /*!************************************!*\
   !*** ./client/components/video.js ***!
@@ -2768,9 +2860,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components */ "./client/components/index.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store */ "./client/store/index.js");
+/* harmony import */ var _components_student_auth_form_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/student-auth-form.js */ "./client/components/student-auth-form.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store */ "./client/store/index.js");
+
 
 
 
@@ -2789,22 +2883,22 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     const {
       isLoggedIn
     } = this.props;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/home",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Home
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Redirect, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Redirect, {
       to: "/home"
-    })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/",
       exact: true,
-      component: _components__WEBPACK_IMPORTED_MODULE_2__.Login
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+      component: _components_student_auth_form_js__WEBPACK_IMPORTED_MODULE_3__.StudentLogin
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/login",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Login
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/signup",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Signup
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/videochat",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Chatroom
     })));
@@ -2827,7 +2921,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     loadInitialData() {
-      dispatch((0,_store__WEBPACK_IMPORTED_MODULE_3__.me)());
+      dispatch((0,_store__WEBPACK_IMPORTED_MODULE_4__.me)());
     }
 
   };
@@ -2835,7 +2929,7 @@ const mapDispatch = dispatch => {
 // when the url changes
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.withRouter)((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Routes)));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_router_dom__WEBPACK_IMPORTED_MODULE_5__.withRouter)((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Routes)));
 
 /***/ }),
 
@@ -2966,6 +3060,99 @@ const middleware = (0,redux_devtools_extension__WEBPACK_IMPORTED_MODULE_2__.comp
 const store = (0,redux__WEBPACK_IMPORTED_MODULE_4__.createStore)(reducer, middleware);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
 
+
+/***/ }),
+
+/***/ "./client/store/student-auth.js":
+/*!**************************************!*\
+  !*** ./client/store/student-auth.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "me": () => /* binding */ me,
+/* harmony export */   "studentAuthenticate": () => /* binding */ studentAuthenticate,
+/* harmony export */   "logout": () => /* binding */ logout,
+/* harmony export */   "default": () => /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _history__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../history */ "./client/history.js");
+
+
+
+const storage = () => window.localStorage;
+
+const TOKEN = 'token';
+/**
+ * ACTION TYPES
+ */
+
+const SET_STUDENT_AUTH = 'SET_STUDENT_AUTH';
+/**
+ * ACTION CREATORS
+ */
+
+const setStudentAuth = auth => ({
+  type: SET_STUDENT_AUTH,
+  auth
+});
+/**
+ * THUNK CREATORS
+ */
+
+
+const me = () => async dispatch => {
+  const token = storage().getItem(TOKEN);
+
+  if (token) {
+    const res = await axios__WEBPACK_IMPORTED_MODULE_0___default().get('/auth/me', {
+      headers: {
+        authorization: token
+      }
+    });
+    return dispatch(setStudentAuth(res.data));
+  }
+};
+const studentAuthenticate = (email, password, method) => async (dispatch) => {
+  let res;
+
+  try {
+    res = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(`/studentauth/${method}`, {
+      email,
+      password
+    });
+    storage().setItem(TOKEN, res.data.token);
+    dispatch(me());
+  } catch (authError) {
+    return dispatch(setAuth({
+      error: authError
+    }));
+  }
+};
+const logout = () => {
+  storage().removeItem(TOKEN);
+  _history__WEBPACK_IMPORTED_MODULE_1__.default.push('/studentlogin');
+  return {
+    type: SET_STUDENT_AUTH,
+    auth: {}
+  };
+};
+/**
+ * REDUCER
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(state = {}, action) {
+  switch (action.type) {
+    case SET_STUDENT_AUTH:
+      return action.studentauth;
+
+    default:
+      return state;
+  }
+}
 
 /***/ }),
 

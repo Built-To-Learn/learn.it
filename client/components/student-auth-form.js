@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { authenticate } from '../store'
+import { studentAuthenticate } from '../store/student-auth.js'
 
 /**
  * COMPONENT
@@ -44,7 +44,7 @@ const StudentAuthForm = (props) => {
  */
 const mapStudentLogin = (state) => {
     return {
-        name: 'login',
+        name: 'studentLogin',
         displayName: 'Login',
         error: state.auth.error,
     }
@@ -52,7 +52,7 @@ const mapStudentLogin = (state) => {
 
 const mapStudentSignup = (state) => {
     return {
-        name: 'signup',
+        name: 'studentSignup',
         displayName: 'Sign Up',
         error: state.auth.error,
     }
@@ -65,7 +65,7 @@ const mapStudentDispatch = (dispatch) => {
             const formName = evt.target.name
             const email = evt.target.email.value
             const password = evt.target.password.value
-            dispatch(authenticate(email, password, formName))
+            dispatch(studentAuthenticate(email, password, formName))
         },
     }
 }
@@ -74,6 +74,7 @@ export const StudentLogin = connect(
     mapStudentLogin,
     mapStudentDispatch
 )(StudentAuthForm)
+
 export const StudentSignup = connect(
     mapStudentSignup,
     mapStudentDispatch

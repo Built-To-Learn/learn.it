@@ -44,7 +44,7 @@ export const studentAuthenticate = (email, password, method) => async (
 
 export const logout = () => {
     storage().removeItem(TOKEN)
-    history.push('/login')
+    history.push('/studentlogin')
     return {
         type: SET_STUDENT_AUTH,
         auth: {},

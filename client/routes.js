@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter, Route, Switch, Redirect } from 'react-router-dom'
 import { Login, Signup, Home, Chatroom } from './components'
+import { StudentLogin } from './components/student-auth-form.js'
 import { me } from './store'
 
 /**
@@ -24,7 +25,7 @@ class Routes extends Component {
                     </Switch>
                 ) : (
                     <Switch>
-                        <Route path="/" exact component={Login} />
+                        <Route path="/" exact component={StudentLogin} />
                         <Route path="/login" component={Login} />
                         <Route path="/signup" component={Signup} />
                         <Route path="/videochat" component={Chatroom} />
