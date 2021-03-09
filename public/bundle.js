@@ -1972,7 +1972,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const App = () => {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components__WEBPACK_IMPORTED_MODULE_1__.Navbar, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_parallax_js__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_icons_js__WEBPACK_IMPORTED_MODULE_3__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_routes__WEBPACK_IMPORTED_MODULE_4__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components__WEBPACK_IMPORTED_MODULE_1__.Video, null));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components__WEBPACK_IMPORTED_MODULE_1__.Navbar, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_parallax_js__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_icons_js__WEBPACK_IMPORTED_MODULE_3__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_routes__WEBPACK_IMPORTED_MODULE_4__.default, null));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
@@ -2087,14 +2087,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 
 
-const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)();
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)(); // window.onunload = window.onbeforeunload = () => {
+//   socket.close();
+// };
 
-window.onunload = window.onbeforeunload = () => {
-  socket.close();
-};
-
+const room = 'room1';
 const typeGlobal = 'student';
-const peerConnections = {};
+let peerConnections = {};
+const initialState = {
+  teacher: '',
+  members: [],
+  focus: '',
+  room: ''
+};
 const config = {
   iceServers: [{
     urls: 'stun:stun.l.google.com:19302'
@@ -2117,23 +2122,14 @@ const constraints = {
 class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      teacher: '',
-      members: [],
-      focus: ''
-    };
+    this.state = initialState;
     this.changeFocus = this.changeFocus.bind(this);
+    this.joinChat = this.joinChat.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
   }
 
   componentDidMount() {
-    // const video = this.selfVideo;
-    const video = document.getElementById('selfVideo');
-    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-      video.srcObject = stream;
-      socket.emit('broadcaster', socket.id, typeGlobal);
-    }).catch(error => console.error(error));
     socket.on('broadcaster', (id, type) => {
-      // const video = document.getElementById('self');
       const video = document.getElementById('selfVideo');
       const peerConnection = new RTCPeerConnection(config);
       let stream = video.srcObject;
@@ -2216,6 +2212,14 @@ class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
         });
       }
     });
+    socket.on('disconnect', () => {
+      socket.emit('disconnected', this.state.room);
+      peerConnections = {};
+      this.state.members.forEach(member => {
+        delete this[member];
+      });
+      this.setState(initialState);
+    });
   }
 
   componentDidUpdate() {
@@ -2227,30 +2231,46 @@ class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
 
     if (this.state.focus !== '') {
       this.focus.srcObject = this[this.state.focus].srcObject;
-    } // if (this.state.focus !== '') {
-    //   console.log(this.state.focus);
-    //   peerConnections[this.state.focus].ontrack = (event) => {
-    //     this.focus.srcObject = event.streams[0];
-    //   };
-    // }
-
+    }
   }
 
   changeFocus(e) {
-    console.log(e.target); // this.focus.srcObject = this[e.target.id].srcObject;
-    // peerConnections[e.target.id].ontrack = (event) => {
-    //   this.focus.srcObject = event.streams[0];
-    // };
-
     this.setState({
       focus: e.target.id
     });
   }
 
+  joinChat(e) {
+    e.persist();
+    console.log(e.target);
+    const video = document.getElementById('selfVideo');
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      video.srcObject = stream;
+      socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
+    }).catch(error => console.error(error));
+    this.setState({
+      room: e.target.id
+    });
+  }
+
+  leaveChat(e) {
+    socket.emit('disconnected', this.state.room);
+    peerConnections = {};
+    this.state.members.forEach(member => {
+      delete this[member];
+    });
+    this.setState(initialState);
+  }
+
   render() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
       id: "videos"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinChat(e)
+    }, "Join"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      onClick: e => this.leaveChat(e)
+    }, " Leave"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
       id: "selfVideo",
       className: "video_player",
       playsInline: true,
@@ -2359,47 +2379,47 @@ const Icons = () => {
     materialize_css__WEBPACK_IMPORTED_MODULE_3___default().Parallax.init(elements);
   });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "container"
+    className: "container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "section"
+    className: "section"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "row"
+    className: "row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "col s12 m4"
+    className: "col s12 m4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "icon-block"
+    className: "icon-block"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
-    class: "center brown-text"
+    className: "center brown-text"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-    class: "material-icons"
+    className: "material-icons"
   }, "flash_on")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h5", {
-    class: "center"
+    className: "center"
   }, "Speeds up development"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
-    class: "light"
+    className: "light"
   }, "We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "col s12 m4"
+    className: "col s12 m4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "icon-block"
+    className: "icon-block"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
-    class: "center brown-text"
+    className: "center brown-text"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-    class: "material-icons"
+    className: "material-icons"
   }, "group")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h5", {
-    class: "center"
+    className: "center"
   }, "User Experience Focused"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
-    class: "light"
+    className: "light"
   }, "By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "col s12 m4"
+    className: "col s12 m4"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    class: "icon-block"
+    className: "icon-block"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
-    class: "center brown-text"
+    className: "center brown-text"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-    class: "material-icons"
+    className: "material-icons"
   }, "settings")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h5", {
-    class: "center"
+    className: "center"
   }, "Easy to work with"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
-    class: "light"
+    className: "light"
   }, "We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize."))))));
 };
 /**

@@ -1,32 +1,31 @@
 body {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 a {
-    /* text-decoration: none; */
+  /* text-decoration: none; */
 }
 
 label {
-    display: block;
+  display: block;
 }
 
 nav a {
-    /* display: inline-block;
+  /* display: inline-block;
     margin: 1em; */
 }
 
 form div {
-    margin: 1em;
-    display: inline-block;
+  margin: 1em;
+  display: inline-block;
 }
-<<<<<<< HEAD
 .parallax-container .parallax {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 /* .parallax-container {
     min-height: 380px;
@@ -47,7 +46,6 @@ form div {
         top: 10%;
     }
 } */
-=======
 
 video {
   width: 20%;
@@ -63,4 +61,3 @@ video {
   width: 80%;
   height: 80%;
 }
->>>>>>> master
