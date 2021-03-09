@@ -61,9 +61,9 @@ io.sockets.on('error', (e) => console.log(e));
 io.sockets.on('connection', (socket) => {
   socket.on('broadcaster', (id, type, room) => {
     socket.join(room);
-    //socket.broadcast.emit('broadcaster', socket.id, type);
     socket.to(room).emit('broadcaster', socket.id, type);
   });
+
   socket.on('offer', (id, message, type) => {
     console.log('offer', id);
     socket.to(id).emit('offer', socket.id, message, type);
