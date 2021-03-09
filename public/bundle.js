@@ -3108,7 +3108,7 @@ const me = () => async dispatch => {
   const token = storage().getItem(TOKEN);
 
   if (token) {
-    const res = await axios__WEBPACK_IMPORTED_MODULE_0___default().get('/auth/me', {
+    const res = await axios__WEBPACK_IMPORTED_MODULE_0___default().get('/auth/student/me', {
       headers: {
         authorization: token
       }
@@ -3120,7 +3120,7 @@ const studentAuthenticate = (email, password, method) => async (dispatch) => {
   let res;
 
   try {
-    res = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(`/studentauth/${method}`, {
+    res = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(`/auth/student/${method}`, {
       email,
       password
     });
@@ -3134,7 +3134,7 @@ const studentAuthenticate = (email, password, method) => async (dispatch) => {
 };
 const logout = () => {
   storage().removeItem(TOKEN);
-  _history__WEBPACK_IMPORTED_MODULE_1__.default.push('/studentlogin');
+  _history__WEBPACK_IMPORTED_MODULE_1__.default.push('/login');
   return {
     type: SET_STUDENT_AUTH,
     auth: {}

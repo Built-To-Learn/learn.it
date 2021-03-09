@@ -20,7 +20,7 @@ const setStudentAuth = (auth) => ({ type: SET_STUDENT_AUTH, auth })
 export const me = () => async (dispatch) => {
     const token = storage().getItem(TOKEN)
     if (token) {
-        const res = await axios.get('/auth/me', {
+        const res = await axios.get('/auth/student/me', {
             headers: {
                 authorization: token,
             },
@@ -34,7 +34,7 @@ export const studentAuthenticate = (email, password, method) => async (
 ) => {
     let res
     try {
-        res = await axios.post(`/studentauth/${method}`, { email, password })
+        res = await axios.post(`/auth/student/${method}`, { email, password })
         storage().setItem(TOKEN, res.data.token)
         dispatch(me())
     } catch (authError) {
@@ -44,7 +44,7 @@ export const studentAuthenticate = (email, password, method) => async (
 
 export const logout = () => {
     storage().removeItem(TOKEN)
-    history.push('/studentlogin')
+    history.push('/login')
     return {
         type: SET_STUDENT_AUTH,
         auth: {},
