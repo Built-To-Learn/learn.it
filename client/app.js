@@ -1,20 +1,15 @@
-import React from 'react'
+import React from 'react';
+import { Navbar } from './components';
 
-import { Navbar } from './components'
-import Parallax from './components/parallax.js'
-import Icons from './components/icons.js'
-
-import Routes from './routes'
+import Routes from './routes';
 
 const App = () => {
-    return (
-        <div>
-            <Navbar />
-            <Parallax />
-            <Icons />
-            <Routes />
-        </div>
-    )
-}
+  return (
+    <div>
+      <Navbar />
+      <Routes />
+    </div>
+  );
+};
 
-export default App
+export default App;
