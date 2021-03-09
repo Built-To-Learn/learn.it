@@ -121,6 +121,7 @@ module.exports = {
     models: {
         Student,
         Teacher,
+        Course,
         Enrollment
     },
 }
