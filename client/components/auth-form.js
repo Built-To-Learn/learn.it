@@ -1,42 +1,42 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { authenticate } from '../store';
-import Parallax from './parallax.js';
-import Icons from './icons.js';
+import React from 'react'
+import { connect } from 'react-redux'
+import { authenticate } from '../store'
+import Parallax from './parallax.js'
+import Icons from './icons.js'
 /**
  * COMPONENT
  */
 const AuthForm = (props) => {
-  const { name, displayName, handleSubmit, error } = props;
+    const { name, displayName, handleSubmit, error } = props
 
-  return (
-    <div>
-      <Parallax />
-      <Icons />
-      <form onSubmit={handleSubmit} name={name}>
+    return (
         <div>
-          <label htmlFor="email">
-            <small>Email</small>
-          </label>
-          <input name="email" type="text" />
+            <Parallax />
+            <Icons />
+            <form onSubmit={handleSubmit} name={name}>
+                <div>
+                    <label htmlFor="email">
+                        <small>Email</small>
+                    </label>
+                    <input name="email" type="text" />
+                </div>
+                <div>
+                    <label htmlFor="password">
+                        <small>Password</small>
+                    </label>
+                    <input name="password" type="password" />
+                </div>
+                <div>
+                    <button type="submit">{displayName}</button>
+                </div>
+                {error && error.response && <div> {error.response.data} </div>}
+            </form>
+            {window.githubURL && (
+                <a href={window.githubURL}>Login / Register Via Github </a>
+            )}
         </div>
-        <div>
-          <label htmlFor="password">
-            <small>Password</small>
-          </label>
-          <input name="password" type="password" />
-        </div>
-        <div>
-          <button type="submit">{displayName}</button>
-        </div>
-        {error && error.response && <div> {error.response.data} </div>}
-      </form>
-      {window.githubURL && (
-        <a href={window.githubURL}>Login / Register Via Github </a>
-      )}
-    </div>
-  );
-};
+    )
+}
 
 /**
  * CONTAINER
@@ -46,32 +46,32 @@ const AuthForm = (props) => {
  *   can stay DRY with interfaces that are very similar to each other!
  */
 const mapLogin = (state) => {
-  return {
-    name: 'login',
-    displayName: 'Login',
-    error: state.auth.error,
-  };
-};
+    return {
+        name: 'login',
+        displayName: 'Login',
+        error: state.auth.error,
+    }
+}
 
 const mapSignup = (state) => {
-  return {
-    name: 'signup',
-    displayName: 'Sign Up',
-    error: state.auth.error,
-  };
-};
+    return {
+        name: 'signup',
+        displayName: 'Sign Up',
+        error: state.auth.error,
+    }
+}
 
 const mapDispatch = (dispatch) => {
-  return {
-    handleSubmit(evt) {
-      evt.preventDefault();
-      const formName = evt.target.name;
-      const email = evt.target.email.value;
-      const password = evt.target.password.value;
-      dispatch(authenticate(email, password, formName));
-    },
-  };
-};
+    return {
+        handleSubmit(evt) {
+            evt.preventDefault()
+            const formName = evt.target.name
+            const email = evt.target.email.value
+            const password = evt.target.password.value
+            dispatch(authenticate(email, password, formName))
+        },
+    }
+}
 
-export const Login = connect(mapLogin, mapDispatch)(AuthForm);
-export const Signup = connect(mapSignup, mapDispatch)(AuthForm);
+export const Login = connect(mapLogin, mapDispatch)(AuthForm)
+export const Signup = connect(mapSignup, mapDispatch)(AuthForm)
