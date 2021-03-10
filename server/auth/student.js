@@ -1,9 +1,11 @@
 const router = require('express').Router()
-const {models: { User }} = require("../db")
+const {
+    models: { Student },
+} = require('../db')
 
 router.post('/login', async (req, res, next) => {
     try {
-        res.send({ token: await User.authenticate(req.body) })
+        res.send({ token: await Student.authenticate(req.body) })
     } catch (err) {
         next(err)
     }
@@ -21,7 +23,7 @@ router.get('/github/callback', async (req, res, next) => {
       <html>
       <body>
         <script>
-        window.localStorage.setItem('token', '${await User.authenticateGithub(
+        window.localStorage.setItem('token', '${await Student.authenticateGithub(
             req.query.code
         )}');
         window.document.location = '/';
@@ -37,11 +39,11 @@ router.get('/github/callback', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
     try {
-        const user = await User.create(req.body)
-        res.send({ token: await user.generateToken() })
+        const student = await Student.create(req.body)
+        res.send({ token: await student.generateToken() })
     } catch (err) {
         if (err.name === 'SequelizeUniqueConstraintError') {
-            res.status(401).send('User already exists')
+            res.status(401).send('Student already exists')
         } else {
             next(err)
         }
@@ -50,7 +52,8 @@ router.post('/signup', async (req, res, next) => {
 
 router.get('/me', async (req, res, next) => {
     try {
-        res.send(await User.findByToken(req.headers.authorization))
+        console.log('TOKEN', req.headers.authorization)
+        res.send(await Student.findByToken(req.headers.authorization))
     } catch (ex) {
         next(ex)
     }

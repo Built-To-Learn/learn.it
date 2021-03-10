@@ -20,11 +20,14 @@ const setStudentAuth = (auth) => ({ type: SET_STUDENT_AUTH, auth })
 export const me = () => async (dispatch) => {
     const token = storage().getItem(TOKEN)
     if (token) {
-        const res = await axios.get('/auth/me', {
+        console.log(token)
+        const res = await axios.get('/auth/student/me', {
             headers: {
                 authorization: token,
             },
         })
+
+        console.log(res)
         return dispatch(setStudentAuth(res.data))
     }
 }
@@ -34,7 +37,7 @@ export const studentAuthenticate = (email, password, method) => async (
 ) => {
     let res
     try {
-        res = await axios.post(`/studentauth/${method}`, { email, password })
+        res = await axios.post(`/auth/student/${method}`, { email, password })
         storage().setItem(TOKEN, res.data.token)
         dispatch(me())
     } catch (authError) {
@@ -57,7 +60,7 @@ export const logout = () => {
 export default function (state = {}, action) {
     switch (action.type) {
         case SET_STUDENT_AUTH:
-            return action.studentauth
+            return action.auth
         default:
             return state
     }
