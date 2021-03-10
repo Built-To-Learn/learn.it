@@ -22,89 +22,39 @@ Enrollment.findCourseByStudent = async function(studentId){
 //
 
 // Associations
-Course.belongsTo(Teacher)
+Course.belongsTo(User)
 
-Course.belongsToMany(Student, { through: Enrollment })
-Student.belongsToMany(Course, { through: Enrollment})
+Course.belongsToMany(User, { through: Enrollment })
+User.belongsToMany(Course, { through: Enrollment })
 
 Course.hasMany(Enrollment)
 Enrollment.belongsTo(Course)
-Student.hasMany(Enrollment)
-Enrollment.belongsTo(Student)
+User.hasMany(Enrollment)
+Enrollment.belongsTo(User)
 
 const syncAndSeed = async () => {
     await db.sync({ force: true })
-    const student = await Promise.all([
-        Student.create({
+    const [cody, murphy, sal] = await Promise.all([
+        User.create({
             name: 'Cody',
             username: 'cody123',
             email: 'cody@email.com',
-            password: '123',
+            password: '123'
         }),
-        Student.create({
+        User.create({
             name: 'Murphy',
             username: 'murphy123',
             email: 'murphy@email.com',
-            password: '123',
+            password: '123'
         }),
-        Student.create({
+        User.create({
             name: 'Sal',
             username: 'Sal123',
             email: 'Sal@email.com',
             password: '123',
+            role: "TEACHER"
         }),
     ])
-    const [cody, murphy, sal] = student
-
-    const [jake, prof] = await Promise.all([
-        Teacher.create({
-            name: 'Jake',
-            username: 'jake123',
-            email: 'jake@email.com',
-            password: '123',
-        }),
-        Teacher.create({
-            name: 'Prof',
-            username: 'profMan333',
-            email: 'prof@email.com',
-            password: '123',
-        })
-    ])
-
-    const [mathclass, woodWorking ] = await Promise.all([
-        Course.create({
-            title: 'Math for fun',
-            subject: 'Math Subject',
-            category: 'Math Category',
-            teacherId: jake.id,
-        }),
-        Course.create({
-            title: 'Building A Table',
-            subject: 'Woodworking',
-            category: 'Building',
-            teacherId: prof.id,
-        })
-    ])
-
-    await Enrollment.create({
-        studentId: cody.id,
-        courseId: mathclass.id,
-    })
-
-    await Enrollment.create({
-        studentId: cody.id,
-        courseId: woodWorking.id,
-    })
-
-    await Enrollment.create({
-        studentId: sal.id,
-        courseId: woodWorking.id,
-    })
-
-    // method testing
-    const jakesClasses = await Course.findByTeacher(jake.id)
-    const codyCourses = await Enrollment.findCourseByStudent(cody.id)
-    const salCourses = await Enrollment.findCourseByStudent(sal.id)
 
     return {
         students: {
@@ -122,6 +72,7 @@ module.exports = {
         Student,
         Teacher,
         Course,
-        Enrollment
+        Enrollment,
+        User
     },
 }

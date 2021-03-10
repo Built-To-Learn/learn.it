@@ -57,6 +57,7 @@ Student.authenticate = async function ({ email, password }) {
 
 Student.findByToken = async function (token) {
     try {
+        console.log(token)
         const { id } = await jwt.verify(token, process.env.JWT)
         const student = Student.findByPk(id)
         if (!student) {
