@@ -34,7 +34,7 @@ Enrollment.belongsTo(User)
 
 const syncAndSeed = async () => {
     await db.sync({ force: true })
-    const student = await Promise.all([
+    const [cody, murphy, sal] = await Promise.all([
         User.create({
             name: 'Cody',
             username: 'cody123',
@@ -57,7 +57,6 @@ const syncAndSeed = async () => {
             role: "TEACHER"
         }),
     ])
-    const [cody, murphy, sal] = student
 
     return {
         students: {
