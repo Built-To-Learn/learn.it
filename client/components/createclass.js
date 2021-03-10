@@ -1,26 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { authenticate } from '../store'
+import { createCourse } from '../store/courses'
 import Parallax from './parallax.js'
 import Icons from './icons.js'
 /**
  * COMPONENT
  */
-const CreateClass = (props) => {
+const CreateCourse = (props) => {
     const { handleSubmit, error, isLoggedIn } = props
-
-    console.log(props)
-
     return (
         <div>
             {isLoggedIn ? (
                 <div>
                     <form onSubmit={handleSubmit} name={name}>
                         <div>
-                            <label htmlFor="classname">
-                                <small>Class Name</small>
+                            <label htmlFor="coursename">
+                                <small>Course Name</small>
                             </label>
-                            <input name="classname" type="text" />
+                            <input name="coursename" type="text" />
                         </div>
                         <div>
                             <label htmlFor="Subject">
@@ -29,17 +26,18 @@ const CreateClass = (props) => {
                             <input name="subject" type="text" />
                         </div>
                         <div>
-                            <button type="submit">Create Class</button>
+                            <label htmlFor="Category">
+                                <small>Category</small>
+                            </label>
+                            <input name="category" type="text" />
+                        </div>
+                        <div>
+                            <button type="submit">Create Course</button>
                         </div>
                         {error && error.response && (
                             <div> {error.response.data} </div>
                         )}
                     </form>
-                    {window.githubURL && (
-                        <a href={window.githubURL}>
-                            Login / Register Via Github{' '}
-                        </a>
-                    )}
                 </div>
             ) : (
                 <p>Must Be Logged In to Create a Class</p>
@@ -48,26 +46,8 @@ const CreateClass = (props) => {
     )
 }
 
-/**
- * CONTAINER
- *   Note that we have two different sets of 'mapStateToProps' functions -
- *   one for Login, and one for Signup. However, they share the same 'mapDispatchToProps'
- *   function, and share the same Component. This is a good example of how we
- *   can stay DRY with interfaces that are very similar to each other!
- */
-// const mapLogin = (state) => {
-//     return {
-//         name: 'login',
-//         displayName: 'Login',
-//         error: state.auth.error,
-//     }
-// }
-
-const mapCreateClass = (state) => {
+const mapCreateCourse = (state) => {
     return {
-        name: 'signup',
-        displayName: 'Sign Up',
-        error: state.auth.error,
         isLoggedIn: !!state.auth.id,
     }
 }
@@ -76,13 +56,19 @@ const mapDispatch = (dispatch) => {
     return {
         handleSubmit(evt) {
             evt.preventDefault()
-            const formName = evt.target.name
-            const email = evt.target.email.value
-            const password = evt.target.password.value
-            dispatch(authenticate(email, password, formName))
+            // const formName = evt.target.name
+            const courseName = evt.target.coursename.value
+            const subject = evt.target.subject.value
+            const category = evt.target.category.value
+            // console.log('formName', formName)
+            console.log('courseName', courseName)
+            console.log('subject', subject)
+            dispatch(createCourse(courseName, subject, category))
         },
     }
 }
 
-export const CreateNewClass = connect(mapCreateClass, mapDispatch)(CreateClass)
-// export const Signup = connect(mapCreateClass, mapDispatch)(CreateClass)
+export const CreateNewCourse = connect(
+    mapCreateCourse,
+    mapDispatch
+)(CreateCourse)

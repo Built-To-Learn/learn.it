@@ -2322,12 +2322,12 @@ class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CreateNewClass": () => /* binding */ CreateNewClass
+/* harmony export */   "CreateNewCourse": () => /* binding */ CreateNewCourse
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
+/* harmony import */ var _store_courses__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/courses */ "./client/store/courses.js");
 /* harmony import */ var _parallax_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./parallax.js */ "./client/components/parallax.js");
 /* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./icons.js */ "./client/components/icons.js");
 
@@ -2339,53 +2339,37 @@ __webpack_require__.r(__webpack_exports__);
  * COMPONENT
  */
 
-const CreateClass = props => {
+const CreateCourse = props => {
   const {
     handleSubmit,
     error,
     isLoggedIn
   } = props;
-  console.log(props);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     onSubmit: handleSubmit,
     name: name
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-    htmlFor: "classname"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Class Name")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-    name: "classname",
+    htmlFor: "coursename"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Course Name")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "coursename",
     type: "text"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "Subject"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Subject")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
     name: "subject",
     type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "Category"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Category")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "category",
+    type: "text"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     type: "submit"
-  }, "Create Class")), error && error.response && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, " ", error.response.data, " ")), window.githubURL && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-    href: window.githubURL
-  }, "Login / Register Via Github", ' ')) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Must Be Logged In to Create a Class"));
+  }, "Create Course")), error && error.response && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, " ", error.response.data, " "))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Must Be Logged In to Create a Class"));
 };
-/**
- * CONTAINER
- *   Note that we have two different sets of 'mapStateToProps' functions -
- *   one for Login, and one for Signup. However, they share the same 'mapDispatchToProps'
- *   function, and share the same Component. This is a good example of how we
- *   can stay DRY with interfaces that are very similar to each other!
- */
-// const mapLogin = (state) => {
-//     return {
-//         name: 'login',
-//         displayName: 'Login',
-//         error: state.auth.error,
-//     }
-// }
 
-
-const mapCreateClass = state => {
+const mapCreateCourse = state => {
   return {
-    name: 'signup',
-    displayName: 'Sign Up',
-    error: state.auth.error,
     isLoggedIn: !!state.auth.id
   };
 };
@@ -2393,17 +2377,21 @@ const mapCreateClass = state => {
 const mapDispatch = dispatch => {
   return {
     handleSubmit(evt) {
-      evt.preventDefault();
-      const formName = evt.target.name;
-      const email = evt.target.email.value;
-      const password = evt.target.password.value;
-      dispatch((0,_store__WEBPACK_IMPORTED_MODULE_2__.authenticate)(email, password, formName));
+      evt.preventDefault(); // const formName = evt.target.name
+
+      const courseName = evt.target.coursename.value;
+      const subject = evt.target.subject.value;
+      const category = evt.target.category.value; // console.log('formName', formName)
+
+      console.log('courseName', courseName);
+      console.log('subject', subject);
+      dispatch((0,_store_courses__WEBPACK_IMPORTED_MODULE_2__.createCourse)(courseName, subject, category));
     }
 
   };
 };
 
-const CreateNewClass = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapCreateClass, mapDispatch)(CreateClass); // export const Signup = connect(mapCreateClass, mapDispatch)(CreateClass)
+const CreateNewCourse = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapCreateCourse, mapDispatch)(CreateCourse);
 
 /***/ }),
 
@@ -2961,8 +2949,13 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
       isLoggedIn
     } = this.props;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
       path: "/home",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Home
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
+      path: "/createcourse",
+      component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Redirect, {
       to: "/home"
     })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
@@ -2981,6 +2974,10 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/dashboard",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Dashboard
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
+      path: "/createcourse",
+      component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
     })));
   }
 
@@ -3097,6 +3094,74 @@ const logout = () => {
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(state = {}, action) {
   switch (action.type) {
     case SET_AUTH:
+      return action.auth;
+
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+
+/***/ "./client/store/courses.js":
+/*!*********************************!*\
+  !*** ./client/store/courses.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createCourse": () => /* binding */ createCourse,
+/* harmony export */   "default": () => /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * ACTION TYPES
+ */
+
+const CREATE_COURSE = 'CREATE_COURSE';
+/**
+ * ACTION CREATORS
+ */
+
+const _createCourse = (courseName, subject, category) => ({
+  type: CREATE_COURSE,
+  courseName,
+  subject,
+  category
+});
+/**
+ * THUNK CREATORS
+ */
+//
+
+
+const createCourse = (courseName, subject, category) => async (dispatch) => {
+  let res;
+
+  try {
+    console.log('HELLO');
+    let title = courseName;
+    res = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(`/api/courses`, {
+      title,
+      subject,
+      category
+    });
+    dispatch(_createCourse(courseName, subject, category));
+  } catch (err) {
+    console.log(err);
+  }
+};
+/**
+ * REDUCER
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(state = {}, action) {
+  switch (action.type) {
+    case CREATE_COURSE:
       return action.auth;
 
     default:
