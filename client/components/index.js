@@ -5,7 +5,8 @@
  */
 export { default as Navbar } from './navbar';
 export { default as Home } from './home';
-export { default as Video } from './video';
 export { default as Chatroom } from './chatroom';
+export { default as Broadcaster } from './broadcaster';
+export { default as Watcher } from './watcher';
 export { Login, Signup } from './auth-form';
 export { default as Dashboard } from './dashboard';

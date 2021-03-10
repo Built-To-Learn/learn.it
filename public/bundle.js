@@ -2071,6 +2071,97 @@ const Signup = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapSignup, m
 
 /***/ }),
 
+/***/ "./client/components/broadcaster.js":
+/*!******************************************!*\
+  !*** ./client/components/broadcaster.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
+
+
+
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_2__.io)();
+const peerConnections = {};
+const config = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  } // {
+  //   "urls": "turn:TURN_IP?transport=tcp",
+  //   "username": "TURN_USERNAME",
+  //   "credential": "TURN_CREDENTIALS"
+  // }
+  ]
+};
+const constraints = {
+  video: {
+    facingMode: 'user'
+  },
+  // Uncomment to enable audio
+  audio: true
+};
+
+class Broadcaster extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  componentDidMount() {
+    const video = document.getElementById('broadcast_watcher_video');
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      video.srcObject = stream;
+      socket.emit('broadcaster');
+    }).catch(error => console.error(error));
+    socket.on('answer', (id, description) => {
+      peerConnections[id].setRemoteDescription(description);
+    });
+    socket.on('watcher', id => {
+      const peerConnection = new RTCPeerConnection(config);
+      peerConnections[id] = peerConnection;
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnection.createOffer().then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('offer', id, peerConnection.localDescription);
+      });
+      console.log(peerConnections);
+    });
+    socket.on('candidate', (id, candidate) => {
+      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
+    });
+    socket.on('disconnectPeer', id => {
+      console.log(id); //peerConnections[id].close();
+
+      delete peerConnections[id];
+    });
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      id: "broadcast_watcher_video",
+      className: "broadcast_watcher",
+      playsInline: true,
+      autoPlay: true,
+      muted: true
+    });
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(null)(Broadcaster));
+
+/***/ }),
+
 /***/ "./client/components/chatroom.js":
 /*!***************************************!*\
   !*** ./client/components/chatroom.js ***!
@@ -2327,6 +2418,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./client/components/index.js");
+
 
 
 
@@ -2351,7 +2444,7 @@ class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right-pane-1-top",
       className: "border"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_index__WEBPACK_IMPORTED_MODULE_2__.Broadcaster, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right-pane-1-bottom",
       className: "border"
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -2527,23 +2620,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Navbar": () => /* reexport safe */ _navbar__WEBPACK_IMPORTED_MODULE_0__.default,
 /* harmony export */   "Home": () => /* reexport safe */ _home__WEBPACK_IMPORTED_MODULE_1__.default,
-/* harmony export */   "Video": () => /* reexport safe */ _video__WEBPACK_IMPORTED_MODULE_2__.default,
-/* harmony export */   "Chatroom": () => /* reexport safe */ _chatroom__WEBPACK_IMPORTED_MODULE_3__.default,
-/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Login,
-/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Signup,
-/* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_5__.default
+/* harmony export */   "Chatroom": () => /* reexport safe */ _chatroom__WEBPACK_IMPORTED_MODULE_2__.default,
+/* harmony export */   "Broadcaster": () => /* reexport safe */ _broadcaster__WEBPACK_IMPORTED_MODULE_3__.default,
+/* harmony export */   "Watcher": () => /* reexport safe */ _watcher__WEBPACK_IMPORTED_MODULE_4__.default,
+/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Login,
+/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Signup,
+/* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_6__.default
 /* harmony export */ });
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./client/components/navbar.js");
 /* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home */ "./client/components/home.js");
-/* harmony import */ var _video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./video */ "./client/components/video.js");
-/* harmony import */ var _chatroom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chatroom */ "./client/components/chatroom.js");
-/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
-/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
+/* harmony import */ var _chatroom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chatroom */ "./client/components/chatroom.js");
+/* harmony import */ var _broadcaster__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./broadcaster */ "./client/components/broadcaster.js");
+/* harmony import */ var _watcher__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./watcher */ "./client/components/watcher.js");
+/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
+/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
 /**
  * `components/index.js` exists simply as a 'central export' for our components.
  * This way, we can import all of our components from the same place, rather than
  * having to figure out which file they belong to!
  */
+
 
 
 
@@ -2703,10 +2799,10 @@ const mapDispatch = dispatch => {
 
 /***/ }),
 
-/***/ "./client/components/video.js":
-/*!************************************!*\
-  !*** ./client/components/video.js ***!
-  \************************************/
+/***/ "./client/components/watcher.js":
+/*!**************************************!*\
+  !*** ./client/components/watcher.js ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2716,64 +2812,108 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
 
 
-const io = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/index.js");
 
-const socket = io();
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_2__.io)();
+const config = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  } // {
+  //   "urls": "turn:TURN_IP?transport=tcp",
+  //   "username": "TURN_USERNAME",
+  //   "credential": "TURN_CREDENTIALS"
+  // }
+  ]
+};
+const constraints = {
+  video: {
+    facingMode: 'user'
+  },
+  // Uncomment to enable audio
+  audio: true
+};
+const broadcaster = {};
 
-class Video extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+class Watcher extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor(props) {
     super(props);
     this.state = {
-      img: ''
+      broadcaster: '',
+      playing: 'false'
     };
   }
 
   componentDidMount() {
-    const video = document.querySelector('video'); // request access to webcam
+    //const video = document.getElementById('broadcast_watcher_video');
+    socket.on('offer', (id, description) => {
+      console.log('offer'); //const video = document.getElementById('broadcast_watcher_video');
 
-    navigator.mediaDevices.getUserMedia({
-      video: {
-        width: 426,
-        height: 240
-      }
-    }).then(stream => video.srcObject = stream); // returns a frame encoded in base64
+      const peerConnection = new RTCPeerConnection(config);
+      peerConnection.setRemoteDescription(description).then(() => peerConnection.createAnswer()).then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('answer', id, peerConnection.localDescription);
+      }); // peerConnection.ontrack = (event) => {
+      //   console.log('tracking');
+      //   console.log(event);
+      //   video.srcObject = event.streams[0];
+      // };
 
-    const getFrame = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      const data = canvas.toDataURL('image/png');
-      return data;
-    };
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
 
-    const FPS = 10;
+      broadcaster[id] = peerConnection;
+      this.setState({
+        broadcaster: id
+      });
+    });
+    socket.on('candidate', (id, candidate) => {
+      broadcaster[id].addIceCandidate(new RTCIceCandidate(candidate)).catch(e => console.error(e));
+    });
     socket.on('connect', () => {
-      console.log(socket.id);
-      setInterval(() => {
-        socket.emit('stream', getFrame());
-      }, 1000 / FPS);
-      socket.on('receiving', data => {
-        this.setState({
-          img: data
-        });
+      socket.emit('watcher');
+    });
+    socket.on('broadcaster', () => {
+      socket.emit('watcher');
+    });
+    socket.on('disconnectPeer', () => {
+      this.setState({
+        broadcaster: '',
+        playing: 'false'
       });
     });
   }
 
+  componentDidUpdate() {
+    if (this.state.broadcaster !== '') {
+      broadcaster[this.state.broadcaster].ontrack = event => {
+        console.log('tracking');
+        console.log(event);
+        this.selfVideo.srcObject = event.streams[0];
+      };
+    }
+  }
+
   render() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      autoPlay: true
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.state.img
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.broadcaster === '' ? 'no one here' : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      id: "broadcast_watcher_video",
+      className: "broadcast_watcher",
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.selfVideo = vid;
+      }
     }));
   }
 
 }
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Video);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(null)(Watcher));
 
 /***/ }),
 
@@ -2883,6 +3023,9 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
       path: "/dashboard",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Dashboard
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+      path: "/watcher",
+      component: _components__WEBPACK_IMPORTED_MODULE_2__.Watcher
     })));
   }
 
