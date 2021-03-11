@@ -35,7 +35,7 @@ const constraints = {
   audio: true,
 };
 
-class Chatroom extends Component {
+class VideoChat extends Component {
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -250,4 +250,4 @@ class Chatroom extends Component {
   }
 }
 
-export default Chatroom;
+export default VideoChat;

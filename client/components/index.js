@@ -6,6 +6,7 @@
 export { default as Navbar } from './navbar';
 export { default as Home } from './home';
 export { default as Video } from './video';
-export { default as Chatroom } from './chatroom';
+export { default as VideoChat } from './videochat';
+export { default as Chat } from './chat';
 export { Login, Signup } from './auth-form';
 export { default as Dashboard } from './dashboard';

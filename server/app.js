@@ -82,4 +82,7 @@ io.sockets.on('connection', (socket) => {
     socket.to(room).emit('disconnectPeer', socket.id);
     socket.leave(room);
   });
+  socket.on('newMessage', (message) => {
+    socket.emit('newMessage', message)
+  });
 });
