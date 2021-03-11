@@ -76,6 +76,12 @@ video {
   display: flex;
   flex-direction: column;
 }
+
+#find_class {
+  display: flex;
+  align-items: center;
+}
+
 #right {
   width: 80%;
 }
