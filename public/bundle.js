@@ -2157,6 +2157,88 @@ class Chat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
 
 /***/ }),
 
+/***/ "./client/components/createclass.js":
+/*!******************************************!*\
+  !*** ./client/components/createclass.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CreateNewCourse": () => /* binding */ CreateNewCourse
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _store_courses__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/courses */ "./client/store/courses.js");
+/* harmony import */ var _parallax_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./parallax.js */ "./client/components/parallax.js");
+/* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./icons.js */ "./client/components/icons.js");
+
+
+
+
+
+/**
+ * COMPONENT
+ */
+
+const CreateCourse = props => {
+  const {
+    handleSubmit,
+    error,
+    isLoggedIn
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+    onSubmit: handleSubmit,
+    name: name
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "coursename"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Course Name")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "coursename",
+    type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "Subject"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Subject")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "subject",
+    type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "Category"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Category")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "category",
+    type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    type: "submit"
+  }, "Create Course")), error && error.response && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, " ", error.response.data, " "))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Must Be Logged In to Create a Class"));
+};
+
+const mapCreateCourse = state => {
+  return {
+    isLoggedIn: !!state.auth.id
+  };
+};
+
+const mapDispatch = dispatch => {
+  return {
+    handleSubmit(evt) {
+      evt.preventDefault(); // const formName = evt.target.name
+
+      const courseName = evt.target.coursename.value;
+      const subject = evt.target.subject.value;
+      const category = evt.target.category.value; // console.log('formName', formName)
+
+      console.log('courseName', courseName);
+      console.log('subject', subject);
+      dispatch((0,_store_courses__WEBPACK_IMPORTED_MODULE_2__.createCourse)(courseName, subject, category));
+    }
+
+  };
+};
+
+const CreateNewCourse = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapCreateCourse, mapDispatch)(CreateCourse);
+
+/***/ }),
+
 /***/ "./client/components/dashboard.js":
 /*!****************************************!*\
   !*** ./client/components/dashboard.js ***!
@@ -2442,12 +2524,14 @@ const Navbar = ({
   id: "logo-container",
   href: "#",
   className: "brand-logo"
-}, "Learn.it"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
-  to: "/home"
-}, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-  href: "#",
+}, "Learn.it"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+  className: "right hide-on-med-and-down "
+}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
+  to: "/#",
   onClick: handleClick
-}, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+}, "Logout")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
+  to: "/signup"
+}, "Sign Up")))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
   className: "nav-wrapper container"
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
   id: "logo-container",
@@ -2937,9 +3021,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components */ "./client/components/index.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store */ "./client/store/index.js");
+/* harmony import */ var _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/createclass.js */ "./client/components/createclass.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store */ "./client/store/index.js");
+
 
 
 
@@ -2958,22 +3044,27 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     const {
       isLoggedIn
     } = this.props;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
       path: "/home",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Home
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Redirect, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
+      path: "/createcourse",
+      component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Redirect, {
       to: "/home"
-    })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/",
       exact: true,
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Login
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/login",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Login
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/signup",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Signup
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/videochat",
 <<<<<<< HEAD
       component: _components__WEBPACK_IMPORTED_MODULE_2__.VideoChat
@@ -2982,10 +3073,17 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Chat
 =======
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Chatroom
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/dashboard",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Dashboard
+<<<<<<< HEAD
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
+      path: "/createcourse",
+      component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
+=======
 >>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
+>>>>>>> 154423caa9f925886832ffe222b058b64c7c6387
     })));
   }
 
@@ -3006,7 +3104,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     loadInitialData() {
-      dispatch((0,_store__WEBPACK_IMPORTED_MODULE_3__.me)());
+      dispatch((0,_store__WEBPACK_IMPORTED_MODULE_4__.me)());
     }
 
   };
@@ -3014,7 +3112,7 @@ const mapDispatch = dispatch => {
 // when the url changes
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.withRouter)((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Routes)));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_router_dom__WEBPACK_IMPORTED_MODULE_5__.withRouter)((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Routes)));
 
 /***/ }),
 
@@ -3103,6 +3201,75 @@ const logout = () => {
   switch (action.type) {
     case SET_AUTH:
       return action.auth;
+
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+
+/***/ "./client/store/courses.js":
+/*!*********************************!*\
+  !*** ./client/store/courses.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createCourse": () => /* binding */ createCourse,
+/* harmony export */   "default": () => /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * ACTION TYPES
+ */
+
+const CREATE_COURSE = 'CREATE_COURSE';
+/**
+ * ACTION CREATORS
+ */
+
+const _createCourse = (courseName, subject, category) => ({
+  type: CREATE_COURSE,
+  courseName,
+  subject,
+  category
+});
+/**
+ * THUNK CREATORS
+ */
+//
+
+
+const createCourse = (courseName, subject, category) => async (dispatch) => {
+  let res;
+
+  try {
+    console.log('HELLO');
+    let title = courseName;
+    res = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(`/api/courses`, {
+      title,
+      subject,
+      category
+    });
+    dispatch(_createCourse(courseName, subject, category));
+  } catch (err) {
+    console.log(err);
+  }
+};
+/**
+ * REDUCER
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(state = {}, action) {
+  switch (action.type) {
+    case CREATE_COURSE:
+      console.log('ACTION', action);
+      return action.course;
 
     default:
       return state;

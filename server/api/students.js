@@ -1,67 +1,69 @@
 const router = require('express').Router()
-const { models: { Student }} = require('../db')
+const {
+    models: { Student },
+} = require('../db')
 
 router.get('/', async (req, res, next) => {
-  try {
-    res.status(200).json(await Student.findAll())
-  } catch (ex) {
-    next(ex)
-  }
+    try {
+        res.status(200).json(await Student.findAll())
+    } catch (ex) {
+        next(ex)
+    }
 })
 
 router.post('/', async (req, res, next) => {
-  try {
-    const { name, username, email , password} = req.body
+    try {
+        const { name, username, email, password } = req.body
 
-    await Student.create({
-      name,
-      username,
-      email,
-      password
-    })
+        await Student.create({
+            name,
+            username,
+            email,
+            password,
+        })
 
-    res.sendStatus(201)
-  } catch (ex) {
-    next(ex)
-  }
+        res.sendStatus(201)
+    } catch (ex) {
+        next(ex)
+    }
 })
 
-router.get("/:studentId", async (req, res, next) => {
-  try {
-    const student = await Student.findOne({
-      where: { id: req.params.studentId }
-    })
+router.get('/:studentId', async (req, res, next) => {
+    try {
+        const student = await Student.findOne({
+            where: { id: req.params.studentId },
+        })
 
-    res.status(200).json(student)
-  } catch (ex) {
-    next(ex)
-  }
+        res.status(200).json(student)
+    } catch (ex) {
+        next(ex)
+    }
 })
 
 router.put('/:studentId', async (req, res, next) => {
-  try {
-    const student = await Student.findOne({
-      where: { id: req.params.studentId }
-    })
+    try {
+        const student = await Student.findOne({
+            where: { id: req.params.studentId },
+        })
 
-    await student.update(req.body)
-    res.sendStatus(204)
-  } catch (error) {
-    next(ex)
-  }
+        await student.update(req.body)
+        res.sendStatus(204)
+    } catch (error) {
+        next(ex)
+    }
 })
 
 router.delete('/:studentId', async (req, res, next) => {
-  try {
-    const student = await Student.findOne({
-      where: { id: req.params.studentId }
-    })
+    try {
+        const student = await Student.findOne({
+            where: { id: req.params.studentId },
+        })
 
-    await student.destroy()
-    res.sendStatus(204)
-  } catch (error) {
-    next(ex)
-  }
+        await student.destroy()
+        res.sendStatus(204)
+    } catch (error) {
+        next(ex)
+    }
 })
 
 module.exports = router

@@ -11,10 +11,16 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
                 <a id="logo-container" href="#" className="brand-logo">
                     Learn.it
                 </a>
-                <Link to="/home">Home</Link>
-                <a href="#" onClick={handleClick}>
-                    Logout
-                </a>
+                <ul className="right hide-on-med-and-down ">
+                    <li>
+                        <Link to="/#" onClick={handleClick}>
+                            Logout
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/signup">Sign Up</Link>
+                    </li>
+                </ul>
             </div>
         ) : (
             <div className="nav-wrapper container">
