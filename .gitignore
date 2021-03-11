@@ -1,4 +1,9 @@
 secrets.js
 public/bundle.js
 public/bundle.js.map
+<<<<<<< HEAD
 node_modules/
+=======
+public/bundle.js
+public/bundle.js.map
+>>>>>>> 154423caa9f925886832ffe222b058b64c7c6387

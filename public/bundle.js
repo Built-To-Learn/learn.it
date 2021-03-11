@@ -2071,10 +2071,10 @@ const Signup = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapSignup, m
 
 /***/ }),
 
-/***/ "./client/components/chatroom.js":
-/*!***************************************!*\
-  !*** ./client/components/chatroom.js ***!
-  \***************************************/
+/***/ "./client/components/chat.js":
+/*!***********************************!*\
+  !*** ./client/components/chat.js ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2085,231 +2085,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
 
-const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)(); // window.onunload = window.onbeforeunload = () => {
-//   socket.close();
-// };
 
-const room = 'room1';
-const typeGlobal = 'student';
-let peerConnections = {};
-const initialState = {
-  teacher: '',
-  members: [],
-  focus: '',
-  room: ''
-};
-const config = {
-  iceServers: [{
-    urls: 'stun:stun.l.google.com:19302'
-  } // {
-  //   "urls": "turn:TURN_IP?transport=tcp",
-  //   "username": "TURN_USERNAME",
-  //   "credential": "TURN_CREDENTIALS"
-  // }
-  ]
-}; // Media contrains
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)();
 
-const constraints = {
-  video: {
-    facingMode: 'user'
-  },
-  // Uncomment to enable audio
-  audio: true
+window.onunload = window.onbeforeunload = () => {
+  socket.close();
 };
 
-class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
-  constructor(props) {
-    super(props);
-    this.state = initialState;
-    this.changeFocus = this.changeFocus.bind(this);
-    this.joinChat = this.joinChat.bind(this);
-    this.leaveChat = this.leaveChat.bind(this);
-  }
-
-  componentDidMount() {
-    socket.on('broadcaster', (id, type) => {
-      const video = document.getElementById('selfVideo');
-      const peerConnection = new RTCPeerConnection(config);
-      let stream = video.srcObject;
-      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-
-      peerConnection.onicecandidate = event => {
-        if (event.candidate) {
-          socket.emit('candidate', id, event.candidate);
-        }
-      };
-
-      peerConnection.createOffer().then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
-        socket.emit('offer', id, peerConnection.localDescription, typeGlobal);
+class Chat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor() {
+    super();
+    this.state = {
+      messages: [],
+      currentMessage: ''
+    };
+    socket.on('newMessage', message => {
+      this.setState({ ...this.state,
+        messages: [...this.state.messages, message]
       });
-      peerConnections[id] = peerConnection;
-
-      if (type === 'student') {
-        this.setState({
-          members: [...this.state.members, id]
-        });
-      } else if (type === 'teacher') {
-        this.setState({
-          teacher: id,
-          members: [...this.state.members, id]
-        });
-      }
-    });
-    socket.on('answer', (id, description) => {
-      peerConnections[id].setRemoteDescription(description);
-    });
-    socket.on('offer', (id, description, type) => {
-      const peerConnection = new RTCPeerConnection(config);
-      const video = document.getElementById('selfVideo'); // const video = this.selfVideo;
-
-      let stream = video.srcObject;
-      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-      peerConnection.setRemoteDescription(description).then(() => peerConnection.createAnswer()).then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
-        socket.emit('answer', id, peerConnection.localDescription);
-      });
-
-      peerConnection.onicecandidate = event => {
-        if (event.candidate) {
-          socket.emit('candidate', id, event.candidate);
-        }
-      };
-
-      peerConnections[id] = peerConnection;
-
-      if (type === 'student') {
-        this.setState({
-          members: [...this.state.members, id]
-        });
-      } else if (type === 'teacher') {
-        this.setState({
-          teacher: id,
-          members: [...this.state.members, id]
-        });
-      }
-    });
-    socket.on('candidate', (id, candidate) => {
-      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
-    });
-    socket.on('disconnectPeer', id => {
-      if (id === this.state.focus) {
-        this.focus.srcObject = this.selfVideo.srcObject;
-      }
-
-      peerConnections[id].close();
-      delete peerConnections[id];
-      delete this[id];
-
-      if (this.state.members.includes(id)) {
-        this.setState({
-          members: this.state.members.filter(peer => peer !== id)
-        });
-      } else {
-        this.setState({
-          teacher: '',
-          members: this.state.members.filter(peer => peer !== id)
-        });
-      }
-    });
-    socket.on('disconnect', () => {
-      socket.emit('disconnected', this.state.room);
-      peerConnections = {};
-      this.state.members.forEach(member => {
-        delete this[member];
-      });
-      this.setState(initialState);
     });
   }
 
-  componentDidUpdate() {
-    this.state.members.forEach(member => {
-      peerConnections[member].ontrack = event => {
-        this[member].srcObject = event.streams[0];
-      };
-    });
-
-    if (this.state.focus !== '') {
-      this.focus.srcObject = this[this.state.focus].srcObject;
-    }
-  }
-
-  changeFocus(e) {
-    this.setState({
-      focus: e.target.id
+  handleChange(event) {
+    const message = event.target.value;
+    this.setState({ ...this.state,
+      currentMessage: message
     });
   }
 
-  joinChat(e) {
-    e.persist();
-    console.log(e.target);
-    const video = document.getElementById('selfVideo');
-    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-      video.srcObject = stream;
-      socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
-    }).catch(error => console.error(error));
-    this.setState({
-      room: e.target.id
+  handleSubmit(event) {
+    event.preventDefault();
+    socket.emit('newMessage', this.state.currentMessage);
+    this.setState({ ...this.state,
+      currentMessage: ''
     });
+<<<<<<< HEAD
   }
-
-  leaveChat(e) {
-    socket.emit('disconnected', this.state.room);
-    peerConnections = {};
-    this.state.members.forEach(member => {
-      delete this[member];
-    });
+=======
     this.setState(initialState);
   } //sendChat (message) -> {
   //socket.emit('sendmessage, message)
   //}
 
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
 
   render() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      id: "videos"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-      id: "room1",
-      onClick: e => this.joinChat(e)
-    }, "Join"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-      onClick: e => this.leaveChat(e)
-    }, " Leave"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
-      id: "selfVideo",
-      className: "video_player",
-      playsInline: true,
-      autoPlay: true,
-      muted: true,
-      ref: vid => {
-        this.selfVideo = vid;
-      },
-      onClick: e => this.changeFocus(e)
-    }), this.state.members.map(member => {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
-        key: member,
-        id: member,
-        className: "video_player",
-        playsInline: true,
-        autoPlay: true,
-        ref: vid => {
-          this[member] = vid;
-        },
-        onClick: e => this.changeFocus(e)
-      });
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
-      id: "focus",
-      key: this.state.focus,
-      playsInline: true,
-      autoPlay: true,
-      muted: true,
-      ref: vid => {
-        this.focus = vid;
-      }
-    })));
+    const {
+      messages,
+      currentMessage
+    } = this.state;
+    const {
+      userName
+    } = this.props;
+    console.log(userName);
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, messages.map(message => {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, message);
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+      value: currentMessage,
+      onChange: event => this.handleChange(event)
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      onClick: event => this.handleSubmit(event)
+    }));
   }
 
 }
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chatroom);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chat);
 
 /***/ }),
 
@@ -2610,17 +2454,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Navbar": () => /* reexport safe */ _navbar__WEBPACK_IMPORTED_MODULE_0__.default,
 /* harmony export */   "Home": () => /* reexport safe */ _home__WEBPACK_IMPORTED_MODULE_1__.default,
 /* harmony export */   "Video": () => /* reexport safe */ _video__WEBPACK_IMPORTED_MODULE_2__.default,
+<<<<<<< HEAD
+/* harmony export */   "VideoChat": () => /* reexport safe */ _videochat__WEBPACK_IMPORTED_MODULE_3__.default,
+/* harmony export */   "Chat": () => /* reexport safe */ _chat__WEBPACK_IMPORTED_MODULE_4__.default,
+/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Login,
+/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Signup
+=======
 /* harmony export */   "Chatroom": () => /* reexport safe */ _chatroom__WEBPACK_IMPORTED_MODULE_3__.default,
 /* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Login,
 /* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Signup,
 /* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_5__.default
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
 /* harmony export */ });
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./client/components/navbar.js");
 /* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home */ "./client/components/home.js");
 /* harmony import */ var _video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./video */ "./client/components/video.js");
+<<<<<<< HEAD
+/* harmony import */ var _videochat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./videochat */ "./client/components/videochat.js");
+/* harmony import */ var _chat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./chat */ "./client/components/chat.js");
+/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
+=======
 /* harmony import */ var _chatroom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chatroom */ "./client/components/chatroom.js");
 /* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
 /* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
 /**
  * `components/index.js` exists simply as a 'central export' for our components.
  * This way, we can import all of our components from the same place, rather than
@@ -2861,6 +2718,245 @@ class Video extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
 
 /***/ }),
 
+/***/ "./client/components/videochat.js":
+/*!****************************************!*\
+  !*** ./client/components/videochat.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)(); // window.onunload = window.onbeforeunload = () => {
+//   socket.close();
+// };
+
+const room = 'room1';
+const typeGlobal = 'student';
+let peerConnections = {};
+const initialState = {
+  teacher: '',
+  members: [],
+  focus: '',
+  room: ''
+};
+const config = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  } // {
+  //   "urls": "turn:TURN_IP?transport=tcp",
+  //   "username": "TURN_USERNAME",
+  //   "credential": "TURN_CREDENTIALS"
+  // }
+  ]
+}; // Media contrains
+
+const constraints = {
+  video: {
+    facingMode: 'user'
+  },
+  // Uncomment to enable audio
+  audio: true
+};
+
+class VideoChat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor(props) {
+    super(props);
+    this.state = initialState;
+    this.changeFocus = this.changeFocus.bind(this);
+    this.joinChat = this.joinChat.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
+  }
+
+  componentDidMount() {
+    socket.on('broadcaster', (id, type) => {
+      const video = document.getElementById('selfVideo');
+      const peerConnection = new RTCPeerConnection(config);
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnection.createOffer().then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('offer', id, peerConnection.localDescription, typeGlobal);
+      });
+      peerConnections[id] = peerConnection;
+
+      if (type === 'student') {
+        this.setState({
+          members: [...this.state.members, id]
+        });
+      } else if (type === 'teacher') {
+        this.setState({
+          teacher: id,
+          members: [...this.state.members, id]
+        });
+      }
+    });
+    socket.on('answer', (id, description) => {
+      peerConnections[id].setRemoteDescription(description);
+    });
+    socket.on('offer', (id, description, type) => {
+      const peerConnection = new RTCPeerConnection(config);
+      const video = document.getElementById('selfVideo'); // const video = this.selfVideo;
+
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+      peerConnection.setRemoteDescription(description).then(() => peerConnection.createAnswer()).then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('answer', id, peerConnection.localDescription);
+      });
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnections[id] = peerConnection;
+
+      if (type === 'student') {
+        this.setState({
+          members: [...this.state.members, id]
+        });
+      } else if (type === 'teacher') {
+        this.setState({
+          teacher: id,
+          members: [...this.state.members, id]
+        });
+      }
+    });
+    socket.on('candidate', (id, candidate) => {
+      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
+    });
+    socket.on('disconnectPeer', id => {
+      if (id === this.state.focus) {
+        this.focus.srcObject = this.selfVideo.srcObject;
+      }
+
+      peerConnections[id].close();
+      delete peerConnections[id];
+      delete this[id];
+
+      if (this.state.members.includes(id)) {
+        this.setState({
+          members: this.state.members.filter(peer => peer !== id)
+        });
+      } else {
+        this.setState({
+          teacher: '',
+          members: this.state.members.filter(peer => peer !== id)
+        });
+      }
+    });
+    socket.on('disconnect', () => {
+      socket.emit('disconnected', this.state.room);
+      peerConnections = {};
+      this.state.members.forEach(member => {
+        delete this[member];
+      });
+      this.setState(initialState);
+    });
+  }
+
+  componentDidUpdate() {
+    this.state.members.forEach(member => {
+      peerConnections[member].ontrack = event => {
+        this[member].srcObject = event.streams[0];
+      };
+    });
+
+    if (this.state.focus !== '') {
+      this.focus.srcObject = this[this.state.focus].srcObject;
+    }
+  }
+
+  changeFocus(e) {
+    this.setState({
+      focus: e.target.id
+    });
+  }
+
+  joinChat(e) {
+    e.persist();
+    console.log(e.target);
+    const video = document.getElementById('selfVideo');
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      video.srcObject = stream;
+      socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
+    }).catch(error => console.error(error));
+    this.setState({
+      room: e.target.id
+    });
+  }
+
+  leaveChat(e) {
+    socket.emit('disconnected', this.state.room);
+    peerConnections = {};
+    this.state.members.forEach(member => {
+      delete this[member];
+    });
+    this.setState(initialState);
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+      id: "videos"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinChat(e)
+    }, "Join"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      onClick: e => this.leaveChat(e)
+    }, " Leave"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+      id: "selfVideo",
+      className: "video_player",
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.selfVideo = vid;
+      },
+      onClick: e => this.changeFocus(e)
+    }), this.state.members.map(member => {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+        key: member,
+        id: member,
+        className: "video_player",
+        playsInline: true,
+        autoPlay: true,
+        ref: vid => {
+          this[member] = vid;
+        },
+        onClick: e => this.changeFocus(e)
+      });
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+      id: "focus",
+      key: this.state.focus,
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.focus = vid;
+      }
+    })));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VideoChat);
+
+/***/ }),
+
 /***/ "./client/history.js":
 /*!***************************!*\
   !*** ./client/history.js ***!
@@ -2970,14 +3066,24 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Signup
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/videochat",
+<<<<<<< HEAD
+      component: _components__WEBPACK_IMPORTED_MODULE_2__.VideoChat
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+      path: "/chat",
+      component: _components__WEBPACK_IMPORTED_MODULE_2__.Chat
+=======
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Chatroom
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/dashboard",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Dashboard
+<<<<<<< HEAD
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       exact: true,
       path: "/createcourse",
       component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
+=======
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
+>>>>>>> 154423caa9f925886832ffe222b058b64c7c6387
     })));
   }
 
