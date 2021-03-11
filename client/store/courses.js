@@ -38,7 +38,8 @@ export const createCourse = (courseName, subject, category) => async (
 export default function (state = {}, action) {
     switch (action.type) {
         case CREATE_COURSE:
-            return action.auth
+            console.log('ACTION', action)
+            return action.course
         default:
             return state
     }
