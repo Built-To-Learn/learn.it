@@ -34,6 +34,7 @@ export const createCourse = (courseObj) => async (dispatch) => {
 export const fetchCourses = () => {
     console.log('FETCHiNG')
     return async (dispatch) => {
+        console.log('INSIDE FETCH')
         const courses = (await axios.get('/api/courses')).data
         dispatch(setCourses(courses))
     }
@@ -51,7 +52,7 @@ export default function (state = initialState, action) {
             return { ...state, courses: [...state.courses, action.course] }
 
         case LOAD_COURSES:
-            return action.course
+            return action.courses
 
         default:
             return state
