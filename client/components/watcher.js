@@ -27,10 +27,16 @@ const broadcaster = {};
 class Watcher extends Component {
   constructor(props) {
     super(props);
-    this.state = { broadcaster: '', playing: 'false' };
+    this.state = { broadcaster: '', playing: 'false', room: props.room };
   }
   componentDidMount() {
     //const video = document.getElementById('broadcast_watcher_video');
+
+    console.log('mounted');
+    socket.on('connect', () => {
+      console.log(socket.id);
+    });
+
     socket.on('offer', (id, description) => {
       console.log('offer');
       //const video = document.getElementById('broadcast_watcher_video');
@@ -63,23 +69,22 @@ class Watcher extends Component {
         .catch((e) => console.error(e));
     });
 
-    socket.on('connect', () => {
-      socket.emit('watcher');
-    });
+    socket.emit('watcher', this.props.room);
 
     socket.on('broadcaster', () => {
-      socket.emit('watcher');
+      socket.emit('watcher', this.props.room);
     });
-    socket.on('disconnectPeer', () => {
-      this.setState({ broadcaster: '', playing: 'false' });
+
+    socket.on('disconnectPeer', (id) => {
+      if (id === this.state.broadcaster) {
+        this.setState({ broadcaster: '', playing: 'false' });
+      }
     });
   }
 
   componentDidUpdate() {
     if (this.state.broadcaster !== '') {
       broadcaster[this.state.broadcaster].ontrack = (event) => {
-        console.log('tracking');
-        console.log(event);
         this.selfVideo.srcObject = event.streams[0];
       };
     }

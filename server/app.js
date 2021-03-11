@@ -58,18 +58,22 @@ const io = require('socket.io')(httpServer);
 module.exports = httpServer;
 
 let broadcaster;
-
+roomManager = {};
 io.sockets.on('error', (e) => console.log(e));
 io.sockets.on('connection', (socket) => {
-  //FOR BROADCASTER/WATCHER SOCKETS
-  socket.on('broadcaster', () => {
-    console.log(socket.id);
+  socket.on('broadcaster', (room) => {
     broadcaster = socket.id;
-    socket.broadcast.emit('broadcaster');
+    if (!roomManager[room]) {
+      roomManager[room] = socket.id;
+      socket.join(room);
+      socket.to(room).emit('broadcaster');
+    }
   });
-  socket.on('watcher', () => {
-    console.log(socket.id);
-    socket.to(broadcaster).emit('watcher', socket.id);
+  socket.on('watcher', (room) => {
+    socket.join(room);
+    if (roomManager[room]) {
+      socket.to(roomManager[room]).emit('watcher', socket.id);
+    }
   });
   socket.on('offer', (id, message) => {
     socket.to(id).emit('offer', socket.id, message);
@@ -81,11 +85,13 @@ io.sockets.on('connection', (socket) => {
     socket.to(id).emit('candidate', socket.id, message);
   });
   socket.on('disconnect', () => {
-    if (socket.id === broadcaster) {
-      socket.broadcast.emit('disconnectPeer', socket.id);
-    } else {
-      socket.to(broadcaster).emit('disconnectPeer', socket.id);
+    const values = Object.values(roomManager);
+    if (values.includes(socket.id)) {
+      const idx = values.indexOf(socket.id);
+      const keys = Object.keys(roomManager);
+      delete roomManager[keys[idx]];
     }
+    socket.broadcast.emit('disconnectPeer', socket.id);
   });
 
   //DO NOT DELETE -> for multi-way video chat

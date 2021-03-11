@@ -25,13 +25,17 @@ const constraints = {
 };
 
 class Broadcaster extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { room: props.room };
+  }
   componentDidMount() {
     const video = document.getElementById('broadcast_watcher_video');
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
         video.srcObject = stream;
-        socket.emit('broadcaster');
+        socket.emit('broadcaster', this.props.room);
       })
       .catch((error) => console.error(error));
 
@@ -66,6 +70,11 @@ class Broadcaster extends Component {
 
     socket.on('candidate', (id, candidate) => {
       peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
+    });
+
+    socket.on('disconnect', () => {
+      console.log('hit');
+      socket.emit('leavingRoom', this.props.room);
     });
 
     socket.on('disconnectPeer', (id) => {

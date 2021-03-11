@@ -2110,11 +2110,18 @@ const constraints = {
 };
 
 class Broadcaster extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      room: props.room
+    };
+  }
+
   componentDidMount() {
     const video = document.getElementById('broadcast_watcher_video');
     navigator.mediaDevices.getUserMedia(constraints).then(stream => {
       video.srcObject = stream;
-      socket.emit('broadcaster');
+      socket.emit('broadcaster', this.props.room);
     }).catch(error => console.error(error));
     socket.on('answer', (id, description) => {
       peerConnections[id].setRemoteDescription(description);
@@ -2138,6 +2145,10 @@ class Broadcaster extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     });
     socket.on('candidate', (id, candidate) => {
       peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
+    });
+    socket.on('disconnect', () => {
+      console.log('hit');
+      socket.emit('leavingRoom', this.props.room);
     });
     socket.on('disconnectPeer', id => {
       console.log(id); //peerConnections[id].close();
@@ -2426,6 +2437,26 @@ __webpack_require__.r(__webpack_exports__);
 class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      room: '',
+      type: ''
+    };
+    this.joinRoomBroadcast = this.joinRoomBroadcast.bind(this);
+    this.joinRoomWatch = this.joinRoomWatch.bind(this);
+  }
+
+  joinRoomBroadcast(e) {
+    this.setState({
+      room: e.target.id,
+      type: 'broadcast'
+    });
+  }
+
+  joinRoomWatch(e) {
+    this.setState({
+      room: e.target.id,
+      type: 'watcher'
+    });
   }
 
   render() {
@@ -2435,7 +2466,13 @@ class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "left",
       className: "border"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinRoomBroadcast(e)
+    }, "Join room as teacher"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinRoomWatch(e)
+    }, "Join room as watcher")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right",
       className: "border"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -2444,7 +2481,11 @@ class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right-pane-1-top",
       className: "border"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_index__WEBPACK_IMPORTED_MODULE_2__.Broadcaster, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.state.type === 'broadcast' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_index__WEBPACK_IMPORTED_MODULE_2__.Broadcaster, {
+      room: this.state.room
+    }) : '', this.state.type === 'watcher' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_index__WEBPACK_IMPORTED_MODULE_2__.Watcher, {
+      room: this.state.room
+    }) : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right-pane-1-bottom",
       className: "border"
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -2842,12 +2883,17 @@ class Watcher extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     super(props);
     this.state = {
       broadcaster: '',
-      playing: 'false'
+      playing: 'false',
+      room: props.room
     };
   }
 
   componentDidMount() {
     //const video = document.getElementById('broadcast_watcher_video');
+    console.log('mounted');
+    socket.on('connect', () => {
+      console.log(socket.id);
+    });
     socket.on('offer', (id, description) => {
       console.log('offer'); //const video = document.getElementById('broadcast_watcher_video');
 
@@ -2874,25 +2920,23 @@ class Watcher extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     socket.on('candidate', (id, candidate) => {
       broadcaster[id].addIceCandidate(new RTCIceCandidate(candidate)).catch(e => console.error(e));
     });
-    socket.on('connect', () => {
-      socket.emit('watcher');
-    });
+    socket.emit('watcher', this.props.room);
     socket.on('broadcaster', () => {
-      socket.emit('watcher');
+      socket.emit('watcher', this.props.room);
     });
-    socket.on('disconnectPeer', () => {
-      this.setState({
-        broadcaster: '',
-        playing: 'false'
-      });
+    socket.on('disconnectPeer', id => {
+      if (id === this.state.broadcaster) {
+        this.setState({
+          broadcaster: '',
+          playing: 'false'
+        });
+      }
     });
   }
 
   componentDidUpdate() {
     if (this.state.broadcaster !== '') {
       broadcaster[this.state.broadcaster].ontrack = event => {
-        console.log('tracking');
-        console.log(event);
         this.selfVideo.srcObject = event.streams[0];
       };
     }
