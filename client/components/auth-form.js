@@ -1,36 +1,35 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { authenticate } from '../store'
-import Parallax from './parallax.js'
-import Icons from './icons.js'
-/**
- * COMPONENT
- */
+
 const AuthForm = (props) => {
     const { name, displayName, handleSubmit, error } = props
 
     return (
-        <div>
-            <Parallax />
-            <Icons />
-            <form onSubmit={handleSubmit} name={name}>
-                <div>
-                    <label htmlFor="email">
-                        <small>Email</small>
-                    </label>
-                    <input name="email" type="text" />
-                </div>
-                <div>
-                    <label htmlFor="password">
-                        <small>Password</small>
-                    </label>
-                    <input name="password" type="password" />
-                </div>
-                <div>
-                    <button type="submit">{displayName}</button>
-                </div>
-                {error && error.response && <div> {error.response.data} </div>}
-            </form>
+        <div className="section container center-align" style={{width: "35%"}}>
+            <h1 className="center-align">{name}</h1>
+            <div className="z-depth-1 grey lighten-3 row"
+                style={{display: "inline-block", padding: "32px 48px 0px 48px"}} >
+
+                <form className="row" onSubmit={handleSubmit} name={name}>
+                    <div className="col s12 input-field">
+                        <label htmlFor="email">
+                            <small>Email</small>
+                        </label>
+                        <input name="email" type="text" />
+                    </div>
+                    <div className="col s12 input-field validate">
+                        <label htmlFor="password">
+                            <small>Password</small>
+                        </label>
+                        <input name="password" type="password" />
+                    </div>
+                    <div>
+                        <button className="btn" type="submit">{displayName}</button>
+                    </div>
+                    {error && error.response && <div> {error.response.data} </div>}
+                </form>
+            </div>
             {window.githubURL && (
                 <a href={window.githubURL}>Login / Register Via Github </a>
             )}
@@ -68,7 +67,14 @@ const mapDispatch = (dispatch) => {
             const formName = evt.target.name
             const email = evt.target.email.value
             const password = evt.target.password.value
-            dispatch(authenticate(email, password, formName))
+            if(email && password){
+                console.log(email, password)
+                dispatch(authenticate(email, password, formName))
+            }else{
+                console.log("NO INPUTS")
+            }
+
+
         },
     }
 }
