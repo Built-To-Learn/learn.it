@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dashboard } from './index';
+import { Dashboard, FindAClass, ClassSearch } from './index';
 import { fetchView } from '../store/view';
 
 class Landing extends Component {
@@ -31,6 +31,7 @@ class Landing extends Component {
           <button id="room1" onClick={(e) => this.joinRoomWatch(e)}>
             Join room as watcher
           </button>
+          <FindAClass />
         </div>
         <div id="right" className="border">
           {view === 'dashboard' ? (
@@ -38,6 +39,7 @@ class Landing extends Component {
           ) : (
             ''
           )}
+          {view === 'findAClass' ? <ClassSearch /> : ''}
         </div>
       </div>
     );
