@@ -5,6 +5,8 @@ const socket = io();
 
 const peerConnections = {};
 
+let globalStream;
+
 const config = {
   iceServers: [
     {
@@ -34,6 +36,7 @@ class Broadcaster extends Component {
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
+        globalStream = stream;
         video.srcObject = stream;
         socket.emit('broadcaster', this.props.room);
       })
@@ -83,6 +86,12 @@ class Broadcaster extends Component {
       delete peerConnections[id];
     });
   }
+
+  componentWillUnmount() {
+    globalStream.getTracks().forEach((track) => track.stop());
+    socket.close();
+  }
+
   render() {
     return (
       <video

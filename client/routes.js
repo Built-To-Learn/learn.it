@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { Login, Signup, Home, VideoChat, Dashboard, Parallax } from './components';
+import { Login, Signup, Home, VideoChat, Dashboard, Parallax, Landing } from './components';
 import { CreateNewCourse } from './components/createclass.js';
 import { me } from './store';
 
@@ -31,7 +31,7 @@ class Routes extends Component {
             <Route path="/login" exact component={Login} />
             <Route path="/signup" exact component={Signup} />
             <Route path="/videochat" component={VideoChat} />
-            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/landing" component={Landing} />
             <Route exact path="/createcourse" component={CreateNewCourse} />
           </Switch>
         )}
