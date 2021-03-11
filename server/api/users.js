@@ -3,16 +3,66 @@ const { models: { User }} = require('../db')
 
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      // explicitly select only the id and email fields - even though
-      // users' passwords are encrypted, it won't help if we just
-      // send everything to anyone who asks!
-      attributes: ['id', 'email']
+    res.status(200).json(await User.findAll())
+  } catch (ex) {
+    next(ex)
+  }
+})
+
+router.post('/', async (req, res, next) => {
+  try {
+    const { name, username, email , password} = req.body
+
+    await User.create({
+      name,
+      username,
+      email,
+      password
     })
-    res.json(users)
-  } catch (err) {
-    next(err)
+
+    res.sendStatus(201)
+  } catch (ex) {
+    next(ex)
+  }
+})
+
+router.get("/:userId", async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: { id: req.params.userId }
+    })
+
+    res.status(200).json(user)
+  } catch (ex) {
+    next(ex)
+  }
+})
+
+router.put('/:userId', async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: { id: req.params.userId }
+    })
+
+    await user.update(req.body)
+    res.sendStatus(204)
+  } catch (error) {
+    next(ex)
+  }
+})
+
+router.delete('/:userId', async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: { id: req.params.userId }
+    })
+
+    await user.destroy()
+    res.sendStatus(204)
+  } catch (error) {
+    next(ex)
   }
 })
 
 module.exports = router
+

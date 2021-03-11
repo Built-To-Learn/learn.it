@@ -27,6 +27,11 @@ const User = db.define('user', {
     githubId: {
         type: Sequelize.INTEGER,
     },
+    role: {
+        type: Sequelize.ENUM,
+        values: ["STUDENT", "TEACHER"],
+        defaultValue: "STUDENT"
+    }
 })
 
 module.exports = User
@@ -40,6 +45,16 @@ User.prototype.correctPassword = function (candidatePwd) {
 
 User.prototype.generateToken = function () {
     return jwt.sign({ id: this.id }, process.env.JWT)
+}
+
+User.prototype.isTeacher = function () {
+    if(this.role === "TEACHER"){
+        return true
+    }else{
+        const error = Error('No Teacher')
+        error.status = 401
+        throw error
+    }
 }
 
 /**

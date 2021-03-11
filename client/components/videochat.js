@@ -192,6 +192,11 @@ class VideoChat extends Component {
     this.setState(initialState);
   }
 
+  //sendChat (message) -> {
+  //socket.emit('sendmessage, message)
+
+  //}
+
   render() {
     return (
       <div id="videos">

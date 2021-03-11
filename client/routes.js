@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { Login, Signup, Home, VideoChat, Chat } from './components';
+import { Login, Signup, Home, VideoChat, Chat, Dashboard } from './components';
 import { me } from './store';
 
 /**
@@ -29,6 +29,7 @@ class Routes extends Component {
             <Route path="/signup" component={Signup} />
             <Route path="/videochat" component={VideoChat} />
             <Route path="/chat" component={Chat} />
+            <Route path="/dashboard" component={Dashboard} />
           </Switch>
         )}
       </div>

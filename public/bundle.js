@@ -2122,7 +2122,15 @@ class Chat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
     this.setState({ ...this.state,
       currentMessage: ''
     });
+<<<<<<< HEAD
   }
+=======
+    this.setState(initialState);
+  } //sendChat (message) -> {
+  //socket.emit('sendmessage, message)
+  //}
+
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
 
   render() {
     const {
@@ -2146,6 +2154,73 @@ class Chat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chat);
+
+/***/ }),
+
+/***/ "./client/components/dashboard.js":
+/*!****************************************!*\
+  !*** ./client/components/dashboard.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+
+
+class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "dashboard",
+      className: "border"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "left",
+      className: "border"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "right",
+      className: "border"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "right-pane-1",
+      className: "border"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "right-pane-1-top",
+      className: "border"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "right-pane-1-bottom",
+      className: "border"
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "right-pane-2",
+      className: "border"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "right-pane-2-top",
+      className: "border"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "right-pane-2-bottom",
+      className: "border"
+    }))));
+  }
+
+}
+
+const mapStateToProps = state => {
+  return {};
+};
+
+const mapDispatch = dispatch => {
+  return {};
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapStateToProps, mapDispatch)(Dashboard));
 
 /***/ }),
 
@@ -2297,17 +2372,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Navbar": () => /* reexport safe */ _navbar__WEBPACK_IMPORTED_MODULE_0__.default,
 /* harmony export */   "Home": () => /* reexport safe */ _home__WEBPACK_IMPORTED_MODULE_1__.default,
 /* harmony export */   "Video": () => /* reexport safe */ _video__WEBPACK_IMPORTED_MODULE_2__.default,
+<<<<<<< HEAD
 /* harmony export */   "VideoChat": () => /* reexport safe */ _videochat__WEBPACK_IMPORTED_MODULE_3__.default,
 /* harmony export */   "Chat": () => /* reexport safe */ _chat__WEBPACK_IMPORTED_MODULE_4__.default,
 /* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Login,
 /* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Signup
+=======
+/* harmony export */   "Chatroom": () => /* reexport safe */ _chatroom__WEBPACK_IMPORTED_MODULE_3__.default,
+/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Login,
+/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Signup,
+/* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_5__.default
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
 /* harmony export */ });
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./client/components/navbar.js");
 /* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home */ "./client/components/home.js");
 /* harmony import */ var _video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./video */ "./client/components/video.js");
+<<<<<<< HEAD
 /* harmony import */ var _videochat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./videochat */ "./client/components/videochat.js");
 /* harmony import */ var _chat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./chat */ "./client/components/chat.js");
 /* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
+=======
+/* harmony import */ var _chatroom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chatroom */ "./client/components/chatroom.js");
+/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
+/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
 /**
  * `components/index.js` exists simply as a 'central export' for our components.
  * This way, we can import all of our components from the same place, rather than
@@ -2887,10 +2975,17 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Signup
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
       path: "/videochat",
+<<<<<<< HEAD
       component: _components__WEBPACK_IMPORTED_MODULE_2__.VideoChat
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
       path: "/chat",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Chat
+=======
+      component: _components__WEBPACK_IMPORTED_MODULE_2__.Chatroom
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+      path: "/dashboard",
+      component: _components__WEBPACK_IMPORTED_MODULE_2__.Dashboard
+>>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
     })));
   }
 
