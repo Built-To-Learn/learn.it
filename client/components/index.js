@@ -8,6 +8,7 @@ export { default as Home } from './home';
 // export { default as Video } from './video';
 export { default as VideoChat } from './videochat';
 export { default as Chat } from './chat';
+export { default as Landing } from './landing';
 export { default as Broadcaster } from './broadcaster';
 export { default as Watcher } from './watcher';
 export { Login, Signup } from './auth-form';
