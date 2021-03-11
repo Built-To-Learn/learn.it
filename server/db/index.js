@@ -1,4 +1,4 @@
-const {Sequelize, INTEGER} = require('sequelize')
+const { Sequelize, INTEGER } = require('sequelize')
 const db = require('./db')
 
 const User = require('./models/user')
@@ -9,10 +9,10 @@ const Enrollment = db.define('enrollment', {
     courseId: INTEGER,
 })
 
-Enrollment.findCourseByStudent = async function(studentId){
+Enrollment.findCourseByStudent = async function (studentId) {
     const courses = await Enrollment.findAll({
         where: { studentId },
-        include: [ Course ]
+        include: [Course],
     })
 
     return courses
@@ -37,20 +37,38 @@ const syncAndSeed = async () => {
             name: 'Cody',
             username: 'cody123',
             email: 'cody@email.com',
-            password: '123'
+            password: '123',
         }),
         User.create({
             name: 'Murphy',
             username: 'murphy123',
             email: 'murphy@email.com',
-            password: '123'
+            password: '123',
         }),
         User.create({
             name: 'Sal',
             username: 'Sal123',
             email: 'Sal@email.com',
             password: '123',
-            role: "TEACHER"
+            role: 'TEACHER',
+        }),
+    ])
+
+    const [geometry, basketweaving, coding] = await Promise.all([
+        Course.create({
+            title: 'Geometry',
+            subject: 'Math',
+            category: 'Traditional Schoolwork',
+        }),
+        Course.create({
+            title: 'Basket Weaving 101',
+            subject: 'For Fun',
+            category: 'Arts and Crafts',
+        }),
+        Course.create({
+            title: 'Intro to Javascript',
+            subject: 'Coding',
+            category: 'Programming',
         }),
     ])
 
@@ -59,6 +77,12 @@ const syncAndSeed = async () => {
             cody,
             murphy,
             sal,
+        },
+
+        courses: {
+            geometry,
+            basketweaving,
+            coding,
         },
     }
 }
@@ -69,6 +93,6 @@ module.exports = {
     models: {
         Course,
         Enrollment,
-        User
+        User,
     },
 }

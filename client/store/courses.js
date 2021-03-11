@@ -4,42 +4,55 @@ import axios from 'axios'
  * ACTION TYPES
  */
 const CREATE_COURSE = 'CREATE_COURSE'
+const LOAD_COURSES = 'LOAD_COURSES'
 
 /**
  * ACTION CREATORS
  */
-const _createCourse = (courseName, subject, category) => ({
+const _createCourse = (course) => ({
     type: CREATE_COURSE,
-    courseName,
-    subject,
-    category,
+    course,
 })
+
+export const setCourses = (courses) => ({ type: LOAD_COURSES, courses })
 
 /**
  * THUNK CREATORS
  */
 //
-export const createCourse = (courseName, subject, category) => async (
-    dispatch
-) => {
+export const createCourse = (courseObj) => async (dispatch) => {
     let res
     try {
         console.log('HELLO')
-        let title = courseName
-        res = await axios.post(`/api/courses`, { title, subject, category })
-        dispatch(_createCourse(courseName, subject, category))
+        await axios.post(`/api/courses`, courseObj)
+        dispatch(_createCourse(courseObj))
     } catch (err) {
         console.log(err)
+    }
+}
+
+export const fetchCourses = () => {
+    console.log('FETCHiNG')
+    return async (dispatch) => {
+        const courses = (await axios.get('/api/courses')).data
+        dispatch(setCourses(courses))
     }
 }
 /**
  * REDUCER
  */
-export default function (state = {}, action) {
+const initialState = {
+    courses: [],
+}
+
+export default function (state = initialState, action) {
     switch (action.type) {
         case CREATE_COURSE:
-            console.log('ACTION', action)
+            return { ...state, courses: [...state.courses, action.course] }
+
+        case LOAD_COURSES:
             return action.course
+
         default:
             return state
     }
