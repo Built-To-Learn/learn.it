@@ -90,6 +90,10 @@ class Watcher extends Component {
     }
   }
 
+  componentWillUnmount() {
+    socket.close();
+  }
+
   render() {
     return (
       <div>

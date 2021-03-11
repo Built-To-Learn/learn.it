@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Broadcaster, Watcher } from './index';
+import { fetchClearView } from '../store/view';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -36,7 +37,11 @@ class Dashboard extends Component {
         </div>
         <div id="right-pane-2" className="border">
           <div id="right-pane-2-top" className="border"></div>
-          <div id="right-pane-2-bottom" className="border"></div>
+          <div id="right-pane-2-bottom" className="border">
+            <button onClick={() => this.props.fetchClearView()}>
+              Leave Room
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -48,7 +53,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatch = (dispatch) => {
-  return {};
+  return {
+    fetchClearView: () => dispatch(fetchClearView()),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatch)(Dashboard);

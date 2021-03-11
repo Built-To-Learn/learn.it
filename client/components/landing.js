@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dashboard } from './index';
+import { fetchView } from '../store/view';
 
 class Landing extends Component {
   constructor(props) {
     super(props);
-    this.state = { view: '', room: '', type: '' };
+    this.state = { room: '', type: '' };
     this.joinRoomBroadcast = this.joinRoomBroadcast.bind(this);
     this.joinRoomWatch = this.joinRoomWatch.bind(this);
   }
   joinRoomBroadcast(e) {
-    this.setState({ view: 'dashboard', room: e.target.id, type: 'broadcast' });
+    this.setState({ room: e.target.id, type: 'broadcast' });
+    this.props.fetchView('dashboard');
   }
   joinRoomWatch(e) {
-    this.setState({ view: 'dashboard', room: e.target.id, type: 'watcher' });
+    this.setState({ room: e.target.id, type: 'watcher' });
+    this.props.fetchView('dashboard');
   }
 
   render() {
-    const view = this.state.view;
+    console.log('view', this.props.view);
+    const view = this.props.view;
     return (
       <div id="dashboard" className="border">
         <div id="left" className="border">
@@ -40,12 +44,16 @@ class Landing extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {};
+const mapStateToProps = ({ view }) => {
+  return {
+    view: view,
+  };
 };
 
 const mapDispatch = (dispatch) => {
-  return {};
+  return {
+    fetchView: (view) => dispatch(fetchView(view)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatch)(Landing);
