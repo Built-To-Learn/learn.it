@@ -1,14 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
-import {
-  Login,
-  Signup,
-  Home,
-  Chatroom,
-  Dashboard,
-  Watcher,
-} from './components';
+import { Login, Signup, Home, VideoChat, Dashboard } from './components';
+import { CreateNewCourse } from './components/createclass.js';
 import { me } from './store';
 
 /**
@@ -26,7 +20,8 @@ class Routes extends Component {
       <div>
         {isLoggedIn ? (
           <Switch>
-            <Route path="/home" component={Home} />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/createcourse" component={CreateNewCourse} />
             <Redirect to="/home" />
           </Switch>
         ) : (
@@ -34,9 +29,9 @@ class Routes extends Component {
             <Route path="/" exact component={Login} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
-            <Route path="/videochat" component={Chatroom} />
+            <Route path="/videochat" component={VideoChat} />
             <Route path="/dashboard" component={Dashboard} />
-            <Route path="/watcher" component={Watcher} />
+            <Route exact path="/createcourse" component={CreateNewCourse} />
           </Switch>
         )}
       </div>

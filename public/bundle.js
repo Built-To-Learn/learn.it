@@ -2173,10 +2173,10 @@ class Broadcaster extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
 
 /***/ }),
 
-/***/ "./client/components/chatroom.js":
-/*!***************************************!*\
-  !*** ./client/components/chatroom.js ***!
-  \***************************************/
+/***/ "./client/components/chat.js":
+/*!***********************************!*\
+  !*** ./client/components/chat.js ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2187,231 +2187,149 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
 
-const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)(); // window.onunload = window.onbeforeunload = () => {
-//   socket.close();
-// };
 
-const room = 'room1';
-const typeGlobal = 'student';
-let peerConnections = {};
-const initialState = {
-  teacher: '',
-  members: [],
-  focus: '',
-  room: ''
-};
-const config = {
-  iceServers: [{
-    urls: 'stun:stun.l.google.com:19302'
-  } // {
-  //   "urls": "turn:TURN_IP?transport=tcp",
-  //   "username": "TURN_USERNAME",
-  //   "credential": "TURN_CREDENTIALS"
-  // }
-  ]
-}; // Media contrains
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)();
 
-const constraints = {
-  video: {
-    facingMode: 'user'
-  },
-  // Uncomment to enable audio
-  audio: true
+window.onunload = window.onbeforeunload = () => {
+  socket.close();
 };
 
-class Chatroom extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
-  constructor(props) {
-    super(props);
-    this.state = initialState;
-    this.changeFocus = this.changeFocus.bind(this);
-    this.joinChat = this.joinChat.bind(this);
-    this.leaveChat = this.leaveChat.bind(this);
-  }
-
-  componentDidMount() {
-    socket.on('broadcaster', (id, type) => {
-      const video = document.getElementById('selfVideo');
-      const peerConnection = new RTCPeerConnection(config);
-      let stream = video.srcObject;
-      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-
-      peerConnection.onicecandidate = event => {
-        if (event.candidate) {
-          socket.emit('candidate', id, event.candidate);
-        }
-      };
-
-      peerConnection.createOffer().then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
-        socket.emit('offer', id, peerConnection.localDescription, typeGlobal);
+class Chat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor() {
+    super();
+    this.state = {
+      messages: [],
+      currentMessage: ''
+    };
+    socket.on('newMessage', message => {
+      this.setState({ ...this.state,
+        messages: [...this.state.messages, message]
       });
-      peerConnections[id] = peerConnection;
-
-      if (type === 'student') {
-        this.setState({
-          members: [...this.state.members, id]
-        });
-      } else if (type === 'teacher') {
-        this.setState({
-          teacher: id,
-          members: [...this.state.members, id]
-        });
-      }
-    });
-    socket.on('answer', (id, description) => {
-      peerConnections[id].setRemoteDescription(description);
-    });
-    socket.on('offer', (id, description, type) => {
-      const peerConnection = new RTCPeerConnection(config);
-      const video = document.getElementById('selfVideo'); // const video = this.selfVideo;
-
-      let stream = video.srcObject;
-      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-      peerConnection.setRemoteDescription(description).then(() => peerConnection.createAnswer()).then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
-        socket.emit('answer', id, peerConnection.localDescription);
-      });
-
-      peerConnection.onicecandidate = event => {
-        if (event.candidate) {
-          socket.emit('candidate', id, event.candidate);
-        }
-      };
-
-      peerConnections[id] = peerConnection;
-
-      if (type === 'student') {
-        this.setState({
-          members: [...this.state.members, id]
-        });
-      } else if (type === 'teacher') {
-        this.setState({
-          teacher: id,
-          members: [...this.state.members, id]
-        });
-      }
-    });
-    socket.on('candidate', (id, candidate) => {
-      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
-    });
-    socket.on('disconnectPeer', id => {
-      if (id === this.state.focus) {
-        this.focus.srcObject = this.selfVideo.srcObject;
-      }
-
-      peerConnections[id].close();
-      delete peerConnections[id];
-      delete this[id];
-
-      if (this.state.members.includes(id)) {
-        this.setState({
-          members: this.state.members.filter(peer => peer !== id)
-        });
-      } else {
-        this.setState({
-          teacher: '',
-          members: this.state.members.filter(peer => peer !== id)
-        });
-      }
-    });
-    socket.on('disconnect', () => {
-      socket.emit('disconnected', this.state.room);
-      peerConnections = {};
-      this.state.members.forEach(member => {
-        delete this[member];
-      });
-      this.setState(initialState);
     });
   }
 
-  componentDidUpdate() {
-    this.state.members.forEach(member => {
-      peerConnections[member].ontrack = event => {
-        this[member].srcObject = event.streams[0];
-      };
-    });
-
-    if (this.state.focus !== '') {
-      this.focus.srcObject = this[this.state.focus].srcObject;
-    }
-  }
-
-  changeFocus(e) {
-    this.setState({
-      focus: e.target.id
+  handleChange(event) {
+    const message = event.target.value;
+    this.setState({ ...this.state,
+      currentMessage: message
     });
   }
 
-  joinChat(e) {
-    e.persist();
-    console.log(e.target);
-    const video = document.getElementById('selfVideo');
-    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-      video.srcObject = stream;
-      socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
-    }).catch(error => console.error(error));
-    this.setState({
-      room: e.target.id
+  handleSubmit(event) {
+    event.preventDefault();
+    socket.emit('newMessage', this.state.currentMessage);
+    this.setState({ ...this.state,
+      currentMessage: ''
     });
   }
-
-  leaveChat(e) {
-    socket.emit('disconnected', this.state.room);
-    peerConnections = {};
-    this.state.members.forEach(member => {
-      delete this[member];
-    });
-    this.setState(initialState);
-  } //sendChat (message) -> {
-  //socket.emit('sendmessage, message)
-  //}
-
 
   render() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      id: "videos"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-      id: "room1",
-      onClick: e => this.joinChat(e)
-    }, "Join"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-      onClick: e => this.leaveChat(e)
-    }, " Leave"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
-      id: "selfVideo",
-      className: "video_player",
-      playsInline: true,
-      autoPlay: true,
-      muted: true,
-      ref: vid => {
-        this.selfVideo = vid;
-      },
-      onClick: e => this.changeFocus(e)
-    }), this.state.members.map(member => {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
-        key: member,
-        id: member,
-        className: "video_player",
-        playsInline: true,
-        autoPlay: true,
-        ref: vid => {
-          this[member] = vid;
-        },
-        onClick: e => this.changeFocus(e)
-      });
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
-      id: "focus",
-      key: this.state.focus,
-      playsInline: true,
-      autoPlay: true,
-      muted: true,
-      ref: vid => {
-        this.focus = vid;
-      }
-    })));
+    const {
+      messages,
+      currentMessage
+    } = this.state;
+    const {
+      userName
+    } = this.props;
+    console.log(userName);
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, messages.map(message => {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, message);
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+      value: currentMessage,
+      onChange: event => this.handleChange(event)
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      onClick: event => this.handleSubmit(event)
+    }));
   }
 
 }
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chatroom);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chat);
+
+/***/ }),
+
+/***/ "./client/components/createclass.js":
+/*!******************************************!*\
+  !*** ./client/components/createclass.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CreateNewCourse": () => /* binding */ CreateNewCourse
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _store_courses__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/courses */ "./client/store/courses.js");
+/* harmony import */ var _parallax_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./parallax.js */ "./client/components/parallax.js");
+/* harmony import */ var _icons_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./icons.js */ "./client/components/icons.js");
+
+
+
+
+
+/**
+ * COMPONENT
+ */
+
+const CreateCourse = props => {
+  const {
+    handleSubmit,
+    error,
+    isLoggedIn
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+    onSubmit: handleSubmit,
+    name: name
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "coursename"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Course Name")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "coursename",
+    type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "Subject"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Subject")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "subject",
+    type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "Category"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, "Category")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    name: "category",
+    type: "text"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    type: "submit"
+  }, "Create Course")), error && error.response && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, " ", error.response.data, " "))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Must Be Logged In to Create a Class"));
+};
+
+const mapCreateCourse = state => {
+  return {
+    isLoggedIn: !!state.auth.id
+  };
+};
+
+const mapDispatch = dispatch => {
+  return {
+    handleSubmit(evt) {
+      evt.preventDefault(); // const formName = evt.target.name
+
+      const courseName = evt.target.coursename.value;
+      const subject = evt.target.subject.value;
+      const category = evt.target.category.value; // console.log('formName', formName)
+
+      console.log('courseName', courseName);
+      console.log('subject', subject);
+      dispatch((0,_store_courses__WEBPACK_IMPORTED_MODULE_2__.createCourse)(courseName, subject, category));
+    }
+
+  };
+};
+
+const CreateNewCourse = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapCreateCourse, mapDispatch)(CreateCourse);
 
 /***/ }),
 
@@ -2661,25 +2579,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Navbar": () => /* reexport safe */ _navbar__WEBPACK_IMPORTED_MODULE_0__.default,
 /* harmony export */   "Home": () => /* reexport safe */ _home__WEBPACK_IMPORTED_MODULE_1__.default,
-/* harmony export */   "Chatroom": () => /* reexport safe */ _chatroom__WEBPACK_IMPORTED_MODULE_2__.default,
-/* harmony export */   "Broadcaster": () => /* reexport safe */ _broadcaster__WEBPACK_IMPORTED_MODULE_3__.default,
-/* harmony export */   "Watcher": () => /* reexport safe */ _watcher__WEBPACK_IMPORTED_MODULE_4__.default,
-/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Login,
-/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Signup,
-/* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_6__.default
+/* harmony export */   "VideoChat": () => /* reexport safe */ _videochat__WEBPACK_IMPORTED_MODULE_2__.default,
+/* harmony export */   "Chat": () => /* reexport safe */ _chat__WEBPACK_IMPORTED_MODULE_3__.default,
+/* harmony export */   "Broadcaster": () => /* reexport safe */ _broadcaster__WEBPACK_IMPORTED_MODULE_4__.default,
+/* harmony export */   "Watcher": () => /* reexport safe */ _watcher__WEBPACK_IMPORTED_MODULE_5__.default,
+/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_6__.Login,
+/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_6__.Signup,
+/* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_7__.default
 /* harmony export */ });
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./client/components/navbar.js");
 /* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home */ "./client/components/home.js");
-/* harmony import */ var _chatroom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chatroom */ "./client/components/chatroom.js");
-/* harmony import */ var _broadcaster__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./broadcaster */ "./client/components/broadcaster.js");
-/* harmony import */ var _watcher__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./watcher */ "./client/components/watcher.js");
-/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
-/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
+/* harmony import */ var _videochat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./videochat */ "./client/components/videochat.js");
+/* harmony import */ var _chat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chat */ "./client/components/chat.js");
+/* harmony import */ var _broadcaster__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./broadcaster */ "./client/components/broadcaster.js");
+/* harmony import */ var _watcher__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./watcher */ "./client/components/watcher.js");
+/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
+/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
 /**
  * `components/index.js` exists simply as a 'central export' for our components.
  * This way, we can import all of our components from the same place, rather than
  * having to figure out which file they belong to!
  */
+
+ // export { default as Video } from './video';
 
 
 
@@ -2722,12 +2644,14 @@ const Navbar = ({
   id: "logo-container",
   href: "#",
   className: "brand-logo"
-}, "Learn.it"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
-  to: "/home"
-}, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-  href: "#",
+}, "Learn.it"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+  className: "right hide-on-med-and-down "
+}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
+  to: "/#",
   onClick: handleClick
-}, "Logout")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+}, "Logout")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Link, {
+  to: "/signup"
+}, "Sign Up")))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
   className: "nav-wrapper container"
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
   id: "logo-container",
@@ -2837,6 +2761,248 @@ const mapDispatch = dispatch => {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Parallax));
+
+/***/ }),
+
+/***/ "./client/components/videochat.js":
+/*!****************************************!*\
+  !*** ./client/components/videochat.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__.io)(); // window.onunload = window.onbeforeunload = () => {
+//   socket.close();
+// };
+
+const room = 'room1';
+const typeGlobal = 'student';
+let peerConnections = {};
+const initialState = {
+  teacher: '',
+  members: [],
+  focus: '',
+  room: ''
+};
+const config = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  } // {
+  //   "urls": "turn:TURN_IP?transport=tcp",
+  //   "username": "TURN_USERNAME",
+  //   "credential": "TURN_CREDENTIALS"
+  // }
+  ]
+}; // Media contrains
+
+const constraints = {
+  video: {
+    facingMode: 'user'
+  },
+  // Uncomment to enable audio
+  audio: true
+};
+
+class VideoChat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor(props) {
+    super(props);
+    this.state = initialState;
+    this.changeFocus = this.changeFocus.bind(this);
+    this.joinChat = this.joinChat.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
+  }
+
+  componentDidMount() {
+    socket.on('broadcaster', (id, type) => {
+      const video = document.getElementById('selfVideo');
+      const peerConnection = new RTCPeerConnection(config);
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnection.createOffer().then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('offer', id, peerConnection.localDescription, typeGlobal);
+      });
+      peerConnections[id] = peerConnection;
+
+      if (type === 'student') {
+        this.setState({
+          members: [...this.state.members, id]
+        });
+      } else if (type === 'teacher') {
+        this.setState({
+          teacher: id,
+          members: [...this.state.members, id]
+        });
+      }
+    });
+    socket.on('answer', (id, description) => {
+      peerConnections[id].setRemoteDescription(description);
+    });
+    socket.on('offer', (id, description, type) => {
+      const peerConnection = new RTCPeerConnection(config);
+      const video = document.getElementById('selfVideo'); // const video = this.selfVideo;
+
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+      peerConnection.setRemoteDescription(description).then(() => peerConnection.createAnswer()).then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('answer', id, peerConnection.localDescription);
+      });
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnections[id] = peerConnection;
+
+      if (type === 'student') {
+        this.setState({
+          members: [...this.state.members, id]
+        });
+      } else if (type === 'teacher') {
+        this.setState({
+          teacher: id,
+          members: [...this.state.members, id]
+        });
+      }
+    });
+    socket.on('candidate', (id, candidate) => {
+      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
+    });
+    socket.on('disconnectPeer', id => {
+      if (id === this.state.focus) {
+        this.focus.srcObject = this.selfVideo.srcObject;
+      }
+
+      peerConnections[id].close();
+      delete peerConnections[id];
+      delete this[id];
+
+      if (this.state.members.includes(id)) {
+        this.setState({
+          members: this.state.members.filter(peer => peer !== id)
+        });
+      } else {
+        this.setState({
+          teacher: '',
+          members: this.state.members.filter(peer => peer !== id)
+        });
+      }
+    });
+    socket.on('disconnect', () => {
+      socket.emit('disconnected', this.state.room);
+      peerConnections = {};
+      this.state.members.forEach(member => {
+        delete this[member];
+      });
+      this.setState(initialState);
+    });
+  }
+
+  componentDidUpdate() {
+    this.state.members.forEach(member => {
+      peerConnections[member].ontrack = event => {
+        this[member].srcObject = event.streams[0];
+      };
+    });
+
+    if (this.state.focus !== '') {
+      this.focus.srcObject = this[this.state.focus].srcObject;
+    }
+  }
+
+  changeFocus(e) {
+    this.setState({
+      focus: e.target.id
+    });
+  }
+
+  joinChat(e) {
+    e.persist();
+    console.log(e.target);
+    const video = document.getElementById('selfVideo');
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      video.srcObject = stream;
+      socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
+    }).catch(error => console.error(error));
+    this.setState({
+      room: e.target.id
+    });
+  }
+
+  leaveChat(e) {
+    socket.emit('disconnected', this.state.room);
+    peerConnections = {};
+    this.state.members.forEach(member => {
+      delete this[member];
+    });
+    this.setState(initialState);
+  } //sendChat (message) -> {
+  //socket.emit('sendmessage, message)
+  //}
+
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+      id: "videos"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinChat(e)
+    }, "Join"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+      onClick: e => this.leaveChat(e)
+    }, " Leave"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+      id: "selfVideo",
+      className: "video_player",
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.selfVideo = vid;
+      },
+      onClick: e => this.changeFocus(e)
+    }), this.state.members.map(member => {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+        key: member,
+        id: member,
+        className: "video_player",
+        playsInline: true,
+        autoPlay: true,
+        ref: vid => {
+          this[member] = vid;
+        },
+        onClick: e => this.changeFocus(e)
+      });
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("video", {
+      id: "focus",
+      key: this.state.focus,
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.focus = vid;
+      }
+    })));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VideoChat);
 
 /***/ }),
 
@@ -3025,9 +3191,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components */ "./client/components/index.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store */ "./client/store/index.js");
+/* harmony import */ var _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/createclass.js */ "./client/components/createclass.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store */ "./client/store/index.js");
+
 
 
 
@@ -3046,30 +3214,36 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     const {
       isLoggedIn
     } = this.props;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
       path: "/home",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Home
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Redirect, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
+      path: "/createcourse",
+      component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Redirect, {
       to: "/home"
-    })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/",
       exact: true,
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Login
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/login",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Login
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/signup",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Signup
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/videochat",
-      component: _components__WEBPACK_IMPORTED_MODULE_2__.Chatroom
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+      component: _components__WEBPACK_IMPORTED_MODULE_2__.VideoChat
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/dashboard",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Dashboard
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
-      path: "/watcher",
-      component: _components__WEBPACK_IMPORTED_MODULE_2__.Watcher
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+      exact: true,
+      path: "/createcourse",
+      component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
     })));
   }
 
@@ -3090,7 +3264,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     loadInitialData() {
-      dispatch((0,_store__WEBPACK_IMPORTED_MODULE_3__.me)());
+      dispatch((0,_store__WEBPACK_IMPORTED_MODULE_4__.me)());
     }
 
   };
@@ -3098,7 +3272,7 @@ const mapDispatch = dispatch => {
 // when the url changes
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.withRouter)((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Routes)));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_router_dom__WEBPACK_IMPORTED_MODULE_5__.withRouter)((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Routes)));
 
 /***/ }),
 
@@ -3187,6 +3361,75 @@ const logout = () => {
   switch (action.type) {
     case SET_AUTH:
       return action.auth;
+
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+
+/***/ "./client/store/courses.js":
+/*!*********************************!*\
+  !*** ./client/store/courses.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createCourse": () => /* binding */ createCourse,
+/* harmony export */   "default": () => /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * ACTION TYPES
+ */
+
+const CREATE_COURSE = 'CREATE_COURSE';
+/**
+ * ACTION CREATORS
+ */
+
+const _createCourse = (courseName, subject, category) => ({
+  type: CREATE_COURSE,
+  courseName,
+  subject,
+  category
+});
+/**
+ * THUNK CREATORS
+ */
+//
+
+
+const createCourse = (courseName, subject, category) => async (dispatch) => {
+  let res;
+
+  try {
+    console.log('HELLO');
+    let title = courseName;
+    res = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(`/api/courses`, {
+      title,
+      subject,
+      category
+    });
+    dispatch(_createCourse(courseName, subject, category));
+  } catch (err) {
+    console.log(err);
+  }
+};
+/**
+ * REDUCER
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(state = {}, action) {
+  switch (action.type) {
+    case CREATE_COURSE:
+      console.log('ACTION', action);
+      return action.course;
 
     default:
       return state;
