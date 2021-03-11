@@ -2071,6 +2071,108 @@ const Signup = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapSignup, m
 
 /***/ }),
 
+/***/ "./client/components/broadcaster.js":
+/*!******************************************!*\
+  !*** ./client/components/broadcaster.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
+
+
+
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_2__.io)();
+const peerConnections = {};
+const config = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  } // {
+  //   "urls": "turn:TURN_IP?transport=tcp",
+  //   "username": "TURN_USERNAME",
+  //   "credential": "TURN_CREDENTIALS"
+  // }
+  ]
+};
+const constraints = {
+  video: {
+    facingMode: 'user'
+  },
+  // Uncomment to enable audio
+  audio: true
+};
+
+class Broadcaster extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      room: props.room
+    };
+  }
+
+  componentDidMount() {
+    const video = document.getElementById('broadcast_watcher_video');
+    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+      video.srcObject = stream;
+      socket.emit('broadcaster', this.props.room);
+    }).catch(error => console.error(error));
+    socket.on('answer', (id, description) => {
+      peerConnections[id].setRemoteDescription(description);
+    });
+    socket.on('watcher', id => {
+      const peerConnection = new RTCPeerConnection(config);
+      peerConnections[id] = peerConnection;
+      let stream = video.srcObject;
+      stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      peerConnection.createOffer().then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('offer', id, peerConnection.localDescription);
+      });
+      console.log(peerConnections);
+    });
+    socket.on('candidate', (id, candidate) => {
+      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
+    });
+    socket.on('disconnect', () => {
+      console.log('hit');
+      socket.emit('leavingRoom', this.props.room);
+    });
+    socket.on('disconnectPeer', id => {
+      console.log(id); //peerConnections[id].close();
+
+      delete peerConnections[id];
+    });
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      id: "broadcast_watcher_video",
+      className: "broadcast_watcher",
+      playsInline: true,
+      autoPlay: true,
+      muted: true
+    });
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(null)(Broadcaster));
+
+/***/ }),
+
 /***/ "./client/components/chat.js":
 /*!***********************************!*\
   !*** ./client/components/chat.js ***!
@@ -2122,15 +2224,7 @@ class Chat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
     this.setState({ ...this.state,
       currentMessage: ''
     });
-<<<<<<< HEAD
   }
-=======
-    this.setState(initialState);
-  } //sendChat (message) -> {
-  //socket.emit('sendmessage, message)
-  //}
-
->>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
 
   render() {
     const {
@@ -2253,12 +2347,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index */ "./client/components/index.js");
+
 
 
 
 class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      room: '',
+      type: ''
+    };
+    this.joinRoomBroadcast = this.joinRoomBroadcast.bind(this);
+    this.joinRoomWatch = this.joinRoomWatch.bind(this);
+  }
+
+  joinRoomBroadcast(e) {
+    this.setState({
+      room: e.target.id,
+      type: 'broadcast'
+    });
+  }
+
+  joinRoomWatch(e) {
+    this.setState({
+      room: e.target.id,
+      type: 'watcher'
+    });
   }
 
   render() {
@@ -2268,7 +2384,13 @@ class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "left",
       className: "border"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinRoomBroadcast(e)
+    }, "Join room as teacher"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      id: "room1",
+      onClick: e => this.joinRoomWatch(e)
+    }, "Join room as watcher")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right",
       className: "border"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -2277,7 +2399,11 @@ class Dashboard extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right-pane-1-top",
       className: "border"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.state.type === 'broadcast' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_index__WEBPACK_IMPORTED_MODULE_2__.Broadcaster, {
+      room: this.state.room
+    }) : '', this.state.type === 'watcher' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_index__WEBPACK_IMPORTED_MODULE_2__.Watcher, {
+      room: this.state.room
+    }) : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "right-pane-1-bottom",
       className: "border"
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -2453,36 +2579,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Navbar": () => /* reexport safe */ _navbar__WEBPACK_IMPORTED_MODULE_0__.default,
 /* harmony export */   "Home": () => /* reexport safe */ _home__WEBPACK_IMPORTED_MODULE_1__.default,
-/* harmony export */   "Video": () => /* reexport safe */ _video__WEBPACK_IMPORTED_MODULE_2__.default,
-<<<<<<< HEAD
-/* harmony export */   "VideoChat": () => /* reexport safe */ _videochat__WEBPACK_IMPORTED_MODULE_3__.default,
-/* harmony export */   "Chat": () => /* reexport safe */ _chat__WEBPACK_IMPORTED_MODULE_4__.default,
-/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Login,
-/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_5__.Signup
-=======
-/* harmony export */   "Chatroom": () => /* reexport safe */ _chatroom__WEBPACK_IMPORTED_MODULE_3__.default,
-/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Login,
-/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_4__.Signup,
-/* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_5__.default
->>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
+/* harmony export */   "VideoChat": () => /* reexport safe */ _videochat__WEBPACK_IMPORTED_MODULE_2__.default,
+/* harmony export */   "Chat": () => /* reexport safe */ _chat__WEBPACK_IMPORTED_MODULE_3__.default,
+/* harmony export */   "Broadcaster": () => /* reexport safe */ _broadcaster__WEBPACK_IMPORTED_MODULE_4__.default,
+/* harmony export */   "Watcher": () => /* reexport safe */ _watcher__WEBPACK_IMPORTED_MODULE_5__.default,
+/* harmony export */   "Login": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_6__.Login,
+/* harmony export */   "Signup": () => /* reexport safe */ _auth_form__WEBPACK_IMPORTED_MODULE_6__.Signup,
+/* harmony export */   "Dashboard": () => /* reexport safe */ _dashboard__WEBPACK_IMPORTED_MODULE_7__.default
 /* harmony export */ });
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./client/components/navbar.js");
 /* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home */ "./client/components/home.js");
-/* harmony import */ var _video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./video */ "./client/components/video.js");
-<<<<<<< HEAD
-/* harmony import */ var _videochat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./videochat */ "./client/components/videochat.js");
-/* harmony import */ var _chat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./chat */ "./client/components/chat.js");
-/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
-=======
-/* harmony import */ var _chatroom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chatroom */ "./client/components/chatroom.js");
-/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
-/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
->>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
+/* harmony import */ var _videochat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./videochat */ "./client/components/videochat.js");
+/* harmony import */ var _chat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./chat */ "./client/components/chat.js");
+/* harmony import */ var _broadcaster__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./broadcaster */ "./client/components/broadcaster.js");
+/* harmony import */ var _watcher__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./watcher */ "./client/components/watcher.js");
+/* harmony import */ var _auth_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./auth-form */ "./client/components/auth-form.js");
+/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./dashboard */ "./client/components/dashboard.js");
 /**
  * `components/index.js` exists simply as a 'central export' for our components.
  * This way, we can import all of our components from the same place, rather than
  * having to figure out which file they belong to!
  */
+
+ // export { default as Video } from './video';
+
 
 
 
@@ -2641,80 +2761,6 @@ const mapDispatch = dispatch => {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapState, mapDispatch)(Parallax));
-
-/***/ }),
-
-/***/ "./client/components/video.js":
-/*!************************************!*\
-  !*** ./client/components/video.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-const io = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/index.js");
-
-const socket = io();
-
-class Video extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      img: ''
-    };
-  }
-
-  componentDidMount() {
-    const video = document.querySelector('video'); // request access to webcam
-
-    navigator.mediaDevices.getUserMedia({
-      video: {
-        width: 426,
-        height: 240
-      }
-    }).then(stream => video.srcObject = stream); // returns a frame encoded in base64
-
-    const getFrame = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      const data = canvas.toDataURL('image/png');
-      return data;
-    };
-
-    const FPS = 10;
-    socket.on('connect', () => {
-      console.log(socket.id);
-      setInterval(() => {
-        socket.emit('stream', getFrame());
-      }, 1000 / FPS);
-      socket.on('receiving', data => {
-        this.setState({
-          img: data
-        });
-      });
-    });
-  }
-
-  render() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      autoPlay: true
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.state.img
-    }));
-  }
-
-}
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Video);
 
 /***/ }),
 
@@ -2907,7 +2953,10 @@ class VideoChat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
       delete this[member];
     });
     this.setState(initialState);
-  }
+  } //sendChat (message) -> {
+  //socket.emit('sendmessage, message)
+  //}
+
 
   render() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
@@ -2954,6 +3003,127 @@ class VideoChat extends react__WEBPACK_IMPORTED_MODULE_1__.Component {
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VideoChat);
+
+/***/ }),
+
+/***/ "./client/components/watcher.js":
+/*!**************************************!*\
+  !*** ./client/components/watcher.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/wrapper.mjs");
+
+
+
+const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_2__.io)();
+const config = {
+  iceServers: [{
+    urls: 'stun:stun.l.google.com:19302'
+  } // {
+  //   "urls": "turn:TURN_IP?transport=tcp",
+  //   "username": "TURN_USERNAME",
+  //   "credential": "TURN_CREDENTIALS"
+  // }
+  ]
+};
+const constraints = {
+  video: {
+    facingMode: 'user'
+  },
+  // Uncomment to enable audio
+  audio: true
+};
+const broadcaster = {};
+
+class Watcher extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      broadcaster: '',
+      playing: 'false',
+      room: props.room
+    };
+  }
+
+  componentDidMount() {
+    //const video = document.getElementById('broadcast_watcher_video');
+    console.log('mounted');
+    socket.on('connect', () => {
+      console.log(socket.id);
+    });
+    socket.on('offer', (id, description) => {
+      console.log('offer'); //const video = document.getElementById('broadcast_watcher_video');
+
+      const peerConnection = new RTCPeerConnection(config);
+      peerConnection.setRemoteDescription(description).then(() => peerConnection.createAnswer()).then(sdp => peerConnection.setLocalDescription(sdp)).then(() => {
+        socket.emit('answer', id, peerConnection.localDescription);
+      }); // peerConnection.ontrack = (event) => {
+      //   console.log('tracking');
+      //   console.log(event);
+      //   video.srcObject = event.streams[0];
+      // };
+
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          socket.emit('candidate', id, event.candidate);
+        }
+      };
+
+      broadcaster[id] = peerConnection;
+      this.setState({
+        broadcaster: id
+      });
+    });
+    socket.on('candidate', (id, candidate) => {
+      broadcaster[id].addIceCandidate(new RTCIceCandidate(candidate)).catch(e => console.error(e));
+    });
+    socket.emit('watcher', this.props.room);
+    socket.on('broadcaster', () => {
+      socket.emit('watcher', this.props.room);
+    });
+    socket.on('disconnectPeer', id => {
+      if (id === this.state.broadcaster) {
+        this.setState({
+          broadcaster: '',
+          playing: 'false'
+        });
+      }
+    });
+  }
+
+  componentDidUpdate() {
+    if (this.state.broadcaster !== '') {
+      broadcaster[this.state.broadcaster].ontrack = event => {
+        this.selfVideo.srcObject = event.streams[0];
+      };
+    }
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.broadcaster === '' ? 'no one here' : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      id: "broadcast_watcher_video",
+      className: "broadcast_watcher",
+      playsInline: true,
+      autoPlay: true,
+      muted: true,
+      ref: vid => {
+        this.selfVideo = vid;
+      }
+    }));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(null)(Watcher));
 
 /***/ }),
 
@@ -3066,24 +3236,14 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Signup
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/videochat",
-<<<<<<< HEAD
       component: _components__WEBPACK_IMPORTED_MODULE_2__.VideoChat
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
-      path: "/chat",
-      component: _components__WEBPACK_IMPORTED_MODULE_2__.Chat
-=======
-      component: _components__WEBPACK_IMPORTED_MODULE_2__.Chatroom
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       path: "/dashboard",
       component: _components__WEBPACK_IMPORTED_MODULE_2__.Dashboard
-<<<<<<< HEAD
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
       exact: true,
       path: "/createcourse",
       component: _components_createclass_js__WEBPACK_IMPORTED_MODULE_3__.CreateNewCourse
-=======
->>>>>>> 2d27d9852aac032fea193d989cd2e2a9c8cfca99
->>>>>>> 154423caa9f925886832ffe222b058b64c7c6387
     })));
   }
 

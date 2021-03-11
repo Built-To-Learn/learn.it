@@ -5,8 +5,10 @@
  */
 export { default as Navbar } from './navbar';
 export { default as Home } from './home';
-export { default as Video } from './video';
+// export { default as Video } from './video';
 export { default as VideoChat } from './videochat';
 export { default as Chat } from './chat';
+export { default as Broadcaster } from './broadcaster';
+export { default as Watcher } from './watcher';
 export { Login, Signup } from './auth-form';
 export { default as Dashboard } from './dashboard';

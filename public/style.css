@@ -91,6 +91,11 @@ video {
   height: 80%;
 }
 
+#broadcast_watcher_video {
+  width: 100%;
+  height: 100%;
+}
+
 #right-pane-2 {
   width: 30%;
 }
