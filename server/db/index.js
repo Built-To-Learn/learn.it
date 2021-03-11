@@ -2,9 +2,7 @@ const {Sequelize, INTEGER} = require('sequelize')
 const db = require('./db')
 
 const User = require('./models/user')
-const Teacher = require('./models/Teacher')
 const Course = require('./models/Course')
-const Student = require('./models/Student')
 
 // Through Table
 const Enrollment = db.define('enrollment', {
@@ -69,8 +67,6 @@ module.exports = {
     db,
     syncAndSeed,
     models: {
-        Student,
-        Teacher,
         Course,
         Enrollment,
         User
