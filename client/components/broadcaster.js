@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { io } from 'socket.io-client';
 
-const socket = io();
+let socket;
 
 const peerConnections = {};
 
 let globalStream;
+let videoTrack;
+let audioTrack;
 
 const config = {
   iceServers: [
@@ -38,6 +40,7 @@ class Broadcaster extends Component {
     this.state = { room: props.room };
   }
   componentDidMount() {
+    socket = io();
     const video = document.getElementById('broadcast_watcher_video');
 
     navigator.mediaDevices
@@ -74,8 +77,6 @@ class Broadcaster extends Component {
         .then(() => {
           socket.emit('offer', id, peerConnection.localDescription);
         });
-
-      console.log(peerConnections);
     });
 
     socket.on('candidate', (id, candidate) => {
@@ -83,57 +84,99 @@ class Broadcaster extends Component {
     });
 
     socket.on('disconnect', () => {
-      console.log('hit');
       socket.emit('leavingRoom', this.props.room);
     });
 
     socket.on('disconnectPeer', (id) => {
-      console.log(id);
       delete peerConnections[id];
     });
   }
 
-  async componentDidUpdate(prevProps) {
-    console.log(prevProps);
-    if (prevProps.device && prevProps.device !== this.props.device) {
-      const video = document.getElementById('broadcast_watcher_video');
+  async componentDidUpdate() {
+    const video = document.getElementById('broadcast_watcher_video');
+
+    if (this.props.audio || this.props.video) {
       if (this.props.device === 'camera') {
+        if (!this.props.video) {
+          constraints.video = false;
+        } else {
+          constraints.video = { facingMode: 'user' };
+        }
+        if (!this.props.audio) {
+          constraints.audio = false;
+        } else {
+          constraints.audio = true;
+        }
+
         await navigator.mediaDevices
           .getUserMedia(constraints)
           .then((stream) => {
+            try {
+              globalStream.getTracks().forEach((track) => track.stop());
+              videoTrack.getTracks().forEach((track) => track.stop());
+              audioTrack.getTracks().forEach((track) => track.stop());
+            } catch {}
+
             globalStream = stream;
             video.srcObject = stream;
           })
           .catch((error) => console.error(error));
       } else {
+        if (!this.props.video) {
+          gdmOptions.video = false;
+        } else {
+          gdmOptions.video = true;
+        }
+
         await navigator.mediaDevices
           .getDisplayMedia(gdmOptions)
           .then(async (stream) => {
-            const [videoTrack] = stream.getVideoTracks();
-            const audioStream = await navigator.mediaDevices
-              .getUserMedia({ audio: true })
-              .catch((e) => {
-                throw e;
-              });
-            const [audioTrack] = audioStream.getAudioTracks();
-            const newStream = new MediaStream([videoTrack, audioTrack]);
+            try {
+              globalStream.getTracks().forEach((track) => track.stop());
+              videoTrack.getTracks().forEach((track) => track.stop());
+              audioTrack.getTracks().forEach((track) => track.stop());
+            } catch {}
+            [videoTrack] = stream.getVideoTracks();
+            let newStream;
+            if (this.props.audio) {
+              const audioStream = await navigator.mediaDevices
+                .getUserMedia({ audio: this.props.audio })
+                .catch((e) => {
+                  throw e;
+                });
+              [audioTrack] = audioStream.getAudioTracks();
+              newStream = new MediaStream([videoTrack, audioTrack]);
+            } else {
+              newStream = new MediaStream([videoTrack]);
+            }
 
             globalStream = newStream;
             video.srcObject = newStream;
           })
           .catch((error) => console.error(error));
       }
-
-      Object.keys(peerConnections).forEach((key) => {
-        const senders = peerConnections[key].getSenders();
-        senders.forEach((sender) => peerConnections[key].removeTrack(sender));
-      });
-      socket.emit('renew', this.props.room);
+    } else {
+      try {
+        globalStream.getTracks().forEach((track) => track.stop());
+        videoTrack.getTracks().forEach((track) => track.stop());
+        audioTrack.getTracks().forEach((track) => track.stop());
+      } catch {}
     }
+
+    Object.keys(peerConnections).forEach((key) => {
+      const senders = peerConnections[key].getSenders();
+      senders.forEach((sender) => peerConnections[key].removeTrack(sender));
+    });
+    socket.emit('renew', this.props.room);
   }
 
   componentWillUnmount() {
+    try {
+      videoTrack.getTracks().forEach((track) => track.stop());
+      audioTrack.getTracks().forEach((track) => track.stop());
+    } catch (er) {}
     globalStream.getTracks().forEach((track) => track.stop());
+    console.log('hit');
     socket.close();
   }
 
