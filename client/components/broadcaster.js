@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { io } from 'socket.io-client';
+
 const socket = io();
 
 const peerConnections = {};
+
+let globalStream;
 
 const config = {
   iceServers: [
@@ -24,6 +27,11 @@ const constraints = {
   audio: true,
 };
 
+const gdmOptions = {
+  video: true,
+  audio: false,
+};
+
 class Broadcaster extends Component {
   constructor(props) {
     super(props);
@@ -31,10 +39,12 @@ class Broadcaster extends Component {
   }
   componentDidMount() {
     const video = document.getElementById('broadcast_watcher_video');
+
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
-        video.srcObject = stream;
+        globalStream = stream;
+        video.srcObject = globalStream;
         socket.emit('broadcaster', this.props.room);
       })
       .catch((error) => console.error(error));
@@ -79,10 +89,54 @@ class Broadcaster extends Component {
 
     socket.on('disconnectPeer', (id) => {
       console.log(id);
-      //peerConnections[id].close();
       delete peerConnections[id];
     });
   }
+
+  async componentDidUpdate(prevProps) {
+    console.log(prevProps);
+    if (prevProps.device && prevProps.device !== this.props.device) {
+      const video = document.getElementById('broadcast_watcher_video');
+      if (this.props.device === 'camera') {
+        await navigator.mediaDevices
+          .getUserMedia(constraints)
+          .then((stream) => {
+            globalStream = stream;
+            video.srcObject = stream;
+          })
+          .catch((error) => console.error(error));
+      } else {
+        await navigator.mediaDevices
+          .getDisplayMedia(gdmOptions)
+          .then(async (stream) => {
+            const [videoTrack] = stream.getVideoTracks();
+            const audioStream = await navigator.mediaDevices
+              .getUserMedia({ audio: true })
+              .catch((e) => {
+                throw e;
+              });
+            const [audioTrack] = audioStream.getAudioTracks();
+            const newStream = new MediaStream([videoTrack, audioTrack]);
+
+            globalStream = newStream;
+            video.srcObject = newStream;
+          })
+          .catch((error) => console.error(error));
+      }
+
+      Object.keys(peerConnections).forEach((key) => {
+        const senders = peerConnections[key].getSenders();
+        senders.forEach((sender) => peerConnections[key].removeTrack(sender));
+      });
+      socket.emit('renew', this.props.room);
+    }
+  }
+
+  componentWillUnmount() {
+    globalStream.getTracks().forEach((track) => track.stop());
+    socket.close();
+  }
+
   render() {
     return (
       <video

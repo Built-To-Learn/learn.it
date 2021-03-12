@@ -13,3 +13,7 @@ export { default as Broadcaster } from './broadcaster';
 export { default as Watcher } from './watcher';
 export { Login, Signup } from './auth-form';
 export { default as Dashboard } from './dashboard';
+export { default as Parallax } from "./parallax"
+export { default as FindAClass } from './find-a-class';
+export { default as ClassSearch } from './find-a-class-search';
+

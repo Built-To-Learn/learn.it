@@ -90,6 +90,10 @@ class Watcher extends Component {
     }
   }
 
+  componentWillUnmount() {
+    socket.close();
+  }
+
   render() {
     return (
       <div>
@@ -101,7 +105,6 @@ class Watcher extends Component {
             className="broadcast_watcher"
             playsInline
             autoPlay
-            muted
             ref={(vid) => {
               this.selfVideo = vid;
             }}

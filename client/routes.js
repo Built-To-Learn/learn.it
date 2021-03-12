@@ -1,11 +1,12 @@
-import React, { Component, Fragment } from 'react'
-import { connect } from 'react-redux'
-import { withRouter, Route, Switch, Redirect } from 'react-router-dom'
-import { Login, Signup, Home, VideoChat, Landing } from './components'
-import { CreateNewCourse } from './components/createclass.js'
+
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { Login, Signup, Home, VideoChat, Dashboard, Parallax, Landing } from './components';
+import { CreateNewCourse } from './components/createclass.js';
+import { me } from './store';
 import CoursesView from './components/courses-view.js'
 
-import { me } from './store'
 
 /**
  * COMPONENT
@@ -18,40 +19,31 @@ class Routes extends Component {
     render() {
         const { isLoggedIn } = this.props
 
-        return (
-            <div>
-                {isLoggedIn ? (
-                    <Switch>
-                        <Route exact path="/home" component={Home} />
-                        <Route
-                            exact
-                            path="/createcourse"
-                            component={CreateNewCourse}
-                        />
-                        <Route
-                            exact
-                            path="/viewcourses"
-                            component={CoursesView}
-                        />
-                        <Redirect to="/home" />
-                    </Switch>
-                ) : (
-                    <Switch>
-                        <Route path="/" exact component={Login} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/signup" component={Signup} />
-                        <Route path="/videochat" component={VideoChat} />
-                        <Route path="/landing" component={Landing} />
-                        <Route
-                            exact
-                            path="/createcourse"
-                            component={CreateNewCourse}
-                        />
-                    </Switch>
-                )}
-            </div>
-        )
-    }
+
+    return (
+      <div>
+        {isLoggedIn ? (
+          <Switch>
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/createcourse" component={CreateNewCourse} />
+            <Route exact path="/viewcourses"component={CoursesView}/>
+            <Route path="/dashboard" component={Dashboard} />
+            <Redirect to="/home" />
+          </Switch>
+        ) : (
+          <Switch>
+            <Route path="/" exact component={Parallax} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/signup" exact component={Signup} />
+            <Route path="/videochat" component={VideoChat} />
+            <Route path="/landing" component={Landing} />
+            <Route exact path="/createcourse" component={CreateNewCourse} />
+          </Switch>
+        )}
+      </div>
+    );
+  }
+
 }
 
 /**
