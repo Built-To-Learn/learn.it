@@ -38,6 +38,7 @@ const CreateCourse = (props) => {
                             <div> {error.response.data} </div>
                         )}
                     </form>
+                    <a href="/viewcourses">link text</a>
                 </div>
             ) : (
                 <p>Must Be Logged In to Create a Class</p>
@@ -57,13 +58,12 @@ const mapDispatch = (dispatch) => {
         handleSubmit(evt) {
             evt.preventDefault()
             // const formName = evt.target.name
-            const courseName = evt.target.coursename.value
+            const title = evt.target.coursename.value
             const subject = evt.target.subject.value
             const category = evt.target.category.value
             // console.log('formName', formName)
-            console.log('courseName', courseName)
-            console.log('subject', subject)
-            dispatch(createCourse(courseName, subject, category))
+            const courseObj = { title, subject, category }
+            dispatch(createCourse(courseObj))
         },
     }
 }

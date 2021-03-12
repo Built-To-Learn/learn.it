@@ -1,5 +1,7 @@
+
 const { Sequelize, INTEGER } = require('sequelize');
 const db = require('./db');
+
 
 const User = require('./models/user');
 const Course = require('./models/Course');
@@ -10,10 +12,12 @@ const Enrollment = db.define('enrollment', {
 });
 
 Enrollment.findCourseByStudent = async function (studentId) {
-  const courses = await Enrollment.findAll({
-    where: { studentId },
-    include: [Course],
-  });
+
+    const courses = await Enrollment.findAll({
+        where: { studentId },
+        include: [Course],
+    })
+
 
   return courses;
 };
@@ -31,6 +35,7 @@ User.hasMany(Enrollment);
 Enrollment.belongsTo(User);
 
 const syncAndSeed = async () => {
+
   await db.sync({ force: true });
   const [cody, murphy, sal] = await Promise.all([
     User.create({
@@ -54,7 +59,25 @@ const syncAndSeed = async () => {
     }),
   ]);
 
-  const [math, stocks, running] = await Promise.all([
+  const [math, stocks, running, geometry, basketweaving, coding] = await Promise.all([
+            Course.create({
+            title: 'Geometry',
+            subject: 'Math',
+            category: 'Traditional Schoolwork',
+              userId: cody.id,
+        }),
+        Course.create({
+            title: 'Basket Weaving 101',
+            subject: 'For Fun',
+            category: 'Arts and Crafts',
+          userId: cody.id,
+        }),
+        Course.create({
+            title: 'Intro to Javascript',
+            subject: 'Coding',
+            category: 'Programming',
+          userId: cody.id,
+        }),
     Course.create({
       title: 'Math is fun',
       subject: 'Math',
@@ -81,6 +104,14 @@ const syncAndSeed = async () => {
       murphy,
       sal,
     },
+    courses: {
+            math, 
+            stocks, 
+            running,
+            geometry,
+            basketweaving,
+            coding,
+        },
   };
 };
 
