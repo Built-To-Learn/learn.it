@@ -57,7 +57,7 @@ export default function (state = initialState, action) {
             return { ...state, courses: [...state.courses, action.course] }
 
         case LOAD_COURSES:
-            return action.courses
+            return { courses: action.courses }
 
         default:
             return state

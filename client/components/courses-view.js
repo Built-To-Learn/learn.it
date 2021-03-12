@@ -5,11 +5,9 @@ import { loadCourses } from '../store/courses'
 import M from 'materialize-css'
 
 class CoursesView extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            courses: [],
-        }
+    constructor(props) {
+        super(props)
+        this.state = {}
     }
     async componentDidMount() {
         console.log('mounting')
@@ -17,10 +15,20 @@ class CoursesView extends React.Component {
     }
 
     render() {
-        const courses = this.props.courses
-        console.log(courses)
+        if (this.props.courses.courses.length !== 0) {
+            const courses = this.props.courses.courses
+            console.log(courses)
 
-        return <div>hi</div>
+            return courses.map((course, idx) => {
+                return (
+                    <div key={idx}>
+                        <p>{course.title}</p>
+                    </div>
+                )
+            })
+        } else {
+            return <div>No Courses</div>
+        }
     }
 }
 
