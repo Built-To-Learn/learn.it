@@ -84,6 +84,7 @@ video {
 
 #right {
   width: 80%;
+  overflow: auto;
 }
 
 #sub-right {
