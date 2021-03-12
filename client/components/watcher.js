@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { io } from 'socket.io-client';
-const socket = io();
+
+let socket;
 
 const config = {
   iceServers: [
@@ -30,16 +31,11 @@ class Watcher extends Component {
     this.state = { broadcaster: '', playing: 'false', room: props.room };
   }
   componentDidMount() {
-    //const video = document.getElementById('broadcast_watcher_video');
-
-    console.log('mounted');
-    socket.on('connect', () => {
-      console.log(socket.id);
-    });
+    socket = io();
 
     socket.on('offer', (id, description) => {
       console.log('offer');
-      //const video = document.getElementById('broadcast_watcher_video');
+
       const peerConnection = new RTCPeerConnection(config);
       peerConnection
         .setRemoteDescription(description)
@@ -48,11 +44,7 @@ class Watcher extends Component {
         .then(() => {
           socket.emit('answer', id, peerConnection.localDescription);
         });
-      // peerConnection.ontrack = (event) => {
-      //   console.log('tracking');
-      //   console.log(event);
-      //   video.srcObject = event.streams[0];
-      // };
+
       peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
           socket.emit('candidate', id, event.candidate);
@@ -95,16 +87,18 @@ class Watcher extends Component {
   }
 
   render() {
+    console.log(this.state.broadcaster);
     return (
-      <div>
+      <div id="main_video_frame">
         {this.state.broadcaster === '' ? (
-          'no one here'
+          'The teacher will arrive shortly...'
         ) : (
           <video
             id="broadcast_watcher_video"
             className="broadcast_watcher"
             playsInline
             autoPlay
+            muted={!!this.props.mute}
             ref={(vid) => {
               this.selfVideo = vid;
             }}

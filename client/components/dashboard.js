@@ -10,16 +10,11 @@ class Dashboard extends Component {
       room: this.props.room,
       type: this.props.type,
       device: 'camera',
+      mute: false,
+      broadCastAudio: true,
+      video: true,
     };
-    // this.joinRoomBroadcast = this.joinRoomBroadcast.bind(this);
-    // this.joinRoomWatch = this.joinRoomWatch.bind(this);
   }
-  // joinRoomBroadcast(e) {
-  //   this.setState({ room: e.target.id, type: 'broadcast' });
-  // }
-  // joinRoomWatch(e) {
-  //   this.setState({ room: e.target.id, type: 'watcher' });
-  // }
 
   render() {
     return (
@@ -27,12 +22,17 @@ class Dashboard extends Component {
         <div id="right-pane-1" className="border">
           <div id="right-pane-1-top" className="border">
             {this.state.type === 'broadcast' ? (
-              <Broadcaster room={this.state.room} device={this.state.device} />
+              <Broadcaster
+                room={this.state.room}
+                device={this.state.device}
+                audio={this.state.broadCastAudio}
+                video={this.state.video}
+              />
             ) : (
               ''
             )}
             {this.state.type === 'watcher' ? (
-              <Watcher room={this.state.room} />
+              <Watcher room={this.state.room} mute={this.state.mute} />
             ) : (
               ''
             )}
@@ -46,15 +46,35 @@ class Dashboard extends Component {
               Leave Room
             </button>
             {this.state.type === 'broadcast' ? (
-              <button onClick={() => this.setState({ device: 'camera' })}>
-                Share Camera
-              </button>
+              <div>
+                <button onClick={() => this.setState({ device: 'camera' })}>
+                  Share Camera
+                </button>
+                <button onClick={() => this.setState({ device: 'screen' })}>
+                  Share Screen
+                </button>
+                <button
+                  onClick={() =>
+                    this.setState({
+                      broadCastAudio: !this.state.broadCastAudio,
+                    })
+                  }
+                >
+                  Mute
+                </button>
+                <button
+                  onClick={() => this.setState({ video: !this.state.video })}
+                >
+                  Video
+                </button>
+              </div>
             ) : (
               ''
             )}
-            {this.state.type === 'broadcast' ? (
-              <button onClick={() => this.setState({ device: 'screen' })}>
-                Share Screen
+
+            {this.state.type === 'watcher' ? (
+              <button onClick={() => this.setState({ mute: !this.state.mute })}>
+                Mute
               </button>
             ) : (
               ''

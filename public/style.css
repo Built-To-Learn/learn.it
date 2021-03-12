@@ -102,6 +102,17 @@ video {
   height: 80%;
 }
 
+#main_video_frame {
+  background-color: black;
+  color: white;
+  font-size: 2rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 #broadcast_watcher_video {
   width: 100%;
   height: 100%;

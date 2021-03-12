@@ -64,6 +64,7 @@ io.sockets.on('connection', (socket) => {
   socket.on('broadcaster', (room) => {
     broadcaster = socket.id;
     if (!roomManager[room]) {
+      console.log('setting boradcaster');
       roomManager[room] = socket.id;
       socket.join(room);
       socket.to(room).emit('broadcaster');
@@ -93,7 +94,6 @@ io.sockets.on('connection', (socket) => {
     }
     socket.broadcast.emit('disconnectPeer', socket.id);
   });
-
   socket.on('renew', (room) => {
     socket.to(room).emit('broadcaster');
   });
