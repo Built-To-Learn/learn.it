@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { logout } from '../store'
-import { fetchCourses } from '../store/courses'
+import { loadCourses } from '../store/courses'
 import M from 'materialize-css'
 
 class CoursesView extends React.Component {
@@ -17,7 +17,8 @@ class CoursesView extends React.Component {
     }
 
     render() {
-        console.log(this.props)
+        const courses = this.props.courses
+        console.log(courses)
 
         return <div>hi</div>
     }
@@ -35,7 +36,9 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
     return {
-        getCourses: fetchCourses,
+        getCourses: () => {
+            dispatch(loadCourses())
+        },
     }
 }
 

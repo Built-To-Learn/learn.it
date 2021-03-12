@@ -14,7 +14,7 @@ const _createCourse = (course) => ({
     course,
 })
 
-export const setCourses = (courses) => ({ type: LOAD_COURSES, courses })
+export const _loadCourses = (courses) => ({ type: LOAD_COURSES, courses })
 
 /**
  * THUNK CREATORS
@@ -31,12 +31,17 @@ export const createCourse = (courseObj) => async (dispatch) => {
     }
 }
 
-export const fetchCourses = () => {
-    console.log('FETCHiNG')
+// export const fetchCourses = async (dispatch) => {
+//     const courses = await axios.get('/api/courses').data
+//     dispatch(setCourses(courses))
+// }
+
+export const loadCourses = () => {
+    console.log('fetch')
     return async (dispatch) => {
-        console.log('INSIDE FETCH')
+        console.log('inside fetch')
         const courses = (await axios.get('/api/courses')).data
-        dispatch(setCourses(courses))
+        dispatch(_loadCourses(courses))
     }
 }
 /**
