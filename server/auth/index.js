@@ -1,4 +1,6 @@
 const router = require('express').Router()
+const fetch = require("node-fetch")
+const axios = require("axios")
 const {models: { User }} = require("../db")
 
 router.post('/login', async (req, res, next) => {
@@ -54,6 +56,31 @@ router.get('/me', async (req, res, next) => {
     } catch (ex) {
         next(ex)
     }
+})
+
+router.get('/paypaltoken', async (req, res, next) => {
+    try {
+        const url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
+        const authStr = `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
+        const base64 = Buffer.from(authStr).toString('base64')
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Accept-Language': 'en_US',
+                'Authorization': `Basic ${base64}`,
+            },
+            body: 'grant_type=client_credentials'
+        })
+            .then(res => res.json())
+            .then(data => res.send(data))
+            .catch(ex => next(ex))
+    } catch (ex) {
+        next(ex)
+    }
+
 })
 
 module.exports = router
