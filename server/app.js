@@ -94,6 +94,10 @@ io.sockets.on('connection', (socket) => {
     socket.broadcast.emit('disconnectPeer', socket.id);
   });
 
+  socket.on('renew', (room) => {
+    socket.to(room).emit('broadcaster');
+  });
+
   //DO NOT DELETE -> for multi-way video chat
   // socket.on('broadcaster', (id, type, room) => {
   //   socket.join(room);

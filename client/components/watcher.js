@@ -105,7 +105,6 @@ class Watcher extends Component {
             className="broadcast_watcher"
             playsInline
             autoPlay
-            muted
             ref={(vid) => {
               this.selfVideo = vid;
             }}
