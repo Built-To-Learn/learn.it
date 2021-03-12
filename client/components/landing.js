@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dashboard, FindAClass, ClassSearch } from './index';
+import {
+  Dashboard,
+  FindAClass,
+  ClassSearch,
+  CreateAClass,
+  ViewCourses,
+  CoursesView,
+} from './index';
+import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
 
 class Landing extends Component {
@@ -31,7 +39,9 @@ class Landing extends Component {
           <button id="room1" onClick={(e) => this.joinRoomWatch(e)}>
             Join room as watcher
           </button>
+          <CreateAClass />
           <FindAClass />
+          <ViewCourses />
         </div>
         <div id="right" className="border">
           {view === 'dashboard' ? (
@@ -40,6 +50,8 @@ class Landing extends Component {
             ''
           )}
           {view === 'findAClass' ? <ClassSearch /> : ''}
+          {view === 'createAClass' ? <CreateNewCourse /> : ''}
+          {view === 'viewClasses' ? <CoursesView /> : ''}
         </div>
       </div>
     );

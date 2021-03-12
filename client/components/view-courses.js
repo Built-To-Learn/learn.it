@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchView } from '../store/view';
 
-class FindAClass extends Component {
+class ViewCourses extends Component {
   render() {
     return (
       <div
-        id="find_class"
+        id="view_class"
         className="landingbtn"
-        onClick={() => this.props.fetchView('findAClass')}
+        onClick={() => this.props.fetchView('viewClasses')}
       >
-        <span>Find a class</span>
+        <span>View all classes</span>
         <img id="magglass" src="magglass.png" height="20px" width="20px" />
       </div>
     );
@@ -21,4 +21,4 @@ export default connect(null, (dispatch) => {
   return {
     fetchView: (view) => dispatch(fetchView(view)),
   };
-})(FindAClass);
+})(ViewCourses);

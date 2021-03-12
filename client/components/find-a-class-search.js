@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { CourseCard } from './course-card';
 
 class ClassSearch extends Component {
   constructor(props) {
@@ -30,15 +31,16 @@ class ClassSearch extends Component {
           onChange={(e) => this.onChange(e)}
         ></textarea>
         <ul>
-          {this.state.results.map((result) => {
+          {this.state.results.map((course, idx) => {
             return (
-              <li
-                id={result.id}
-                key={result.id}
-                onClick={(e) => this.addClass(e)}
-              >
-                {result.title}
-              </li>
+              <CourseCard className="course_list" course={course} key={idx} />
+              // <li
+              //   id={result.id}
+              //   key={result.id}
+              //   onClick={(e) => this.addClass(e)}
+              // >
+              //   {result.title}
+              // </li>
             );
           })}
         </ul>
