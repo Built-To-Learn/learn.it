@@ -70,10 +70,10 @@ io.sockets.on('connection', (socket) => {
       socket.to(room).emit('broadcaster');
     }
   });
-  socket.on('watcher', (room) => {
+  socket.on('watcher', (room, name) => {
     socket.join(room);
     if (roomManager[room]) {
-      socket.to(roomManager[room]).emit('watcher', socket.id);
+      socket.to(roomManager[room]).emit('watcher', socket.id, name);
     }
   });
   socket.on('offer', (id, message) => {
