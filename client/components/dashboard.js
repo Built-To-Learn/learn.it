@@ -44,7 +44,11 @@ class Dashboard extends Component {
         </div>
         <div id="right-pane-2" className="border">
           <div id="right-pane-2-top" className="border">
-            <Chat room={this.state.room} />
+            {this.state.topPanel === 'chat' ? (
+              <Chat room={this.state.room} />
+            ) : (
+              ''
+            )}
             {this.state.topPanel === 'participants' ? <ViewParticipants /> : ''}
           </div>
           <div id="right-pane-2-bottom" className="border">
