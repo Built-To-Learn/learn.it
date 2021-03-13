@@ -4,7 +4,6 @@ import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import auth from './auth';
 import view from './view';
-import courses from './courses.js'
 import payment from './payment'
 import courses from './courses.js';
 import participants from './participants';

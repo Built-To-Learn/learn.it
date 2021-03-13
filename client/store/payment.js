@@ -17,5 +17,8 @@ export default function(state = {}, action){
   switch(action.type){
     case GENERATE_TOKEN:
       return action.token
+
+    default:
+      return state
   }
 }
