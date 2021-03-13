@@ -6,8 +6,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import auth from './auth';
 import view from './view';
 import courses from './courses.js'
+import payment from './payment'
 
-const reducer = combineReducers({ auth, view, courses });
+const reducer = combineReducers({ auth, view, courses, payment });
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
 );
