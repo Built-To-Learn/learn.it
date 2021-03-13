@@ -21,19 +21,22 @@ class Chat extends Component {
       messages: [],
       currentMessage: '',
     };
+    this.keyup = this.keyup.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  keyup(event) {
+    event.preventDefault();
+    if (event.key === 'Enter') {
+      document.getElementById('chat-submit').click();
+    }
   }
 
   componentDidMount() {
-    document
-      .getElementById('chat-text')
-      .addEventListener('keyup', function (event) {
-        event.preventDefault();
-        if (event.key === 'Enter') {
-          document.getElementById('chat-submit').click();
-        }
-      });
+    const el = document.getElementById('chat-text');
+    el.addEventListener('keyup', this.keyup);
 
-    console.log('this componet mounted');
     socket = io();
 
     socket.on('connect', () => {
@@ -71,7 +74,7 @@ class Chat extends Component {
       currentMessage: '',
       messages: [
         ...this.state.messages,
-        `${userName}:${this.state.currentMessage}`,
+        `${userName}: ${this.state.currentMessage}`,
       ],
     });
   }
@@ -81,6 +84,13 @@ class Chat extends Component {
       const chat = document.getElementById('chat-messages');
       chat.scrollTop = chat.scrollHeight;
     }, 100);
+  }
+
+  componentWillUnmount() {
+    console.log('unmount');
+    socket.close();
+    const el = document.getElementById('chat-text');
+    el.removeEventListener('keyup', this.keyup);
   }
 
   render() {
