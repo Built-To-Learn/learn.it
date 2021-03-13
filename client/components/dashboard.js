@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Broadcaster, Watcher, ViewParticipants } from './index';
+import { Broadcaster, Watcher, Chat, ViewParticipants } from './index';
 import { fetchClearView } from '../store/view';
 //import { ViewParticipants } from './viewParticipants';
 import { peerConnections } from './broadcaster';
@@ -44,6 +44,7 @@ class Dashboard extends Component {
         </div>
         <div id="right-pane-2" className="border">
           <div id="right-pane-2-top" className="border">
+            <Chat/>
             {this.state.topPanel === 'participants' ? <ViewParticipants /> : ''}
           </div>
           <div id="right-pane-2-bottom" className="border">

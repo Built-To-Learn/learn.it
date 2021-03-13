@@ -24,7 +24,18 @@ class Chat extends Component {
     });
   }
 
+  componentDidMount () {
+    document.getElementById("chat-text")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.key === 'Enter') {
+        document.getElementById("chat-submit").click();
+    }
+});
+  }
+
   handleChange(event) {
+    const { userName } = this.props
     const message = event.target.value;
     this.setState({
       ...this.state,
@@ -34,7 +45,8 @@ class Chat extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    socket.emit('newMessage', this.state.currentMessage);
+    const { userName } = this.props;
+    socket.emit('newMessage', `${userName}: ${this.state.currentMessage}`);
     this.setState({
       ...this.state,
       currentMessage: '',
@@ -43,23 +55,30 @@ class Chat extends Component {
 
   render() {
     const { messages, currentMessage } = this.state;
-    const { userName } = this.props;
-
-    console.log(userName);
 
     return (
-      <div>
-        {messages.map((message) => {
-          return <p>{message}</p>;
-        })}
-        <input
-          value={currentMessage}
-          onChange={(event) => this.handleChange(event)}
-        ></input>
-        <button onClick={(event) => this.handleSubmit(event)}></button>
+      <div id='chat'>
+        <div id='chat-messages'>
+          {messages.map((message, i) => {
+            return <p key={i}>{message}</p>;
+          })}
+        </div>
+        <div id='chat-input'>
+          <input
+            value={currentMessage}
+            onChange={(event) => this.handleChange(event)}
+            id='chat-text'
+          ></input>
+          <button type='submit' id='chat-submit' onClick={(event) => this.handleSubmit(event)}>Send</button>
+          
+        </div>
       </div>
     );
   }
 }
 
-export default Chat;
+const mapState = (state) => ({
+  userName: state.auth.username
+})
+
+export default connect(mapState)(Chat);
