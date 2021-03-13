@@ -119,7 +119,12 @@ io.sockets.on('connection', (socket) => {
   //   socket.to(room).emit('disconnectPeer', socket.id);
   //   socket.leave(room);
   // });
-  socket.on('newMessage', (message) => {
-    socket.emit('newMessage', message);
+
+  socket.on('joinChat', (room) => {
+    socket.join(room);
+  });
+  socket.on('newMessage', (message, room) => {
+    console.log(message, room);
+    socket.to(room).emit('newMessage', message);
   });
 });

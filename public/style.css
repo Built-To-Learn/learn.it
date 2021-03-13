@@ -127,19 +127,28 @@ video {
   height: 80%;
 }
 
-#chat-messages {
-  overflow-y: scroll;
+#chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 }
 
-#chat-input {
+#chat-messages {
+  /* overflow: auto; */
+  overflow-y: auto;
+}
+
+/* #chat-input {
   position: absolute;
   width: 270px;
   bottom: 140px;
-}
+} */
 
-#chat-submit {
+/* #chat-submit {
   height: 80%;
   width: 50px;
   position: absolute;
   right: 0;
-}
+} */
