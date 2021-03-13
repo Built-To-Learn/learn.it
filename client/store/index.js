@@ -4,11 +4,21 @@ import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import auth from './auth';
 import view from './view';
-import payment from './payment'
+import payment from './payment';
 import courses from './courses.js';
 import participants from './participants';
+import breakout from './breakout';
+import studentBreakout from './student-breakout';
 
-const reducer = combineReducers({ auth, view, courses, participants, payment });
+const reducer = combineReducers({
+  auth,
+  view,
+  courses,
+  participants,
+  payment,
+  breakout,
+  studentBreakout,
+});
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
 );
