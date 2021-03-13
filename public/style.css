@@ -126,3 +126,20 @@ video {
 #right-pane-2-top {
   height: 80%;
 }
+
+#chat-messages {
+  overflow-y: scroll;
+}
+
+#chat-input {
+  position: absolute;
+  width: 270px;
+  bottom: 140px;
+}
+
+#chat-submit {
+  height: 80%;
+  width: 50px;
+  position: absolute;
+  right: 0;
+}

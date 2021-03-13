@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Broadcaster, Watcher } from './index';
+import { Broadcaster, Watcher, Chat } from './index';
 import { fetchClearView } from '../store/view';
 
 class Dashboard extends Component {
@@ -40,7 +40,9 @@ class Dashboard extends Component {
           <div id="right-pane-1-bottom" className="border"></div>
         </div>
         <div id="right-pane-2" className="border">
-          <div id="right-pane-2-top" className="border"></div>
+          <div id="right-pane-2-top" className="border">
+            <Chat/>
+          </div>
           <div id="right-pane-2-bottom" className="border">
             <button onClick={() => this.props.fetchClearView()}>
               Leave Room
