@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { io } from 'socket.io-client';
+import {
+  fetchAddPeer,
+  fetchRemovePeer,
+  fetchClearPeer,
+} from '../store/participants';
 
 let socket;
 
-const peerConnections = {};
+export const peerConnections = {};
 
 let globalStream;
 let videoTrack;
@@ -56,9 +61,10 @@ class Broadcaster extends Component {
       peerConnections[id].setRemoteDescription(description);
     });
 
-    socket.on('watcher', (id) => {
+    socket.on('watcher', (id, name) => {
       const peerConnection = new RTCPeerConnection(config);
       peerConnections[id] = peerConnection;
+      this.props.fetchAddPeer({ id: id, name: name });
 
       let stream = video.srcObject;
       stream
@@ -89,6 +95,7 @@ class Broadcaster extends Component {
 
     socket.on('disconnectPeer', (id) => {
       delete peerConnections[id];
+      this.props.fetchRemovePeer(id);
     });
   }
 
@@ -176,8 +183,8 @@ class Broadcaster extends Component {
       audioTrack.getTracks().forEach((track) => track.stop());
     } catch (er) {}
     globalStream.getTracks().forEach((track) => track.stop());
-    console.log('hit');
     socket.close();
+    this.props.fetchClearPeer();
   }
 
   render() {
@@ -193,4 +200,10 @@ class Broadcaster extends Component {
   }
 }
 
-export default connect(null)(Broadcaster);
+export default connect(null, (dispatch) => {
+  return {
+    fetchAddPeer: (peer) => dispatch(fetchAddPeer(peer)),
+    fetchRemovePeer: (peer) => dispatch(fetchRemovePeer(peer)),
+    fetchClearPeer: () => dispatch(fetchClearPeer()),
+  };
+})(Broadcaster);
