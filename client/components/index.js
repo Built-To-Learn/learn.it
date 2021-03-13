@@ -19,5 +19,6 @@ export { default as CreateAClass } from './create-class';
 export { default as ViewCourses } from './view-courses';
 export { default as CoursesView } from './courses-view';
 export { default as ClassSearch } from './find-a-class-search';
-export { default as Payment} from "./payment"
 export { default as ViewParticipants } from './viewParticipants';
+export { default as AccountInfoBtn } from "./account_info_btn"
+export { default as AccountInfo } from "./account_info"

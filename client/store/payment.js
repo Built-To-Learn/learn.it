@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 const GENERATE_SIGNUP = "GENERATE_SIGNUP"
 
 const generateSignup = (links) => ({
@@ -7,10 +6,11 @@ const generateSignup = (links) => ({
   links
 })
 
-export const getPaypalLinks = () => async (dispatch) => {
+export const getPaypalLinks = (email, userid) => async (dispatch) => {
   const {token_type, access_token} = (await axios.get("/auth/paypaltoken")).data
   const url = 'https://api-m.sandbox.paypal.com/v2/customer/partner-referrals'
   const bodyParams = {
+    "tracking_id": userid,
     "operations": [
       {
         "operation": "API_INTEGRATION",
@@ -37,6 +37,10 @@ export const getPaypalLinks = () => async (dispatch) => {
         "granted": true
       }
     ],
+    "email": email,
+    // "partner_config_override": {
+    //   "return_url": "http://www.learnit-test.com/paypal/return"
+    // }
 }
   const config = {
     headers: {

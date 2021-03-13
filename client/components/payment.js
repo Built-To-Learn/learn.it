@@ -8,12 +8,11 @@ class Payment extends React.Component{
   }
 
   async componentDidMount(){
-    this.props.getLinks()
+    this.props.getLinks(this.props.auth.email, this.props.auth.id)
   }
 
   render(){
-    const {links} = this.props.payment
-    console.log(links)
+    const { links } = this.props.payment
     return (
       <div>
         <a target="_blank" className={!links ? "disabled btn" : "btn" }  href={!links ? "" : links[1].href}>
@@ -24,16 +23,17 @@ class Payment extends React.Component{
   }
 }
 
-const mapState = ({payment}) => {
+const mapState = ({payment, auth}) => {
   return {
-      payment
+      payment,
+      auth
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
-      getLinks(){
-        dispatch(getPaypalLinks())
+      getLinks(email, userid){
+        dispatch(getPaypalLinks(email, userid))
       }
   }
 }

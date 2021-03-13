@@ -7,6 +7,8 @@ import {
   CreateAClass,
   ViewCourses,
   CoursesView,
+  AccountInfoBtn,
+  AccountInfo
 } from './index';
 import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
@@ -18,6 +20,7 @@ class Landing extends Component {
     this.joinRoomBroadcast = this.joinRoomBroadcast.bind(this);
     this.joinRoomWatch = this.joinRoomWatch.bind(this);
   }
+
   joinRoomBroadcast(e) {
     this.setState({ room: e.target.id, type: 'broadcast' });
     this.props.fetchView('dashboard');
@@ -39,6 +42,7 @@ class Landing extends Component {
           <button id="room1" onClick={(e) => this.joinRoomWatch(e)}>
             Join room as watcher
           </button>
+          <AccountInfoBtn />
           <CreateAClass />
           <FindAClass />
           <ViewCourses />
@@ -52,6 +56,7 @@ class Landing extends Component {
           {view === 'findAClass' ? <ClassSearch /> : ''}
           {view === 'createAClass' ? <CreateNewCourse /> : ''}
           {view === 'viewClasses' ? <CoursesView /> : ''}
+          {view === 'accountInfo' ? <AccountInfo /> : ''}
         </div>
       </div>
     );
