@@ -61,10 +61,10 @@ class Watcher extends Component {
         .catch((e) => console.error(e));
     });
 
-    socket.emit('watcher', this.props.room);
+    socket.emit('watcher', this.props.room, this.props.auth);
 
     socket.on('broadcaster', () => {
-      socket.emit('watcher', this.props.room);
+      socket.emit('watcher', this.props.room, this.props.auth);
     });
 
     socket.on('disconnectPeer', (id) => {
@@ -109,4 +109,8 @@ class Watcher extends Component {
   }
 }
 
-export default connect(null)(Watcher);
+export default connect(({ auth }) => {
+  return {
+    auth: auth.name,
+  };
+})(Watcher);
