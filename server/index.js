@@ -15,6 +15,8 @@ try {
   );
 }
 
+require("dotenv").config()
+
 const { db, syncAndSeed } = require('./db');
 const PORT = process.env.PORT || 8080;
 const httpServer = require('./app');
