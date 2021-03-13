@@ -1,8 +1,6 @@
 import { io } from 'socket.io-client';
 import React, { Component } from 'react';
 
-const socket = io();
-
 // window.onunload = window.onbeforeunload = () => {
 //   socket.close();
 // };
@@ -13,7 +11,7 @@ const typeGlobal = 'student';
 
 let peerConnections = {};
 
-const initialState = { teacher: '', members: [], focus: '', room: '' };
+//const initialState = { teacher: '', members: [], focus: '', room: '' };
 
 const config = {
   iceServers: [
@@ -35,16 +33,20 @@ const constraints = {
   audio: true,
 };
 
+let socket;
+
 class Chatroom extends Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
+    this.state = { teacher: '', members: [], focus: '', room: this.props.room };
     this.changeFocus = this.changeFocus.bind(this);
     this.joinChat = this.joinChat.bind(this);
     this.leaveChat = this.leaveChat.bind(this);
   }
   componentDidMount() {
-    socket.on('broadcaster', (id, type) => {
+    socket = io();
+
+    socket.on('breakout_broadcaster', (id, type) => {
       const video = document.getElementById('selfVideo');
       const peerConnection = new RTCPeerConnection(config);
       let stream = video.srcObject;
@@ -54,7 +56,7 @@ class Chatroom extends Component {
 
       peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
-          socket.emit('candidate', id, event.candidate);
+          socket.emit('breakout_candidate', id, event.candidate);
         }
       };
 
@@ -62,7 +64,12 @@ class Chatroom extends Component {
         .createOffer()
         .then((sdp) => peerConnection.setLocalDescription(sdp))
         .then(() => {
-          socket.emit('offer', id, peerConnection.localDescription, typeGlobal);
+          socket.emit(
+            'breakout_offer',
+            id,
+            peerConnection.localDescription,
+            typeGlobal
+          );
         });
 
       peerConnections[id] = peerConnection;
@@ -79,11 +86,11 @@ class Chatroom extends Component {
       }
     });
 
-    socket.on('answer', (id, description) => {
+    socket.on('breakout_answer', (id, description) => {
       peerConnections[id].setRemoteDescription(description);
     });
 
-    socket.on('offer', (id, description, type) => {
+    socket.on('breakout_offer', (id, description, type) => {
       const peerConnection = new RTCPeerConnection(config);
 
       const video = document.getElementById('selfVideo');
@@ -98,12 +105,12 @@ class Chatroom extends Component {
         .then(() => peerConnection.createAnswer())
         .then((sdp) => peerConnection.setLocalDescription(sdp))
         .then(() => {
-          socket.emit('answer', id, peerConnection.localDescription);
+          socket.emit('breakout_answer', id, peerConnection.localDescription);
         });
 
       peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
-          socket.emit('candidate', id, event.candidate);
+          socket.emit('breakout_candidate', id, event.candidate);
         }
       };
 
@@ -121,11 +128,11 @@ class Chatroom extends Component {
       }
     });
 
-    socket.on('candidate', (id, candidate) => {
+    socket.on('breakout_candidate', (id, candidate) => {
       peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
     });
 
-    socket.on('disconnectPeer', (id) => {
+    socket.on('breakout_disconnectPeer', (id) => {
       if (id === this.state.focus) {
         this.focus.srcObject = this.selfVideo.srcObject;
       }
@@ -144,13 +151,18 @@ class Chatroom extends Component {
       }
     });
 
-    socket.on('disconnect', () => {
-      socket.emit('disconnected', this.state.room);
+    socket.on('breakout_disconnect', () => {
+      socket.emit('breakout_disconnected', this.state.room);
       peerConnections = {};
       this.state.members.forEach((member) => {
         delete this[member];
       });
-      this.setState(initialState);
+      this.setState({
+        teacher: '',
+        members: [],
+        focus: '',
+        room: this.props.room,
+      });
     });
   }
 
@@ -177,19 +189,24 @@ class Chatroom extends Component {
       .getUserMedia(constraints)
       .then((stream) => {
         video.srcObject = stream;
-        socket.emit('broadcaster', socket.id, typeGlobal, e.target.id);
+        socket.emit('breakout_broadcaster', socket.id, typeGlobal, e.target.id);
       })
       .catch((error) => console.error(error));
     this.setState({ room: e.target.id });
   }
 
   leaveChat(e) {
-    socket.emit('disconnected', this.state.room);
+    socket.emit('breakout_disconnected', this.state.room);
     peerConnections = {};
     this.state.members.forEach((member) => {
       delete this[member];
     });
-    this.setState(initialState);
+    this.setState({
+      teacher: '',
+      members: [],
+      focus: '',
+      room: this.props.room,
+    });
   }
 
   //sendChat (message) -> {

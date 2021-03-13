@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { io } from 'socket.io-client';
+import { fetchView } from '../store/view';
+import { fetchStudentBreakout } from '../store/student-breakout';
 
 let socket;
 
@@ -72,6 +74,11 @@ class Watcher extends Component {
         this.setState({ broadcaster: '', playing: 'false' });
       }
     });
+
+    socket.on('joinBreakout', (room) => {
+      this.props.fetchStudentBreakout(room);
+      // this.props.fetchView('d');
+    });
   }
 
   componentDidUpdate() {
@@ -109,8 +116,16 @@ class Watcher extends Component {
   }
 }
 
-export default connect(({ auth }) => {
-  return {
-    auth: auth.name,
-  };
-})(Watcher);
+export default connect(
+  ({ auth }) => {
+    return {
+      auth: auth.name,
+    };
+  },
+  (dispatch) => {
+    return {
+      fetchView: (view) => dispatch(fetchView(view)),
+      fetchStudentBreakout: (room) => dispatch(fetchStudentBreakout(room)),
+    };
+  }
+)(Watcher);
