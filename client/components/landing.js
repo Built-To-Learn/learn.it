@@ -8,7 +8,7 @@ import {
   ViewCourses,
   CoursesView,
   AccountInfoBtn,
-  AccountInfo
+  AccountInfo,
 } from './index';
 import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
@@ -40,8 +40,8 @@ class Landing extends Component {
           room: this.props.studentBreakout.room,
           type: 'breakout',
         });
+        this.props.fetchView(`breakout`);
       }
-      this.props.fetchView(`breakout`);
     }
   }
 

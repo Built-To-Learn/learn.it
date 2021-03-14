@@ -87,7 +87,6 @@ class Chat extends Component {
   }
 
   componentWillUnmount() {
-    console.log('unmount');
     socket.close();
     const el = document.getElementById('chat-text');
     el.removeEventListener('keyup', this.keyup);
