@@ -1,26 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { getPaypalLinks } from "../store"
+import { generateSignupLinks, setMerchant } from "../store"
 
-class Payment extends React.Component{
-  constructor(props){
-    super(props)
-  }
+const Payment = ({paypalSignup, payment, auth}) => {
+  useEffect(() => {
+    const init = async () => {
+      await paypalSignup(auth.email, auth.id)
+    }
 
-  async componentDidMount(){
-    this.props.getLinks(this.props.auth.email, this.props.auth.id)
-  }
+    init()
+  }, [])
 
-  render(){
-    const { links } = this.props.payment
-    return (
-      <div>
-        <a target="_blank" className={!links ? "disabled btn" : "btn" }  href={!links ? "" : links[1].href}>
-          Link Paypal
-        </a>
-      </div>
-    )
-  }
+  return(
+    <div>
+      <a target="_blank" className={ !payment.links ? "disabled btn" : "btn" }  href={!payment.links ? "" : payment.links[1].href}>
+        Link Paypal
+      </a>
+      {/* <p>{ !primary_email_confirmed ? 'please verify primary email' : ''}</p> */}
+    </div>
+  )
 }
 
 const mapState = ({payment, auth}) => {
@@ -32,9 +30,9 @@ const mapState = ({payment, auth}) => {
 
 const mapDispatch = (dispatch) => {
   return {
-      getLinks(email, userid){
-        dispatch(getPaypalLinks(email, userid))
-      }
+      paypalSignup(email, userid){
+        dispatch(generateSignupLinks(email, userid))
+      },
   }
 }
 

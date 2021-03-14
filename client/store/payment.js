@@ -1,13 +1,38 @@
 import axios from 'axios'
 const GENERATE_SIGNUP = "GENERATE_SIGNUP"
+const SET_MERCHANT = "SET_MERCHANT"
 
 const generateSignup = (links) => ({
   type: GENERATE_SIGNUP,
   links
 })
 
-export const getPaypalLinks = (email, userid) => async (dispatch) => {
+const _setMerchant = (merchant) => ({
+  type: SET_MERCHANT,
+  merchant
+})
+
+// export const setMerchant = (trackingId, token_type = "Bearer") => async (dispatch) => {
+//   const data = {
+//     token_type,
+//     access_token
+//   }
+
+//   const merchant = (await axios.post(`/auth/paypal/merchant/${trackingId}`, data)).data
+//   dispatch(_setMerchant(merchant))
+// }
+
+const getAccessCode = async () => {
   const {token_type, access_token} = (await axios.get("/auth/paypaltoken")).data
+
+  return {token_type, access_token}
+}
+
+export const generateSignupLinks = (email, userid) => async (dispatch) => {
+  // check if we have an access code - otherwise get one ????
+  const {token_type, access_token} = await getAccessCode()
+
+  // Builds a "relationship" between us the partner and the seller (client)
   const url = 'https://api-m.sandbox.paypal.com/v2/customer/partner-referrals'
   const bodyParams = {
     "tracking_id": userid,
@@ -41,22 +66,38 @@ export const getPaypalLinks = (email, userid) => async (dispatch) => {
     // "partner_config_override": {
     //   "return_url": "http://www.learnit-test.com/paypal/return"
     // }
-}
+  }
+
   const config = {
     headers: {
       Authorization: `${token_type} ${access_token}`,
       "Content-Type": "application/json"
     }
   }
-  const {links} = (await axios.post(url, bodyParams, config)).data
+
+  // Gets user specific signup link to fill button with using the above objects
+  const {links} = (await axios.post(
+    'https://api-m.sandbox.paypal.com/v2/customer/partner-referrals',
+    bodyParams,
+    config
+  )).data
+
+  // Dispatch the links to the store to use on componenets button
   dispatch(generateSignup(links))
 }
 
-const initState = {}
+const initState = {
+  merchantId: null,
+  payments_receivable: false,
+  primary_email_confirmed: false
+}
+
 export default function(state = initState, action){
   switch(action.type){
     case GENERATE_SIGNUP:
       return {...state, links: [...action.links]}
+    case SET_MERCHANT:
+      return {...state, ...action}
     default:
       return state
   }
