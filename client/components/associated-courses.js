@@ -18,9 +18,13 @@ class AssociatedCourses extends React.Component {
     render() {
         const userId = this.props.auth
         console.log('PROPS', this.props)
-        if (this.props.courses.courses.length !== 0) {
+        if (
+            this.props.courses.courses.length !== 0 &&
+            this.props.enrollments.enrollments.length !== 0
+        ) {
             const courses = this.props.courses.courses
-            // const enrolledCourse = this.props
+            const enrolledCourses = this.props.enrollments.enrollments
+            console.log('HI', enrolledCourses)
             const usersTaughtCourses = courses.filter(
                 (course) => course.userId === userId
             )
@@ -35,9 +39,9 @@ class AssociatedCourses extends React.Component {
                             icon={<Icon>school</Icon>}
                             node="div"
                         >
-                            {usersTaughtCourses.map((course) => {
-                                return <p key={course.id}>{course.title}</p>
-                            })}
+                            {usersTaughtCourses.map((course) => (
+                                <p key={course.id}>{course.title}</p>
+                            ))}
                         </CollapsibleItem>
 
                         <CollapsibleItem
@@ -46,8 +50,9 @@ class AssociatedCourses extends React.Component {
                             icon={<Icon>cast_connected</Icon>}
                             node="div"
                         >
-                            Yeah, you do seem to have a little 'shit creek'
-                            action going.
+                            {enrolledCourses.map((course) => (
+                                <p key={course.courseId}>{course.courseId}</p>
+                            ))}
                         </CollapsibleItem>
                     </Collapsible>
                 </div>
