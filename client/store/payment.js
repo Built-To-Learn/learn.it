@@ -12,15 +12,20 @@ const _setMerchant = (merchant) => ({
   merchant
 })
 
-// export const setMerchant = (trackingId, token_type = "Bearer") => async (dispatch) => {
-//   const data = {
-//     token_type,
-//     access_token
-//   }
+export const setMerchant = (trackingId) => async (dispatch) => {
+  const {token_type, access_token} = await getAccessCode()
 
-//   const merchant = (await axios.post(`/auth/paypal/merchant/${trackingId}`, data)).data
-//   dispatch(_setMerchant(merchant))
-// }
+  const body = {
+    token_type,
+    access_token
+  }
+
+  // needs Auth in req body
+  const merchant = (await axios.post(`/auth/paypal/merchant/${trackingId}`,
+   body)).data
+
+  dispatch(_setMerchant(merchant))
+}
 
 const getAccessCode = async () => {
   const {token_type, access_token} = (await axios.get("/auth/paypaltoken")).data
@@ -29,6 +34,7 @@ const getAccessCode = async () => {
 }
 
 export const generateSignupLinks = (email, userid) => async (dispatch) => {
+  console.log("GENERATING LINKS")
   // check if we have an access code - otherwise get one ????
   const {token_type, access_token} = await getAccessCode()
 
@@ -87,9 +93,12 @@ export const generateSignupLinks = (email, userid) => async (dispatch) => {
 }
 
 const initState = {
-  merchantId: null,
-  payments_receivable: false,
-  primary_email_confirmed: false
+  merchant:{
+    merchantId: null,
+    payments_receivable: false,
+    primary_email_confirmed: false
+  }
+
 }
 
 export default function(state = initState, action){

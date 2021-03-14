@@ -1,7 +1,7 @@
 import React from "react"
 import Payment from "./payment"
 import { connect } from "react-redux"
-import { updateUserInfo } from "../store"
+import { updateUserInfo, generateSignupLinks, setMerchant } from "../store"
 
 const AccountInfo = ({auth, handleSubmit}) => {
   return (

@@ -2,23 +2,29 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { generateSignupLinks, setMerchant } from "../store"
 
-const Payment = ({paypalSignup, payment, auth}) => {
+const Payment = ({paypalBootstrap, payment, auth}) => {
   useEffect(() => {
-    const init = async () => {
-      await paypalSignup(auth.email, auth.id)
-    }
-
-    init()
+    paypalBootstrap(auth.email, auth.id)
   }, [])
 
-  return(
-    <div>
-      <a target="_blank" className={ !payment.links ? "disabled btn" : "btn" }  href={!payment.links ? "" : payment.links[1].href}>
-        Link Paypal
-      </a>
-      {/* <p>{ !primary_email_confirmed ? 'please verify primary email' : ''}</p> */}
-    </div>
-  )
+  if(payment.merchant.payments_receivable){
+    return(
+      <div>
+        <a className="btn disabled">
+          Paypal Account Linked
+        </a>
+      </div>
+    )
+
+  }else{
+    return (
+      <div>
+        <a className="btn" target="_blank" href={!payment.links ? "" : payment.links[1].href}>
+          Link Paypal
+        </a>
+      </div>
+    )
+  }
 }
 
 const mapState = ({payment, auth}) => {
@@ -30,8 +36,9 @@ const mapState = ({payment, auth}) => {
 
 const mapDispatch = (dispatch) => {
   return {
-      paypalSignup(email, userid){
-        dispatch(generateSignupLinks(email, userid))
+      async paypalBootstrap(email, userid){
+        await dispatch(generateSignupLinks(email, userid))
+        await dispatch(setMerchant(userid))
       },
   }
 }
