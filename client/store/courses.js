@@ -34,8 +34,8 @@ export const createCourse = (courseObj) => async (dispatch) => {
 export const loadCourses = () => {
     console.log('fetch')
     return async (dispatch) => {
-        console.log('inside fetch')
         const courses = (await axios.get('/api/courses')).data
+        console.log('COURSES', courses)
         dispatch(_loadCourses(courses))
     }
 }

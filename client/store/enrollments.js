@@ -1,5 +1,5 @@
 import axios from 'axios'
-const ENROLL_IN_COURSE = 'ENROLL IN COURSE'
+const ENROLL_IN_COURSE = 'ENROLL_IN_COURSE'
 const LOAD_ENROLLMENTS = 'LOAD_ENROLLMENTS'
 
 export const _enrollInCourse = (enrollment) => ({
@@ -21,6 +21,7 @@ export const enrollInCourse = (courseId, userId) => {
                 courseId,
                 userId,
             })
+
             dispatch(_enrollInCourse({ courseId, userId }))
         }
     } catch (err) {
@@ -43,11 +44,12 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case LOAD_ENROLLMENTS:
-            return { enrollments: action.enrollment }
+            console.log('ACTION', action)
+            return { enrollments: action.enrollments }
         case ENROLL_IN_COURSE:
             return {
                 ...state,
-                enrollments: [...state.enrollments, action.enrollment],
+                enrollments: [...state.enrollments, action.enrollment], // why is this undefeind
             }
 
         default:

@@ -13,14 +13,14 @@ class AssociatedCourses extends React.Component {
     componentDidMount() {
         this.props.getCourses()
         this.props.getEnrollments(this.props.auth)
-        console.log('PROPS', this.props)
     }
 
     render() {
         const userId = this.props.auth
-
+        console.log('PROPS', this.props)
         if (this.props.courses.courses.length !== 0) {
             const courses = this.props.courses.courses
+            // const enrolledCourse = this.props
             const usersTaughtCourses = courses.filter(
                 (course) => course.userId === userId
             )
