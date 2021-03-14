@@ -42,11 +42,6 @@ class Routes extends Component {
                             path="/viewcourses"
                             component={CoursesView}
                         />
-                        <Route
-                            exact
-                            path="/associatedcourses"
-                            component={AssociatedCourses}
-                        />
                         {/* <Route path="/dashboard" component={Dashboard} /> */}
                         <Redirect to="/home" />
                     </Switch>

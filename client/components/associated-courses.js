@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { logout } from '../store'
 import { loadCourses } from '../store/courses'
 import M from 'materialize-css'
-import { CourseCard } from './course-card'
 import { Collapsible, CollapsibleItem, Icon } from 'react-materialize'
 
 class AssociatedCourses extends React.Component {
@@ -13,14 +11,7 @@ class AssociatedCourses extends React.Component {
     }
     componentDidMount() {
         this.props.getCourses()
-        let elems = document.querySelectorAll('.collapsible')
-        M.Collapsible.init(elems)
     }
-
-    // async componentDidUpdate() {
-    //     var elems = document.querySelectorAll('.collapsible')
-    //     M.Collapsible.init(elems, options)
-    // }
 
     render() {
         const userId = this.props.auth
@@ -68,7 +59,6 @@ class AssociatedCourses extends React.Component {
  */
 const mapState = (state) => {
     return {
-        isLoggedIn: !!state.auth.id,
         courses: state.courses,
         auth: state.auth.id,
     }
