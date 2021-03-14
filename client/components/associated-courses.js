@@ -12,8 +12,8 @@ class AssociatedCourses extends React.Component {
     }
     componentDidMount() {
         this.props.getCourses()
-        console.log('PROPS', this.props)
         this.props.getEnrollments(this.props.auth)
+        console.log('PROPS', this.props)
     }
 
     render() {
@@ -65,6 +65,7 @@ const mapState = (state) => {
     return {
         courses: state.courses,
         auth: state.auth.id,
+        enrollments: state.enrollments,
     }
 }
 

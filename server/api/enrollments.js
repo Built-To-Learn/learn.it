@@ -1,13 +1,13 @@
 const router = require('express').Router()
 const {
-    models: { Enrollment, Student, Course },
+    models: { Enrollment, User, Course },
 } = require('../db')
 
 router.get('/', async (req, res, next) => {
     try {
         res.status(200).json(
             await Enrollment.findAll({
-                include: [Course],
+                include: [User, Course],
             })
         )
     } catch (ex) {

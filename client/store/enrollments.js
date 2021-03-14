@@ -31,6 +31,7 @@ export const enrollInCourse = (courseId, userId) => {
 export const loadEnrollments = (userId) => {
     return async (dispatch) => {
         const enrollments = (await axios.get(`/api/enrollments/${userId}`)).data
+        console.log('ENROLLMENTS', enrollments)
         dispatch(_loadEnrollments(enrollments))
     }
 }
