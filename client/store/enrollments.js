@@ -1,9 +1,15 @@
 import axios from 'axios'
-const ENROLL_IN_COURSE = 'ENTROLL IN COURSE'
+const ENROLL_IN_COURSE = 'ENROLL IN COURSE'
+const LOAD_ENROLLMENTS = 'LOAD_ENROLLMENTS'
 
 export const _enrollInCourse = (enrollment) => ({
     type: ENROLL_IN_COURSE,
     enrollment,
+})
+
+export const _loadEnrollments = (enrollments) => ({
+    type: LOAD_ENROLLMENTS,
+    enrollments,
 })
 
 export const enrollInCourse = (courseId, userId) => {
@@ -22,12 +28,21 @@ export const enrollInCourse = (courseId, userId) => {
     }
 }
 
+export const loadEnrollments = (userId) => {
+    return async (dispatch) => {
+        const enrollments = (await axios.get(`/api/enrollments/${userId}`)).data
+        dispatch(_loadEnrollments(enrollments))
+    }
+}
+
 const initialState = {
     enrollments: [],
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case LOAD_ENROLLMENTS:
+            return { enrollments: action.enrollment }
         case ENROLL_IN_COURSE:
             return {
                 ...state,

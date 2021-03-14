@@ -16,8 +16,6 @@ const _createCourse = (course) => ({
 
 export const _loadCourses = (courses) => ({ type: LOAD_COURSES, courses })
 
-export const _enrollInCourse = (course) => ({ type: ENROLL_IN_COURSE, course })
-
 /**
  * THUNK CREATORS
  */
@@ -42,22 +40,22 @@ export const loadCourses = () => {
     }
 }
 
-export const enrollInCourse = (courseId, userId) => {
-    console.log('ENROLL IN COURSE', courseId, userId)
-    try {
-        return async () => {
-            console.log('enroll inside enroll')
-            await axios.post(`/api/courses`)
-        }
-    } catch (err) {
-        console.log(err)
-    }
-    // return async (dispatch) => {
-    //     // console.log('inside fetch')
-    //     // const courses = (await axios.get('/api/courses')).data
-    //     // dispatch(_loadCourses(courses))
-    // }
-}
+// export const enrollInCourse = (courseId, userId) => {
+//     console.log('ENROLL IN COURSE', courseId, userId)
+//     try {
+//         return async () => {
+//             console.log('enroll inside enroll')
+//             await axios.post(`/api/courses`)
+//         }
+//     } catch (err) {
+//         console.log(err)
+//     }
+//     // return async (dispatch) => {
+//     //     // console.log('inside fetch')
+//     //     // const courses = (await axios.get('/api/courses')).data
+//     //     // dispatch(_loadCourses(courses))
+//     // }
+// }
 /**
  * REDUCER
  */

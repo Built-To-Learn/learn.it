@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { loadCourses } from '../store/courses'
+import { loadEnrollments } from '../store/enrollments'
 import M from 'materialize-css'
 import { Collapsible, CollapsibleItem, Icon } from 'react-materialize'
 
@@ -11,6 +12,8 @@ class AssociatedCourses extends React.Component {
     }
     componentDidMount() {
         this.props.getCourses()
+        console.log('PROPS', this.props)
+        this.props.getEnrollments(this.props.auth)
     }
 
     render() {
@@ -21,6 +24,7 @@ class AssociatedCourses extends React.Component {
             const usersTaughtCourses = courses.filter(
                 (course) => course.userId === userId
             )
+            console.log('userTaughtCOURSES', usersTaughtCourses)
 
             return (
                 <div style={{ display: 'inline-block' }}>
@@ -68,6 +72,10 @@ const mapDispatch = (dispatch) => {
     return {
         getCourses: () => {
             dispatch(loadCourses())
+        },
+
+        getEnrollments: (userId) => {
+            dispatch(loadEnrollments(userId))
         },
     }
 }
