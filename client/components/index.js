@@ -22,3 +22,5 @@ export { default as ClassSearch } from './find-a-class-search';
 export { default as ViewParticipants } from './viewParticipants';
 export { default as AccountInfoBtn } from "./account_info_btn"
 export { default as AccountInfo } from "./account_info"
+export { default as Breakout } from './breakout';
+export { default as Chatroom } from './breakout-video';

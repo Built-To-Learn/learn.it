@@ -30,6 +30,21 @@ class Landing extends Component {
     this.props.fetchView('dashboard');
   }
 
+  componentDidUpdate(prevProps) {
+    console.log('props', prevProps.studentBreakout.active);
+    if (
+      prevProps.studentBreakout.active !== this.props.studentBreakout.active
+    ) {
+      if (!!this.props.studentBreakout.active) {
+        this.setState({
+          room: this.props.studentBreakout.room,
+          type: 'breakout',
+        });
+      }
+      this.props.fetchView(`breakout`);
+    }
+  }
+
   render() {
     console.log('view', this.props.view);
     const view = this.props.view;
@@ -53,6 +68,11 @@ class Landing extends Component {
           ) : (
             ''
           )}
+          {view === 'breakout' ? (
+            <Dashboard room={this.state.room} type={this.state.type} />
+          ) : (
+            ''
+          )}
           {view === 'findAClass' ? <ClassSearch /> : ''}
           {view === 'createAClass' ? <CreateNewCourse /> : ''}
           {view === 'viewClasses' ? <CoursesView /> : ''}
@@ -63,9 +83,10 @@ class Landing extends Component {
   }
 }
 
-const mapStateToProps = ({ view }) => {
+const mapStateToProps = ({ view, studentBreakout }) => {
   return {
     view: view,
+    studentBreakout: studentBreakout,
   };
 };
 

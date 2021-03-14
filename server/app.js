@@ -98,28 +98,38 @@ io.sockets.on('connection', (socket) => {
     socket.to(room).emit('broadcaster');
   });
 
-  //DO NOT DELETE -> for multi-way video chat
-  // socket.on('broadcaster', (id, type, room) => {
-  //   socket.join(room);
-  //   socket.to(room).emit('broadcaster', socket.id, type);
-  // });
+  socket.on('breakout_broadcaster', (id, type, room) => {
+    socket.join(room);
+    socket.to(room).emit('breakout_broadcaster', socket.id, type);
+  });
 
-  // socket.on('offer', (id, message, type) => {
-  //   console.log('offer', id);
-  //   socket.to(id).emit('offer', socket.id, message, type);
-  // });
-  // socket.on('answer', (id, message) => {
-  //   socket.to(id).emit('answer', socket.id, message);
-  // });
-  // socket.on('candidate', (id, message) => {
-  //   console.log('candidate', id);
-  //   socket.to(id).emit('candidate', socket.id, message);
-  // });
-  // socket.on('disconnected', (room) => {
-  //   socket.to(room).emit('disconnectPeer', socket.id);
-  //   socket.leave(room);
-  // });
-  socket.on('newMessage', (message) => {
-    socket.emit('newMessage', message);
+  socket.on('breakout_offer', (id, message, type) => {
+    console.log('offer', id);
+    socket.to(id).emit('breakout_offer', socket.id, message, type);
+  });
+  socket.on('breakout_answer', (id, message) => {
+    socket.to(id).emit('breakout_answer', socket.id, message);
+  });
+  socket.on('breakout_candidate', (id, message) => {
+    console.log('candidate', id);
+    socket.to(id).emit('breakout_candidate', socket.id, message);
+  });
+  socket.on('breakout_disconnected', (room) => {
+    socket.to(room).emit('breakout_disconnectPeer', socket.id);
+    socket.leave(room);
+  });
+
+  socket.on('breakout', (room, rooms) => {
+    Object.keys(rooms).forEach((key) => {
+      socket.to(key).emit('joinBreakout', `${room}-${rooms[key].group}`);
+    });
+  });
+
+  socket.on('joinChat', (room) => {
+    socket.join(room);
+  });
+  socket.on('newMessage', (message, room) => {
+    console.log(message, room);
+    socket.to(room).emit('newMessage', message);
   });
 });

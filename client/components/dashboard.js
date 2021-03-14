@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Broadcaster, Watcher, ViewParticipants } from './index';
+import {
+  Broadcaster,
+  Watcher,
+  Chat,
+  ViewParticipants,
+  Breakout,
+  Chatroom,
+} from './index';
 import { fetchClearView } from '../store/view';
 //import { ViewParticipants } from './viewParticipants';
-import { peerConnections } from './broadcaster';
+// import { peerConnections } from './broadcaster';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -20,6 +27,7 @@ class Dashboard extends Component {
   }
 
   render() {
+    console.log('this is the type', this.state.type);
     return (
       <div id="sub-right" className="border">
         <div id="right-pane-1" className="border">
@@ -39,12 +47,23 @@ class Dashboard extends Component {
             ) : (
               ''
             )}
+            {this.state.type === 'breakout' ? (
+              <Chatroom room={this.state.room} mute={this.state.mute} />
+            ) : (
+              ''
+            )}
           </div>
           <div id="right-pane-1-bottom" className="border"></div>
         </div>
         <div id="right-pane-2" className="border">
           <div id="right-pane-2-top" className="border">
+            {this.state.topPanel === 'chat' ? (
+              <Chat room={this.state.room} />
+            ) : (
+              ''
+            )}
             {this.state.topPanel === 'participants' ? <ViewParticipants /> : ''}
+            {this.state.topPanel === 'breakout' ? <Breakout /> : ''}
           </div>
           <div id="right-pane-2-bottom" className="border">
             <button onClick={() => this.props.fetchClearView()}>
@@ -79,6 +98,9 @@ class Dashboard extends Component {
                 </button>
                 <button onClick={() => this.setState({ topPanel: 'chat' })}>
                   Chat
+                </button>
+                <button onClick={() => this.setState({ topPanel: 'breakout' })}>
+                  Breakout
                 </button>
               </div>
             ) : (
