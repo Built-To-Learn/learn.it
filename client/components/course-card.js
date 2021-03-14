@@ -4,9 +4,6 @@ import M from 'materialize-css'
 export const CourseCard = ({ course }) => {
     console.log(course)
     return (
-        // <div key={idx}>
-        //     <p>{course.title}</p>
-        // </div>
         <div className="row">
             <div className="col s13 m3">
                 <div className="card hoverable">
