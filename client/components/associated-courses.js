@@ -19,7 +19,7 @@ class AssociatedCourses extends React.Component {
         const userId = this.props.auth
         console.log('PROPS', this.props)
         if (
-            this.props.courses.courses.length !== 0 &&
+            this.props.courses.courses.length !== 0 ||
             this.props.enrollments.enrollments.length !== 0
         ) {
             const courses = this.props.courses.courses
@@ -51,7 +51,9 @@ class AssociatedCourses extends React.Component {
                             node="div"
                         >
                             {enrolledCourses.map((course) => (
-                                <p key={course.courseId}>{course.courseId}</p>
+                                <p key={course.course.id}>
+                                    {course.course.title}
+                                </p>
                             ))}
                         </CollapsibleItem>
                     </Collapsible>
