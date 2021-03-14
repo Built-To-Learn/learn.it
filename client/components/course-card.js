@@ -1,6 +1,8 @@
 import React from 'react'
 import M from 'materialize-css'
 import { connect } from 'react-redux'
+import { handleEnrollment } from '../store'
+import { enrollInCourse } from '../store/enrollments'
 
 class CourseCard extends React.Component {
     constructor(props) {
@@ -9,6 +11,7 @@ class CourseCard extends React.Component {
 
     render() {
         const course = this.props.course
+        const userId = this.props.auth
         return (
             <div className="row">
                 <div className="col s13 m3">
@@ -27,7 +30,16 @@ class CourseCard extends React.Component {
                                 </i>
                             </span>
                             <p>
-                                <a href="#">Enroll</a>
+                                <a
+                                    onClick={() =>
+                                        this.props.enrollInCourse(
+                                            course.id,
+                                            userId
+                                        )
+                                    }
+                                >
+                                    Enroll
+                                </a>
                             </p>
                         </div>
                         <div className="card-reveal">
@@ -49,8 +61,9 @@ class CourseCard extends React.Component {
 
 const mapState = (state) => {
     return {
-        isLoggedIn: !!state.auth.id,
-        courses: state.courses,
+        auth: state.auth.id,
+        // isLoggedIn: !!state.auth.id,
+        // courses: state.courses,
     }
 }
 
@@ -59,6 +72,8 @@ const mapDispatch = (dispatch) => {
         getCourses: () => {
             dispatch(loadCourses())
         },
+        enrollInCourse: (courseId, userId) =>
+            dispatch(enrollInCourse(courseId, userId)),
     }
 }
 
