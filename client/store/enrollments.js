@@ -9,12 +9,13 @@ export const _enrollInCourse = (enrollment) => ({
 export const enrollInCourse = (courseId, userId) => {
     console.log('ENROLL IN COURSE', courseId, userId)
     try {
-        return async () => {
+        return async (dispatch) => {
             console.log('enroll inside enroll')
             await axios.post(`/api/enrollments`, {
-                courseId: courseId,
-                userId: userId,
+                courseId,
+                userId,
             })
+            dispatch(_enrollInCourse({ courseId, userId }))
         }
     } catch (err) {
         console.log(err)
@@ -27,8 +28,11 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        // case ENROLL_IN_COURSE:
-        //     return { ...state, courses: [...state.courses, action.course] }
+        case ENROLL_IN_COURSE:
+            return {
+                ...state,
+                enrollments: [...state.enrollments, action.enrollment],
+            }
 
         default:
             return state
