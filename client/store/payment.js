@@ -28,13 +28,11 @@ export const setMerchant = (trackingId) => async (dispatch) => {
 }
 
 const getAccessCode = async () => {
-  const {token_type, access_token} = (await axios.get("/auth/paypaltoken")).data
-
+  const {token_type, access_token} = (await axios.get("/auth/paypal/token")).data
   return {token_type, access_token}
 }
 
 export const generateSignupLinks = (email, userid) => async (dispatch) => {
-  console.log("GENERATING LINKS")
   // check if we have an access code - otherwise get one ????
   const {token_type, access_token} = await getAccessCode()
 
@@ -106,7 +104,13 @@ export default function(state = initState, action){
     case GENERATE_SIGNUP:
       return {...state, links: [...action.links]}
     case SET_MERCHANT:
-      return {...state, ...action}
+      return {...state,
+         merchant: {
+           merchantId: action.merchant.merchantId,
+           payments_receivable: action.merchant.payments_receivable,
+           primary_email_confirmed: action.merchant.primary_email_confirmed
+          }
+        }
     default:
       return state
   }

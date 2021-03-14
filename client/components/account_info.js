@@ -3,7 +3,7 @@ import Payment from "./payment"
 import { connect } from "react-redux"
 import { updateUserInfo, generateSignupLinks, setMerchant } from "../store"
 
-const AccountInfo = ({auth, handleSubmit}) => {
+const AccountInfo = ({auth, handleSubmit, payment}) => {
   return (
       <div className="section container">
         <h1 className="center-align">Account Info</h1>
@@ -28,16 +28,23 @@ const AccountInfo = ({auth, handleSubmit}) => {
               </label>
               <input name="email" type="text" defaultValue={auth.email} />
           </div>
-          <Payment />
-          <button className="btn" type="submit">Save</button>
+
+          <div className="col s12 center">
+            <Payment />
+            <button className="btn" type="submit">Save</button>
+          </div>
+          <p className="red-text">
+            {(!payment.merchant.primary_email_confirmed && payment.links && payment.merchant.payments_receivable) && "please confirm your email"}
+          </p>
         </form>
       </div>
   )
 }
 
-const mapState = ({auth}) => {
+const mapState = ({auth, payment}) => {
   return {
-    auth
+    auth,
+    payment
   }
 }
 

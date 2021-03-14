@@ -58,7 +58,7 @@ router.get('/me', async (req, res, next) => {
     }
 })
 
-router.get('/paypaltoken', async (req, res, next) => {
+router.get('/paypal/token', async (req, res, next) => {
     try {
         const url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
         const authStr = `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
