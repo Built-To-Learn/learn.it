@@ -105,8 +105,8 @@ const syncAndSeed = async () => {
       sal,
     },
     courses: {
-            math, 
-            stocks, 
+            math,
+            stocks,
             running,
             geometry,
             basketweaving,
