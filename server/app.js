@@ -128,6 +128,14 @@ io.sockets.on('connection', (socket) => {
     });
   });
 
+  socket.on('breakout_returnToMain', (room) => {
+    const mainRoom = room.slice(0, room.lastIndexOf('-'));
+    console.log('mainRoom', mainRoom);
+    for (let i = 1; i <= 3; i++) {
+      socket.to(`${mainRoom}-${i}`).emit('breakout_returnToMain', mainRoom);
+    }
+  });
+
   socket.on('joinChat', (room) => {
     socket.join(room);
   });

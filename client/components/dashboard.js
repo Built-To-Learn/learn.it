@@ -10,6 +10,7 @@ import {
 } from './index';
 import { fetchClearView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
+import { fetchReturnToMain } from '../store/student-breakout';
 //import { ViewParticipants } from './viewParticipants';
 // import { peerConnections } from './broadcaster';
 
@@ -29,17 +30,14 @@ class Dashboard extends Component {
   }
 
   resetRoom() {
-    console.log(this.props.studentBreakout);
     if (this.props.studentBreakout.active === true) {
-      console.log('resetting');
       this.props.fetchClearStudentBreakout();
     }
-    console.log('hitbelow');
+
     this.props.fetchClearView();
   }
 
   render() {
-    console.log('this is the type', this.state.type);
     return (
       <div id="sub-right" className="border">
         <div id="right-pane-1" className="border">
@@ -128,6 +126,20 @@ class Dashboard extends Component {
             ) : (
               ''
             )}
+            {this.state.type === 'breakout' ? (
+              <button
+                onClick={() =>
+                  this.props.fetchReturnToMain(
+                    this.state.room.slice(0, this.state.room.lastIndexOf('-')),
+                    'broadcast'
+                  )
+                }
+              >
+                Return to main
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>
@@ -143,6 +155,7 @@ const mapDispatch = (dispatch) => {
   return {
     fetchClearView: () => dispatch(fetchClearView()),
     fetchClearStudentBreakout: () => dispatch(fetchClearStudentBreakout()),
+    fetchReturnToMain: (room, type) => dispatch(fetchReturnToMain(room, type)),
   };
 };
 

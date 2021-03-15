@@ -1,7 +1,11 @@
 import { io } from 'socket.io-client';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchClearStudentBreakout } from '../store/student-breakout';
+import {
+  fetchClearStudentBreakout,
+  fetchReturnToMain,
+  fetchFinalReturn,
+} from '../store/student-breakout';
 import { fetchClearBreakout } from '../store/breakout';
 
 // window.onunload = window.onbeforeunload = () => {
@@ -42,14 +46,18 @@ let socket;
 class Chatroom extends Component {
   constructor(props) {
     super(props);
-    this.state = { teacher: '', members: [], focus: '', room: this.props.room };
+    this.state = {
+      teacher: '',
+      members: [],
+      focus: '',
+      room: this.props.room,
+    };
     this.changeFocus = this.changeFocus.bind(this);
   }
   componentDidMount() {
     socket = io();
 
     socket.on('connect', () => {
-      console.log('breakoutroom', socket.id);
       const video = document.getElementById('selfVideo');
       navigator.mediaDevices
         .getUserMedia(constraints)
@@ -173,9 +181,21 @@ class Chatroom extends Component {
         });
       }
     });
+
+    socket.on('breakout_returnToMain', (room) => {
+      this.props.fetchReturnToMain(room, 'watcher');
+      this.props.fetchFinalReturn();
+    });
   }
 
   componentDidUpdate() {
+    console.log('before emitting', this.props.studentBreakout);
+    if (this.props.studentBreakout.return === true) {
+      console.log('emitting returns');
+      socket.emit('breakout_returnToMain', this.state.room);
+      this.props.fetchFinalReturn();
+    }
+
     this.state.members.forEach((member) => {
       peerConnections[member].ontrack = (event) => {
         this[member].srcObject = event.streams[0];
@@ -190,7 +210,6 @@ class Chatroom extends Component {
     this.setState({ focus: e.target.id });
   }
   componentWillUnmount() {
-    console.log('unmounting');
     globalStream.getTracks().forEach((track) => track.stop());
     socket.close();
     // this.props.fetchClearStudentBreakout();
@@ -246,13 +265,24 @@ class Chatroom extends Component {
   }
 }
 
-export default connect(null, (dispatch) => {
-  return {
-    fetchClearStudentBreakout: () => {
-      dispatch(fetchClearStudentBreakout());
-    },
-    fetchClearBreakout: () => {
-      dispatch(fetchClearBreakout());
-    },
-  };
-})(Chatroom);
+export default connect(
+  ({ studentBreakout }) => {
+    return {
+      studentBreakout: studentBreakout,
+    };
+  },
+  (dispatch) => {
+    return {
+      fetchClearStudentBreakout: () => {
+        dispatch(fetchClearStudentBreakout());
+      },
+      fetchClearBreakout: () => {
+        dispatch(fetchClearBreakout());
+      },
+      fetchReturnToMain: (room, type) => {
+        dispatch(fetchReturnToMain(room, type));
+      },
+      fetchFinalReturn: () => dispatch(fetchFinalReturn()),
+    };
+  }
+)(Chatroom);
