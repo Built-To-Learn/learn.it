@@ -9,11 +9,12 @@ import {
   Dashboard,
   Parallax,
   Landing,
-  Payment
+  Payment,
 } from './components';
 import { CreateNewCourse } from './components/createclass.js';
 import { me } from './store';
 import CoursesView from './components/courses-view.js';
+import AssociatedCourses from './components/associated-courses.js';
 
 /**
  * COMPONENT
@@ -44,6 +45,7 @@ class Routes extends Component {
             {/* <Route path="/videochat" component={VideoChat} /> */}
             {/* <Route path="/landing" component={Landing} /> */}
             <Route exact path="/createcourse" component={CreateNewCourse} />
+            <Route exact path="/tip" component={Payment} />
           </Switch>
         )}
       </div>

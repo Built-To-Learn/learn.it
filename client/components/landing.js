@@ -9,6 +9,7 @@ import {
   CoursesView,
   AccountInfoBtn,
   AccountInfo,
+  AssociatedCourses,
 } from './index';
 import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
@@ -61,6 +62,7 @@ class Landing extends Component {
           <CreateAClass />
           <FindAClass />
           <ViewCourses />
+          <AssociatedCourses />
         </div>
         <div id="right" className="border">
           {view === 'dashboard' ? (
