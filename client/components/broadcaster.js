@@ -190,7 +190,6 @@ class Broadcaster extends Component {
   }
 
   componentWillUnmount() {
-    console.log('unmount broadcast');
     try {
       videoTrack.getTracks().forEach((track) => track.stop());
       audioTrack.getTracks().forEach((track) => track.stop());

@@ -189,9 +189,7 @@ class Chatroom extends Component {
   }
 
   componentDidUpdate() {
-    console.log('before emitting', this.props.studentBreakout);
     if (this.props.studentBreakout.return === true) {
-      console.log('emitting returns');
       socket.emit('breakout_returnToMain', this.state.room);
       this.props.fetchFinalReturn();
     }
