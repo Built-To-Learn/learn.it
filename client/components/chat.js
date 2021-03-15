@@ -2,16 +2,6 @@ import { io } from 'socket.io-client';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-// const socket = io();
-
-// socket.on('connect', () => {
-//   console.log('new socket', socket.id);
-// });
-
-// window.onunload = window.onbeforeunload = () => {
-//   socket.close();
-// };
-
 let socket;
 
 class Chat extends Component {
@@ -40,12 +30,10 @@ class Chat extends Component {
     socket = io();
 
     socket.on('connect', () => {
-      console.log('new socket', socket.id);
       socket.emit('joinChat', this.props.room);
     });
 
     socket.on('newMessage', (message) => {
-      console.log(message);
       this.setState({
         ...this.state,
         messages: [...this.state.messages, message],

@@ -13,6 +13,7 @@ import {
 } from './index';
 import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
+import { fetchClearStudentBreakout } from '../store/student-breakout';
 
 class Landing extends Component {
   constructor(props) {
@@ -31,8 +32,7 @@ class Landing extends Component {
     this.props.fetchView('dashboard');
   }
 
-  componentDidUpdate(prevProps) {
-    console.log('props', prevProps.studentBreakout.active);
+  async componentDidUpdate(prevProps) {
     if (
       prevProps.studentBreakout.active !== this.props.studentBreakout.active
     ) {
@@ -43,11 +43,32 @@ class Landing extends Component {
         });
         this.props.fetchView(`breakout`);
       }
+    } else if (
+      !this.props.studentBreakout.active &&
+      !!this.props.studentBreakout.return
+    ) {
+      this.setState({
+        room: this.props.studentBreakout.room,
+        type: this.props.studentBreakout.type,
+      });
+      this.props.fetchClearStudentBreakout();
+      this.props.fetchView('dashboard');
     }
+
+    // if (
+    //   !prevProps.studentBreakout.return &&
+    //   !!this.props.studentBreakout.return
+    // ) {
+    // this.setState({
+    //   room: this.props.studentBreakout.room,
+    //   type: this.props.studentBreakout.type,
+    // });
+    // this.props.fetchClearStudentBreakout();
+    // this.props.fetchView('dashboard');
+    // }
   }
 
   render() {
-    console.log('view', this.props.view);
     const view = this.props.view;
     return (
       <div id="dashboard" className="border">
@@ -95,6 +116,7 @@ const mapStateToProps = ({ view, studentBreakout }) => {
 const mapDispatch = (dispatch) => {
   return {
     fetchView: (view) => dispatch(fetchView(view)),
+    fetchClearStudentBreakout: () => dispatch(fetchClearStudentBreakout()),
   };
 };
 

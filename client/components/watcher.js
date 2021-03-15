@@ -36,8 +36,6 @@ class Watcher extends Component {
     socket = io();
 
     socket.on('offer', (id, description) => {
-      console.log('offer');
-
       const peerConnection = new RTCPeerConnection(config);
       peerConnection
         .setRemoteDescription(description)
@@ -94,7 +92,6 @@ class Watcher extends Component {
   }
 
   render() {
-    console.log(this.state.broadcaster);
     return (
       <div id="main_video_frame">
         {this.state.broadcaster === '' ? (

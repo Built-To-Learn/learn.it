@@ -171,7 +171,7 @@ class VideoChat extends Component {
 
   joinChat(e) {
     e.persist();
-    console.log(e.target);
+
     const video = document.getElementById('selfVideo');
     navigator.mediaDevices
       .getUserMedia(constraints)
