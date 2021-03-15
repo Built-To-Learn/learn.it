@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Dashboard,
   FindAClass,
@@ -41,8 +41,8 @@ class Landing extends Component {
           room: this.props.studentBreakout.room,
           type: 'breakout',
         });
+        this.props.fetchView(`breakout`);
       }
-      this.props.fetchView(`breakout`);
     }
   }
 
@@ -93,9 +93,9 @@ const mapStateToProps = ({ view, studentBreakout }) => {
 };
 
 const mapDispatch = (dispatch) => {
-    return {
-        fetchView: (view) => dispatch(fetchView(view)),
-    }
-}
+  return {
+    fetchView: (view) => dispatch(fetchView(view)),
+  };
+};
 
-export default connect(mapStateToProps, mapDispatch)(Landing)
+export default connect(mapStateToProps, mapDispatch)(Landing);

@@ -9,6 +9,7 @@ import {
   Chatroom,
 } from './index';
 import { fetchClearView } from '../store/view';
+import { fetchClearStudentBreakout } from '../store/student-breakout';
 //import { ViewParticipants } from './viewParticipants';
 // import { peerConnections } from './broadcaster';
 
@@ -24,6 +25,17 @@ class Dashboard extends Component {
       video: true,
       topPanel: 'chat',
     };
+    this.resetRoom = this.resetRoom.bind(this);
+  }
+
+  resetRoom() {
+    console.log(this.props.studentBreakout);
+    if (this.props.studentBreakout.active === true) {
+      console.log('resetting');
+      this.props.fetchClearStudentBreakout();
+    }
+    console.log('hitbelow');
+    this.props.fetchClearView();
   }
 
   render() {
@@ -63,12 +75,14 @@ class Dashboard extends Component {
               ''
             )}
             {this.state.topPanel === 'participants' ? <ViewParticipants /> : ''}
-            {this.state.topPanel === 'breakout' ? <Breakout /> : ''}
+            {this.state.topPanel === 'breakout' ? (
+              <Breakout room={this.state.room} />
+            ) : (
+              ''
+            )}
           </div>
           <div id="right-pane-2-bottom" className="border">
-            <button onClick={() => this.props.fetchClearView()}>
-              Leave Room
-            </button>
+            <button onClick={() => this.resetRoom()}>Leave Room</button>
             {this.state.type === 'broadcast' ? (
               <div>
                 <button onClick={() => this.setState({ device: 'camera' })}>
@@ -121,13 +135,14 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {};
+const mapStateToProps = ({ studentBreakout }) => {
+  return { studentBreakout: studentBreakout };
 };
 
 const mapDispatch = (dispatch) => {
   return {
     fetchClearView: () => dispatch(fetchClearView()),
+    fetchClearStudentBreakout: () => dispatch(fetchClearStudentBreakout()),
   };
 };
 

@@ -7,6 +7,8 @@ import {
   fetchClearPeer,
 } from '../store/participants';
 
+import { fetchClearBreakout } from '../store/breakout';
+
 let socket;
 
 export const peerConnections = {};
@@ -100,79 +102,84 @@ class Broadcaster extends Component {
   }
 
   async componentDidUpdate() {
-    console.log(this.props.breakout);
     if (this.props.breakout.active === true) {
+      // try {
+      //   videoTrack.getTracks().forEach((track) => track.stop());
+      //   audioTrack.getTracks().forEach((track) => track.stop());
+      // } catch (er) {}
+      // globalStream.getTracks().forEach((track) => track.stop());
+
       socket.emit('breakout', this.props.room, this.props.breakout.rooms);
-    }
-
-    const video = document.getElementById('broadcast_watcher_video');
-
-    if (this.props.audio || this.props.video) {
-      if (this.props.device === 'camera') {
-        if (!this.props.video) {
-          constraints.video = false;
-        } else {
-          constraints.video = { facingMode: 'user' };
-        }
-        if (!this.props.audio) {
-          constraints.audio = false;
-        } else {
-          constraints.audio = true;
-        }
-
-        await navigator.mediaDevices
-          .getUserMedia(constraints)
-          .then((stream) => {
-            try {
-              globalStream.getTracks().forEach((track) => track.stop());
-              videoTrack.getTracks().forEach((track) => track.stop());
-              audioTrack.getTracks().forEach((track) => track.stop());
-            } catch {}
-
-            globalStream = stream;
-            video.srcObject = stream;
-          })
-          .catch((error) => console.error(error));
-      } else {
-        if (!this.props.video) {
-          gdmOptions.video = false;
-        } else {
-          gdmOptions.video = true;
-        }
-
-        await navigator.mediaDevices
-          .getDisplayMedia(gdmOptions)
-          .then(async (stream) => {
-            try {
-              globalStream.getTracks().forEach((track) => track.stop());
-              videoTrack.getTracks().forEach((track) => track.stop());
-              audioTrack.getTracks().forEach((track) => track.stop());
-            } catch {}
-            [videoTrack] = stream.getVideoTracks();
-            let newStream;
-            if (this.props.audio) {
-              const audioStream = await navigator.mediaDevices
-                .getUserMedia({ audio: this.props.audio })
-                .catch((e) => {
-                  throw e;
-                });
-              [audioTrack] = audioStream.getAudioTracks();
-              newStream = new MediaStream([videoTrack, audioTrack]);
-            } else {
-              newStream = new MediaStream([videoTrack]);
-            }
-
-            globalStream = newStream;
-            video.srcObject = newStream;
-          })
-          .catch((error) => console.error(error));
-      }
     } else {
-      try {
-        globalStream.getTracks().forEach((track) => track.stop());
-        videoTrack.getTracks().forEach((track) => track.stop());
-        audioTrack.getTracks().forEach((track) => track.stop());
-      } catch {}
+      const video = document.getElementById('broadcast_watcher_video');
+
+      if (this.props.audio || this.props.video) {
+        if (this.props.device === 'camera') {
+          if (!this.props.video) {
+            constraints.video = false;
+          } else {
+            constraints.video = { facingMode: 'user' };
+          }
+          if (!this.props.audio) {
+            constraints.audio = false;
+          } else {
+            constraints.audio = true;
+          }
+
+          await navigator.mediaDevices
+            .getUserMedia(constraints)
+            .then((stream) => {
+              try {
+                globalStream.getTracks().forEach((track) => track.stop());
+                videoTrack.getTracks().forEach((track) => track.stop());
+                audioTrack.getTracks().forEach((track) => track.stop());
+              } catch {}
+
+              globalStream = stream;
+              video.srcObject = stream;
+            })
+            .catch((error) => console.error(error));
+        } else {
+          if (!this.props.video) {
+            gdmOptions.video = false;
+          } else {
+            gdmOptions.video = true;
+          }
+
+          await navigator.mediaDevices
+            .getDisplayMedia(gdmOptions)
+            .then(async (stream) => {
+              try {
+                globalStream.getTracks().forEach((track) => track.stop());
+                videoTrack.getTracks().forEach((track) => track.stop());
+                audioTrack.getTracks().forEach((track) => track.stop());
+              } catch {}
+              [videoTrack] = stream.getVideoTracks();
+              let newStream;
+              if (this.props.audio) {
+                const audioStream = await navigator.mediaDevices
+                  .getUserMedia({ audio: this.props.audio })
+                  .catch((e) => {
+                    throw e;
+                  });
+                [audioTrack] = audioStream.getAudioTracks();
+                newStream = new MediaStream([videoTrack, audioTrack]);
+              } else {
+                newStream = new MediaStream([videoTrack]);
+              }
+
+              globalStream = newStream;
+              video.srcObject = newStream;
+            })
+            .catch((error) => console.error(error));
+        }
+      } else {
+        try {
+          globalStream.getTracks().forEach((track) => track.stop());
+          videoTrack.getTracks().forEach((track) => track.stop());
+          audioTrack.getTracks().forEach((track) => track.stop());
+        } catch {}
+      }
     }
 
     Object.keys(peerConnections).forEach((key) => {
@@ -183,6 +190,7 @@ class Broadcaster extends Component {
   }
 
   componentWillUnmount() {
+    console.log('unmount broadcast');
     try {
       videoTrack.getTracks().forEach((track) => track.stop());
       audioTrack.getTracks().forEach((track) => track.stop());
@@ -190,6 +198,7 @@ class Broadcaster extends Component {
     globalStream.getTracks().forEach((track) => track.stop());
     socket.close();
     this.props.fetchClearPeer();
+    this.props.fetchClearBreakout();
   }
 
   render() {
@@ -216,6 +225,7 @@ export default connect(
       fetchAddPeer: (peer) => dispatch(fetchAddPeer(peer)),
       fetchRemovePeer: (peer) => dispatch(fetchRemovePeer(peer)),
       fetchClearPeer: () => dispatch(fetchClearPeer()),
+      fetchClearBreakout: () => dispatch(fetchClearBreakout()),
     };
   }
 )(Broadcaster);

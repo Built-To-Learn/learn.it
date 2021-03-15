@@ -1,5 +1,8 @@
 import { io } from 'socket.io-client';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchClearStudentBreakout } from '../store/student-breakout';
+import { fetchClearBreakout } from '../store/breakout';
 
 // window.onunload = window.onbeforeunload = () => {
 //   socket.close();
@@ -11,6 +14,7 @@ const typeGlobal = 'student';
 
 let peerConnections = {};
 
+let globalStream;
 //const initialState = { teacher: '', members: [], focus: '', room: '' };
 
 const config = {
@@ -40,11 +44,27 @@ class Chatroom extends Component {
     super(props);
     this.state = { teacher: '', members: [], focus: '', room: this.props.room };
     this.changeFocus = this.changeFocus.bind(this);
-    this.joinChat = this.joinChat.bind(this);
-    this.leaveChat = this.leaveChat.bind(this);
   }
   componentDidMount() {
     socket = io();
+
+    socket.on('connect', () => {
+      console.log('breakoutroom', socket.id);
+      const video = document.getElementById('selfVideo');
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then((stream) => {
+          globalStream = stream;
+          video.srcObject = globalStream;
+          socket.emit(
+            'breakout_broadcaster',
+            socket.id,
+            typeGlobal,
+            this.state.room
+          );
+        })
+        .catch((error) => console.error(error));
+    });
 
     socket.on('breakout_broadcaster', (id, type) => {
       const video = document.getElementById('selfVideo');
@@ -132,37 +152,26 @@ class Chatroom extends Component {
       peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
     });
 
-    socket.on('breakout_disconnectPeer', (id) => {
+    socket.on('disconnectPeer', (id) => {
       if (id === this.state.focus) {
         this.focus.srcObject = this.selfVideo.srcObject;
       }
-      peerConnections[id].close();
-      delete peerConnections[id];
-      delete this[id];
+      if (peerConnections[id]) {
+        peerConnections[id].close();
+        delete peerConnections[id];
+        delete this[id];
+      }
+
       if (this.state.members.includes(id)) {
         this.setState({
           members: this.state.members.filter((peer) => peer !== id),
         });
-      } else {
+      } else if (id === this.state.teacher) {
         this.setState({
           teacher: '',
           members: this.state.members.filter((peer) => peer !== id),
         });
       }
-    });
-
-    socket.on('breakout_disconnect', () => {
-      socket.emit('breakout_disconnected', this.state.room);
-      peerConnections = {};
-      this.state.members.forEach((member) => {
-        delete this[member];
-      });
-      this.setState({
-        teacher: '',
-        members: [],
-        focus: '',
-        room: this.props.room,
-      });
     });
   }
 
@@ -180,47 +189,17 @@ class Chatroom extends Component {
   changeFocus(e) {
     this.setState({ focus: e.target.id });
   }
-
-  joinChat(e) {
-    e.persist();
-    console.log(e.target);
-    const video = document.getElementById('selfVideo');
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then((stream) => {
-        video.srcObject = stream;
-        socket.emit('breakout_broadcaster', socket.id, typeGlobal, e.target.id);
-      })
-      .catch((error) => console.error(error));
-    this.setState({ room: e.target.id });
+  componentWillUnmount() {
+    console.log('unmounting');
+    globalStream.getTracks().forEach((track) => track.stop());
+    socket.close();
+    // this.props.fetchClearStudentBreakout();
+    // this.props.fetchClearBreakout();
   }
-
-  leaveChat(e) {
-    socket.emit('breakout_disconnected', this.state.room);
-    peerConnections = {};
-    this.state.members.forEach((member) => {
-      delete this[member];
-    });
-    this.setState({
-      teacher: '',
-      members: [],
-      focus: '',
-      room: this.props.room,
-    });
-  }
-
-  //sendChat (message) -> {
-  //socket.emit('sendmessage, message)
-
-  //}
 
   render() {
     return (
       <div id="videos">
-        <button id="room1" onClick={(e) => this.joinChat(e)}>
-          Join
-        </button>
-        <button onClick={(e) => this.leaveChat(e)}> Leave</button>
         <div>
           <video
             id="selfVideo"
@@ -267,4 +246,13 @@ class Chatroom extends Component {
   }
 }
 
-export default Chatroom;
+export default connect(null, (dispatch) => {
+  return {
+    fetchClearStudentBreakout: () => {
+      dispatch(fetchClearStudentBreakout());
+    },
+    fetchClearBreakout: () => {
+      dispatch(fetchClearBreakout());
+    },
+  };
+})(Chatroom);

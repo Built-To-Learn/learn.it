@@ -90,6 +90,7 @@ io.sockets.on('connection', (socket) => {
     if (values.includes(socket.id)) {
       const idx = values.indexOf(socket.id);
       const keys = Object.keys(roomManager);
+      console.log('deleting manager');
       delete roomManager[keys[idx]];
     }
     socket.broadcast.emit('disconnectPeer', socket.id);
@@ -114,7 +115,9 @@ io.sockets.on('connection', (socket) => {
     console.log('candidate', id);
     socket.to(id).emit('breakout_candidate', socket.id, message);
   });
+
   socket.on('breakout_disconnected', (room) => {
+    console.log('breakout disconnect hit');
     socket.to(room).emit('breakout_disconnectPeer', socket.id);
     socket.leave(room);
   });
