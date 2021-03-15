@@ -100,6 +100,11 @@ class Broadcaster extends Component {
   }
 
   async componentDidUpdate() {
+    console.log(this.props.breakout);
+    if (this.props.breakout.active === true) {
+      socket.emit('breakout', this.props.room, this.props.breakout.rooms);
+    }
+
     const video = document.getElementById('broadcast_watcher_video');
 
     if (this.props.audio || this.props.video) {
@@ -200,10 +205,17 @@ class Broadcaster extends Component {
   }
 }
 
-export default connect(null, (dispatch) => {
-  return {
-    fetchAddPeer: (peer) => dispatch(fetchAddPeer(peer)),
-    fetchRemovePeer: (peer) => dispatch(fetchRemovePeer(peer)),
-    fetchClearPeer: () => dispatch(fetchClearPeer()),
-  };
-})(Broadcaster);
+export default connect(
+  ({ breakout }) => {
+    return {
+      breakout: breakout,
+    };
+  },
+  (dispatch) => {
+    return {
+      fetchAddPeer: (peer) => dispatch(fetchAddPeer(peer)),
+      fetchRemovePeer: (peer) => dispatch(fetchRemovePeer(peer)),
+      fetchClearPeer: () => dispatch(fetchClearPeer()),
+    };
+  }
+)(Broadcaster);

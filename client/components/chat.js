@@ -2,11 +2,17 @@ import { io } from 'socket.io-client';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-const socket = io();
+// const socket = io();
 
-window.onunload = window.onbeforeunload = () => {
-  socket.close();
-};
+// socket.on('connect', () => {
+//   console.log('new socket', socket.id);
+// });
+
+// window.onunload = window.onbeforeunload = () => {
+//   socket.close();
+// };
+
+let socket;
 
 class Chat extends Component {
   constructor() {
@@ -15,8 +21,31 @@ class Chat extends Component {
       messages: [],
       currentMessage: '',
     };
+    this.keyup = this.keyup.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  keyup(event) {
+    event.preventDefault();
+    if (event.key === 'Enter') {
+      document.getElementById('chat-submit').click();
+    }
+  }
+
+  componentDidMount() {
+    const el = document.getElementById('chat-text');
+    el.addEventListener('keyup', this.keyup);
+
+    socket = io();
+
+    socket.on('connect', () => {
+      console.log('new socket', socket.id);
+      socket.emit('joinChat', this.props.room);
+    });
 
     socket.on('newMessage', (message) => {
+      console.log(message);
       this.setState({
         ...this.state,
         messages: [...this.state.messages, message],
@@ -34,32 +63,67 @@ class Chat extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    socket.emit('newMessage', this.state.currentMessage);
+    const { userName } = this.props;
+    socket.emit(
+      'newMessage',
+      `${userName}: ${this.state.currentMessage}`,
+      this.props.room
+    );
     this.setState({
       ...this.state,
       currentMessage: '',
+      messages: [
+        ...this.state.messages,
+        `${userName}: ${this.state.currentMessage}`,
+      ],
     });
+  }
+
+  componentDidUpdate() {
+    setTimeout(() => {
+      const chat = document.getElementById('chat-messages');
+      chat.scrollTop = chat.scrollHeight;
+    }, 100);
+  }
+
+  componentWillUnmount() {
+    console.log('unmount');
+    socket.close();
+    const el = document.getElementById('chat-text');
+    el.removeEventListener('keyup', this.keyup);
   }
 
   render() {
     const { messages, currentMessage } = this.state;
-    const { userName } = this.props;
-
-    console.log(userName);
 
     return (
-      <div>
-        {messages.map((message) => {
-          return <p>{message}</p>;
-        })}
-        <input
-          value={currentMessage}
-          onChange={(event) => this.handleChange(event)}
-        ></input>
-        <button onClick={(event) => this.handleSubmit(event)}></button>
+      <div id="chat">
+        <div id="chat-messages">
+          {messages.map((message, i) => {
+            return <p key={i}>{message}</p>;
+          })}
+        </div>
+        <div id="chat-input">
+          <input
+            value={currentMessage}
+            onChange={(event) => this.handleChange(event)}
+            id="chat-text"
+          ></input>
+          <button
+            type="submit"
+            id="chat-submit"
+            onClick={(event) => this.handleSubmit(event)}
+          >
+            Send
+          </button>
+        </div>
       </div>
     );
   }
 }
 
-export default Chat;
+const mapState = (state) => ({
+  userName: state.auth.username,
+});
+
+export default connect(mapState)(Chat);

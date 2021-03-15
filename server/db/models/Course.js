@@ -4,6 +4,11 @@ const db = require('../db')
 const SALT_ROUNDS = 5
 
 const Course = db.define('course', {
+    id: {
+        primaryKey: true,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
+    },
     title: {
         type: Sequelize.STRING,
         allowNull: false,
