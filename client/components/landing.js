@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Dashboard,
   FindAClass,
@@ -8,7 +8,8 @@ import {
   ViewCourses,
   CoursesView,
   AccountInfoBtn,
-  AccountInfo
+  AccountInfo,
+  AssociatedCourses,
 } from './index';
 import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
@@ -61,6 +62,7 @@ class Landing extends Component {
           <CreateAClass />
           <FindAClass />
           <ViewCourses />
+          <AssociatedCourses />
         </div>
         <div id="right" className="border">
           {view === 'dashboard' ? (
@@ -91,9 +93,9 @@ const mapStateToProps = ({ view, studentBreakout }) => {
 };
 
 const mapDispatch = (dispatch) => {
-  return {
-    fetchView: (view) => dispatch(fetchView(view)),
-  };
-};
+    return {
+        fetchView: (view) => dispatch(fetchView(view)),
+    }
+}
 
-export default connect(mapStateToProps, mapDispatch)(Landing);
+export default connect(mapStateToProps, mapDispatch)(Landing)
