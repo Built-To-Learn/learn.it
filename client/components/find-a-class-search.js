@@ -19,7 +19,7 @@ class ClassSearch extends Component {
   }
   async onChange(e) {
     const text = e.target.value;
-    const res = (await axios.get(`/api/courses/${text}`)).data;
+    const res = (await axios.get(`/api/courses/courseSearch/${text}`)).data;
     this.setState({ text: text, results: res });
   }
 
