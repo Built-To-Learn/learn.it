@@ -12,6 +12,7 @@ class CourseCard extends React.Component {
     render() {
         const course = this.props.course
         const userId = this.props.auth
+        // console.log('PROPS HERE', this.props)
         return (
             <div className="row">
                 <div className="col s13 m3">
@@ -34,7 +35,8 @@ class CourseCard extends React.Component {
                                     onClick={() =>
                                         this.props.enrollInCourse(
                                             course.id,
-                                            userId
+                                            userId,
+                                            course.title
                                         )
                                     }
                                 >
@@ -72,8 +74,8 @@ const mapDispatch = (dispatch) => {
         getCourses: () => {
             dispatch(loadCourses())
         },
-        enrollInCourse: (courseId, userId) =>
-            dispatch(enrollInCourse(courseId, userId)),
+        enrollInCourse: (courseId, userId, courseTitle) =>
+            dispatch(enrollInCourse(courseId, userId, courseTitle)),
     }
 }
 

@@ -17,18 +17,15 @@ class AssociatedCourses extends React.Component {
 
     render() {
         const userId = this.props.auth
-        console.log('PROPS', this.props)
-        if (
-            this.props.courses.courses.length !== 0 ||
-            this.props.enrollments.enrollments.length !== 0
-        ) {
+        // console.log('PROPS', this.props)
+        if (this.props.courses.courses.length !== 0) {
             const courses = this.props.courses.courses
-            const enrolledCourses = this.props.enrollments.enrollments
-            console.log('HI', enrolledCourses)
+            // const enrolledCourses = this.props.enrollments.enrollments
+            // console.log('HI', enrolledCourses)
             const usersTaughtCourses = courses.filter(
                 (course) => course.userId === userId
             )
-            console.log('userTaughtCOURSES', usersTaughtCourses)
+            // console.log('userTaughtCOURSES', usersTaughtCourses)
 
             return (
                 <div style={{ display: 'inline-block' }}>
@@ -42,9 +39,10 @@ class AssociatedCourses extends React.Component {
                             {usersTaughtCourses.map((course) => (
                                 <p key={course.id}>{course.title}</p>
                             ))}
+                            {/* hi */}
                         </CollapsibleItem>
 
-                        <CollapsibleItem
+                        {/* <CollapsibleItem
                             expanded={false}
                             header="Enrolled Classes"
                             icon={<Icon>cast_connected</Icon>}
@@ -55,7 +53,7 @@ class AssociatedCourses extends React.Component {
                                     {course.course.title}
                                 </p>
                             ))}
-                        </CollapsibleItem>
+                        </CollapsibleItem> */}
                     </Collapsible>
                 </div>
             )
