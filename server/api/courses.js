@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {
   db,
-  models: { Course, Teacher },
+  models: { Course, Teacher, User },
 } = require('../db');
 const { Op } = db.Sequelize;
 
@@ -33,6 +33,8 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     console.log('REQ.BODY', req.body);
+    const user = await User.findByToken(req.headers.authorization);
+    req.body.userId = user.id;
     await Course.create(req.body);
     res.sendStatus(201);
   } catch (ex) {
