@@ -7,6 +7,7 @@ import {
   AccountInfoBtn,
   AccountInfo,
   AssociatedCourses,
+  EnrolledCourses,
 } from './index';
 import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
@@ -77,7 +78,9 @@ class Landing extends Component {
             Join room as watcher
           </button>
           <AccountInfoBtn />
+
           <AssociatedCourses />
+          <EnrolledCourses />
         </div>
         <div id="right" className="border">
           {view === 'dashboard' ? (
