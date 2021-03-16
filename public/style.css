@@ -47,6 +47,15 @@ form div {
     }
 } */
 
+.landingbtn {
+  display: flex;
+  align-items: center;
+}
+
+.landingbtn_text{
+  margin-top: 2px;
+}
+
 video {
   width: 20%;
   height: 20%;

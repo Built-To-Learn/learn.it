@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchView } from '../store/view';
+import { Icon } from 'react-materialize';
 
 class FindAClass extends Component {
   render() {
@@ -10,8 +11,8 @@ class FindAClass extends Component {
         className="landingbtn"
         onClick={() => this.props.fetchView('findAClass')}
       >
-        <span>Find a class</span>
-        <img id="magglass" src="magglass.png" height="20px" width="20px" />
+        <Icon>find_in_page</Icon>
+        <span className="landingbtn_text">Find a class</span>
       </div>
     );
   }

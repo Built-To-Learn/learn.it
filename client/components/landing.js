@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   Dashboard,
-  FindAClass,
   ClassSearch,
-  CreateAClass,
-  ViewCourses,
   CoursesView,
   AccountInfoBtn,
   AccountInfo,
@@ -80,9 +77,6 @@ class Landing extends Component {
             Join room as watcher
           </button>
           <AccountInfoBtn />
-          <CreateAClass />
-          <FindAClass />
-          <ViewCourses />
           <AssociatedCourses />
         </div>
         <div id="right" className="border">
