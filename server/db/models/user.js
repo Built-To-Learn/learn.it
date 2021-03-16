@@ -36,6 +36,9 @@ const User = db.define('user', {
         type: Sequelize.ENUM,
         values: ["STUDENT", "TEACHER"],
         defaultValue: "STUDENT"
+    },
+    merchantId: {
+        type: Sequelize.STRING
     }
 })
 

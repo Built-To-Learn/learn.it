@@ -22,7 +22,7 @@ export const setMerchant = (trackingId) => async (dispatch) => {
 
   // needs Auth in req body
   const merchant = (await axios.post(`/auth/paypal/merchant/${trackingId}`,
-   body)).data
+  body)).data
 
   dispatch(_setMerchant(merchant))
 }
@@ -104,13 +104,7 @@ export default function(state = initState, action){
     case GENERATE_SIGNUP:
       return {...state, links: [...action.links]}
     case SET_MERCHANT:
-      return {...state,
-         merchant: {
-           merchantId: action.merchant.merchantId,
-           payments_receivable: action.merchant.payments_receivable,
-           primary_email_confirmed: action.merchant.primary_email_confirmed
-          }
-        }
+      return { ...state, merchant: {...action.merchant}}
     default:
       return state
   }

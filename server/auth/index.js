@@ -99,14 +99,17 @@ router.post('/paypal/merchant/:trackingId', async (req, res, next) => {
 
         const { merchant_id } = (await axios.get(url, config)).data
 
-        url = `https://api-m.sandbox.paypal.com/v1/customer/partners/${process.env.PAYPAL_SANDBOX_MERCHANT_ID}/merchant-integrations/${merchant_id}`
+        if(merchant_id){
+            url = `https://api-m.sandbox.paypal.com/v1/customer/partners/${process.env.PAYPAL_SANDBOX_MERCHANT_ID}/merchant-integrations/${merchant_id}`
 
-        const {payments_receivable, primary_email_confirmed} = (await axios.get(url, config)).data
+            const {payments_receivable, primary_email_confirmed} = (await axios.get(url, config)).data
 
-        res.send({merchant_id, payments_receivable, primary_email_confirmed})
+            res.send({merchant_id, payments_receivable, primary_email_confirmed})
+        }
     } catch (ex) {
-        next(ex)
+        next("No Merchant Found")
     }
+
 })
 
 module.exports = router

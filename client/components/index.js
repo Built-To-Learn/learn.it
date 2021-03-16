@@ -21,11 +21,14 @@ export { default as CourseCard } from './course-card'
 export { default as CoursesView } from './courses-view'
 export { default as ViewCourses } from './view-courses'
 export { default as ClassSearch } from './find-a-class-search'
-export { default as Payment } from './payment'
+
+// Onboarding / Payment Components
+export { default as Onboard } from './onboard'
+export { default as SuccessfulOnboard } from './successful_onboard'
+
 export { default as ViewParticipants } from './viewParticipants'
 export { default as AssociatedCourses } from './associated-courses'
 export { default as AccountInfoBtn } from "./account_info_btn"
 export { default as AccountInfo } from "./account_info"
 export { default as Breakout } from './breakout';
 export { default as Chatroom } from './breakout-video';
-
