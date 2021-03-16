@@ -48,22 +48,21 @@ router.get('/:courseId', async (req, res, next) => {
             include: [Teacher],
             where: { id: req.params.courseId },
         })
-
-        res.status(200).json(course)
     } catch (ex) {
         next(ex)
     }
 })
 
-router.get('/:userId', async (req, res, next) => {
+router.get('/user', async (req, res, next) => {
     try {
-        console.log('REQ.BODY USERID', req.body)
-        const courses = await Course.findAll({
-            where: { userID: req.params.userId },
-        })
-
-        res.status(200).json(courses)
+        console.log('INSIDE ROUTE')
+        // const user = await User.findByToken(req.headers.authorization)
+        // const courses = await Course.findAll({
+        //     where: { userId: req.params.userId },
+        // })
+        res.send(200).json('courses')
     } catch (ex) {
+        console.log('ERRRROR')
         next(ex)
     }
 })
