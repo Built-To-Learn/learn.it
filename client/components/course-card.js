@@ -12,7 +12,7 @@ class CourseCard extends React.Component {
     render() {
         const course = this.props.course
         const userId = this.props.auth
-        // console.log('PROPS HERE', this.props)
+
         return (
             <div className="row">
                 <div className="col s13 m3">

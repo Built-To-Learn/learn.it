@@ -13,10 +13,8 @@ export const _loadEnrollments = (enrollments) => ({
 })
 
 export const enrollInCourse = (courseId, userId, title) => {
-    console.log('ENROLL IN COURSE', courseId, userId, title)
     try {
         return async (dispatch) => {
-            console.log('enroll inside enroll')
             await axios.post(`/api/enrollments`, {
                 courseId,
                 userId,
@@ -32,7 +30,6 @@ export const enrollInCourse = (courseId, userId, title) => {
 export const loadEnrollments = (userId) => {
     return async (dispatch) => {
         const enrollments = (await axios.get(`/api/enrollments/${userId}`)).data
-        console.log('ENROLLMENTS', enrollments)
         dispatch(_loadEnrollments(enrollments))
     }
 }
@@ -42,10 +39,8 @@ const initialState = []
 export default function (state = initialState, action) {
     switch (action.type) {
         case LOAD_ENROLLMENTS:
-            console.log('ACTION', action)
             return action.enrollments
         case ENROLL_IN_COURSE:
-            console.log(action.enrollment)
             return [...state, { course: action.enrollment }]
         // why is this undefeind
         default:
