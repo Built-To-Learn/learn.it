@@ -42,7 +42,6 @@ const initialState = []
 export default function (state = initialState, action) {
     switch (action.type) {
         case LOAD_ENROLLMENTS:
-            console.log('ACTION', action)
             return action.enrollments
         case ENROLL_IN_COURSE:
             console.log(action.enrollment)

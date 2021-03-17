@@ -37,7 +37,18 @@ class EnrolledCourses extends React.Component {
                 </div>
             )
         } else {
-            return <div>You don't have any enrollments</div>
+            return (
+                <Collapsible accordion>
+                    <CollapsibleItem
+                        expanded={false}
+                        header="Enrolled Classes"
+                        icon={<Icon>cast_connected</Icon>}
+                        node="div"
+                    >
+                        No Classes
+                    </CollapsibleItem>
+                </Collapsible>
+            )
         }
     }
 }

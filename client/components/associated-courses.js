@@ -22,31 +22,31 @@ class AssociatedCourses extends React.Component {
 
     render() {
         const userId = this.props.auth
+        console.log('PROPS', this.props)
 
-        // if (this.props.courses.courses.length !== 0) {
-        //     const usersTaughtCourses = this.props.courses.courses
+        if (this.props.courses.length !== 0) {
+            const usersTaughtCourses = this.props.courses
 
-        return (
-            <div style={{ display: 'inline-block' }}>
-                <Collapsible accordion>
-                    <ClassOptions />
-                    <CollapsibleItem
-                        expanded={false}
-                        header="Taught Classes."
-                        icon={<Icon>school</Icon>}
-                        node="div"
-                    >
-                        {/* {usersTaughtCourses.map((course) => (
+            return (
+                <div style={{ display: 'inline-block' }}>
+                    <Collapsible accordion>
+                        <ClassOptions />
+                        <CollapsibleItem
+                            expanded={false}
+                            header="Taught Classes."
+                            icon={<Icon>school</Icon>}
+                            node="div"
+                        >
+                            {usersTaughtCourses.map((course) => (
                                 <p key={course.id}>{course.title}</p>
-                            ))} */}
-                        {/* hi */}
-                    </CollapsibleItem>
-                </Collapsible>
-            </div>
-        )
-        // } else {
-        //     return <div>You don't have any classes</div>
-        // }
+                            ))}
+                        </CollapsibleItem>
+                    </Collapsible>
+                </div>
+            )
+        } else {
+            return <div>You don't have any classes</div>
+        }
     }
 }
 
