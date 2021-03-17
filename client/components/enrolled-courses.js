@@ -28,7 +28,9 @@ class EnrolledCourses extends React.Component {
                     onSelect={() => {}}
                 >
                     {enrolledCourses.map((enrollment, idx) => (
-                        <p key={idx}>{enrollment.course.title}</p>
+                        <p key={enrollment.course.id}>
+                            {enrollment.course.title}
+                        </p>
                     ))}
                 </CollapsibleItem>
             )

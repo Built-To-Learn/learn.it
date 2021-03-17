@@ -31,7 +31,8 @@ router.post('/', async (req, res, next) => {
         const user = await User.findByToken(req.headers.authorization)
         req.body.userId = user.id
         await Course.create(req.body)
-        res.sendStatus(201)
+        console.log('USERID', user.id)
+        res.status(201).send(user.id)
     } catch (ex) {
         next(ex)
     }

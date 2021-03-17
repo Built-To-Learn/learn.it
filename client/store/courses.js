@@ -31,11 +31,14 @@ export const createCourse = (courseObj) => async (dispatch) => {
     try {
         const token = window.localStorage.getItem('token')
         if (token) {
-            await axios.post(`/api/courses`, courseObj, {
-                headers: {
-                    authorization: token,
-                },
-            })
+            const uuid = (
+                await axios.post(`/api/courses`, courseObj, {
+                    headers: {
+                        authorization: token,
+                    },
+                })
+            ).data
+            courseObj = { ...courseObj, id: uuid }
             dispatch(_createCourse(courseObj))
         }
     } catch (err) {
@@ -78,10 +81,9 @@ const initialState = []
 export default function (state = initialState, action) {
     switch (action.type) {
         case CREATE_COURSE:
-            return [...state, { course: action.course }]
+            return [...state, action.course]
 
         case LOAD_COURSES:
-            // return { courses: action.courses }
             return action.courses
 
         case LOAD_USER_COURSES:
