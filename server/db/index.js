@@ -2,9 +2,9 @@
 const { Sequelize, INTEGER } = require('sequelize');
 const db = require('./db');
 
-
 const User = require('./models/user');
 const Course = require('./models/Course');
+const Question = require('./models/Question');
 
 // Through Table
 const Enrollment = db.define('enrollment', {
@@ -33,6 +33,8 @@ Course.hasMany(Enrollment);
 Enrollment.belongsTo(Course);
 User.hasMany(Enrollment);
 Enrollment.belongsTo(User);
+Course.hasMany(Question);
+Question.belongsTo(Course);
 
 const syncAndSeed = async () => {
 
@@ -60,24 +62,24 @@ const syncAndSeed = async () => {
   ]);
 
   const [math, stocks, running, geometry, basketweaving, coding] = await Promise.all([
-            Course.create({
-            title: 'Geometry',
-            subject: 'Math',
-            category: 'Traditional Schoolwork',
-              userId: cody.id,
-        }),
-        Course.create({
-            title: 'Basket Weaving 101',
-            subject: 'For Fun',
-            category: 'Arts and Crafts',
-          userId: cody.id,
-        }),
-        Course.create({
-            title: 'Intro to Javascript',
-            subject: 'Coding',
-            category: 'Programming',
-          userId: cody.id,
-        }),
+    Course.create({
+    title: 'Geometry',
+    subject: 'Math',
+    category: 'Traditional Schoolwork',
+    userId: cody.id,
+    }),
+    Course.create({
+        title: 'Basket Weaving 101',
+        subject: 'For Fun',
+        category: 'Arts and Crafts',
+      userId: cody.id,
+    }),
+    Course.create({
+        title: 'Intro to Javascript',
+        subject: 'Coding',
+        category: 'Programming',
+      userId: cody.id,
+    }),
     Course.create({
       title: 'Math is fun',
       subject: 'Math',
@@ -105,13 +107,13 @@ const syncAndSeed = async () => {
       sal,
     },
     courses: {
-            math,
-            stocks,
-            running,
-            geometry,
-            basketweaving,
-            coding,
-        },
+      math,
+      stocks,
+      running,
+      geometry,
+      basketweaving,
+      coding,
+    },
   };
 };
 
