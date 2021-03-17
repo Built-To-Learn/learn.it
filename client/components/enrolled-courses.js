@@ -21,33 +21,29 @@ class EnrolledCourses extends React.Component {
             console.log('HELLO', enrolledCourses)
 
             return (
-                <div style={{ display: 'inline-block' }}>
-                    <Collapsible accordion>
-                        <CollapsibleItem
-                            expanded={false}
-                            header="Enrolled Classes"
-                            icon={<Icon>cast_connected</Icon>}
-                            node="div"
-                        >
-                            {enrolledCourses.map((enrollment, idx) => (
-                                <p key={idx}>{enrollment.course.title}</p>
-                            ))}
-                        </CollapsibleItem>
-                    </Collapsible>
-                </div>
+                <CollapsibleItem
+                    expanded={false}
+                    header="Enrolled Classes"
+                    icon={<Icon>cast_connected</Icon>}
+                    node="div"
+                    onSelect={() => {}}
+                >
+                    {enrolledCourses.map((enrollment, idx) => (
+                        <p key={idx}>{enrollment.course.title}</p>
+                    ))}
+                </CollapsibleItem>
             )
         } else {
             return (
-                <Collapsible accordion>
-                    <CollapsibleItem
-                        expanded={false}
-                        header="Enrolled Classes"
-                        icon={<Icon>cast_connected</Icon>}
-                        node="div"
-                    >
-                        No Classes
-                    </CollapsibleItem>
-                </Collapsible>
+                <CollapsibleItem
+                    expanded={false}
+                    header="Enrolled Classes"
+                    icon={<Icon>cast_connected</Icon>}
+                    node="div"
+                    onSelect={() => {}}
+                >
+                    No Classes
+                </CollapsibleItem>
             )
         }
     }
