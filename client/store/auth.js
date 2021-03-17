@@ -43,8 +43,6 @@ export const authenticate = (
     }
 
     if (method === 'signup') {
-      console.log('INSIDE SIGNUP!');
-      console.log(fullname, username);
       res = await axios.post(`/auth/${method}`, {
         email,
         password,

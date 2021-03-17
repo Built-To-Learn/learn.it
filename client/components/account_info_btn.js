@@ -35,8 +35,10 @@ export default connect(mapState, (dispatch) => {
     buildSignups: async (email, userid, merchantId) => {
       if(merchantId === null){
         try {
+          // check if we have a merchant
           await dispatch(setMerchant(userid))
         } catch (error) {
+          // if that fails we generate signup links
           await dispatch(generateSignupLinks(email, userid))
         }
       }

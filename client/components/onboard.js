@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 const Onboard = ({payment}) => {
   const { merchant } = payment
+
   if(merchant.payments_receivable){
     return(
       <div>
@@ -14,7 +15,6 @@ const Onboard = ({payment}) => {
         </a>
       </div>
     )
-
   }else{
     return (
       <div>
