@@ -29,7 +29,6 @@ export const _loadUserCourses = (courses) => ({
 export const createCourse = (courseObj) => async (dispatch) => {
     let res
     try {
-        console.log('HELLO')
         const token = window.localStorage.getItem('token')
         if (token) {
             await axios.post(`/api/courses`, courseObj, {
@@ -54,10 +53,8 @@ export const loadCourses = () => {
 export const loadUserCourses = () => {
     return async (dispatch) => {
         const token = window.localStorage.getItem('token')
-        console.log('TOKEN', token)
         try {
             if (token) {
-                console.log('INSIDE TRY')
                 const courses = (
                     await axios.get(`/api/courses/user`, {
                         headers: {
@@ -65,10 +62,6 @@ export const loadUserCourses = () => {
                         },
                     })
                 ).data
-                console.log('these are my course', courses)
-                // const courses = await axios.get(`/api/courses/user`).data
-
-                // console.log('COURSES', courses)
                 dispatch(_loadUserCourses(courses))
             }
         } catch (err) {

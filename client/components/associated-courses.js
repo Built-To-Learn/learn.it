@@ -21,9 +21,6 @@ class AssociatedCourses extends React.Component {
     }
 
     render() {
-        const userId = this.props.auth
-        console.log('PROPS', this.props)
-
         if (this.props.courses.length !== 0) {
             const usersTaughtCourses = this.props.courses
 

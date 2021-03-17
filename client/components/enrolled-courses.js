@@ -18,7 +18,6 @@ class EnrolledCourses extends React.Component {
         const userId = this.props.auth
         if (this.props.enrollments.length !== 0) {
             const enrolledCourses = this.props.enrollments
-            console.log('HELLO', enrolledCourses)
 
             return (
                 <CollapsibleItem

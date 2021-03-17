@@ -17,7 +17,6 @@ class CoursesView extends React.Component {
     render() {
         if (this.props.courses.length !== 0) {
             const courses = this.props.courses
-            console.log(courses)
 
             return courses.map((course) => {
                 return (
