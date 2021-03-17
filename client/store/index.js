@@ -11,6 +11,7 @@ import participants from './participants';
 import breakout from './breakout';
 import studentBreakout from './student-breakout';
 import enrollments from './enrollments'
+import questions from './questions'
 
 const reducer = combineReducers({
   auth,
@@ -21,6 +22,7 @@ const reducer = combineReducers({
   breakout,
   studentBreakout,
   enrollments,
+  questions
 });
 
 const middleware = composeWithDevTools(
