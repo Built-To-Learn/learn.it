@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { loadCourses } from '../store/courses'
+import { loadCourses, loadUserCourses } from '../store/courses'
 import { loadEnrollments } from '../store/enrollments'
 import M from 'materialize-css'
 import { Collapsible, CollapsibleItem, Icon } from 'react-materialize'
+import { ClassOptions, EnrolledCourses } from './index'
 
 class AssociatedCourses extends React.Component {
     constructor(props) {
@@ -11,28 +12,22 @@ class AssociatedCourses extends React.Component {
         this.state = {}
     }
     componentDidMount() {
-        this.props.getCourses()
-        this.props.getEnrollments(this.props.auth)
+        //  this.props.auth
+        const init = async () => {
+            await this.props.getUserCourses()
+            await this.props.getEnrollments(this.props.auth)
+        }
+        init()
     }
 
     render() {
-        const userId = this.props.auth
-        console.log('PROPS', this.props)
-        if (
-            this.props.courses.courses.length !== 0 ||
-            this.props.enrollments.enrollments.length !== 0
-        ) {
-            const courses = this.props.courses.courses
-            const enrolledCourses = this.props.enrollments.enrollments
-            console.log('HI', enrolledCourses)
-            const usersTaughtCourses = courses.filter(
-                (course) => course.userId === userId
-            )
-            console.log('userTaughtCOURSES', usersTaughtCourses)
+        if (this.props.courses.length !== 0) {
+            const usersTaughtCourses = this.props.courses
 
             return (
                 <div style={{ display: 'inline-block' }}>
                     <Collapsible accordion>
+                        <ClassOptions />
                         <CollapsibleItem
                             expanded={false}
                             header="Taught Classes."
@@ -43,19 +38,7 @@ class AssociatedCourses extends React.Component {
                                 <p key={course.id}>{course.title}</p>
                             ))}
                         </CollapsibleItem>
-
-                        <CollapsibleItem
-                            expanded={false}
-                            header="Enrolled Classes"
-                            icon={<Icon>cast_connected</Icon>}
-                            node="div"
-                        >
-                            {enrolledCourses.map((course) => (
-                                <p key={course.course.id}>
-                                    {course.course.title}
-                                </p>
-                            ))}
-                        </CollapsibleItem>
+                        <EnrolledCourses />
                     </Collapsible>
                 </div>
             )
@@ -78,8 +61,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
     return {
-        getCourses: () => {
-            dispatch(loadCourses())
+        getUserCourses: () => {
+            dispatch(loadUserCourses())
         },
 
         getEnrollments: (userId) => {

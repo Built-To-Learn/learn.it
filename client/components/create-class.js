@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchView } from '../store/view';
+import { Icon } from 'react-materialize';
 
 class CreateAClass extends Component {
   render() {
@@ -10,8 +11,8 @@ class CreateAClass extends Component {
         className="landingbtn"
         onClick={() => this.props.fetchView('createAClass')}
       >
-        <span>Create a class</span>
-        <img id="magglass" src="magglass.png" height="20px" width="20px" />
+        <Icon>add</Icon>
+        <span className="landingbtn_text">Create a class</span>
       </div>
     );
   }
