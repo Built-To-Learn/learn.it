@@ -37,7 +37,14 @@ class Dashboard extends Component {
     this.props.fetchClearView();
   }
 
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.dashboard.room !== this.props.dashboard.room) {
+  //     this.setState({ room: this.props.dashboard.room });
+  //   }
+  // }
+
   render() {
+    console.log(this.props.auth.id, this.props.dashboard.teacher);
     return (
       <div id="sub-right" className="border">
         <div id="right-pane-1" className="border">
@@ -126,7 +133,8 @@ class Dashboard extends Component {
             ) : (
               ''
             )}
-            {this.state.type === 'breakout' ? (
+            {this.state.type === 'breakout' &&
+            this.props.dashboard.teacher === this.props.auth.id ? (
               <button
                 onClick={() =>
                   this.props.fetchReturnToMain(
@@ -147,8 +155,8 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = ({ studentBreakout }) => {
-  return { studentBreakout: studentBreakout };
+const mapStateToProps = ({ studentBreakout, dashboard, auth }) => {
+  return { studentBreakout: studentBreakout, dashboard: dashboard, auth: auth };
 };
 
 const mapDispatch = (dispatch) => {

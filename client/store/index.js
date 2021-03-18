@@ -1,4 +1,3 @@
-
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
@@ -10,7 +9,8 @@ import courses from './courses.js';
 import participants from './participants';
 import breakout from './breakout';
 import studentBreakout from './student-breakout';
-import enrollments from './enrollments'
+import enrollments from './enrollments';
+import dashboard from './dashboard';
 
 const reducer = combineReducers({
   auth,
@@ -21,15 +21,14 @@ const reducer = combineReducers({
   breakout,
   studentBreakout,
   enrollments,
+  dashboard,
 });
 
 const middleware = composeWithDevTools(
-    applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
-)
-const store = createStore(reducer, middleware)
-
+  applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
+);
+const store = createStore(reducer, middleware);
 
 export default store;
 export * from './auth';
-export * from "./payment"
-
+export * from './payment';
