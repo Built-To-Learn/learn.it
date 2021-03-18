@@ -4,7 +4,7 @@ import { loadCourses, loadUserCourses } from '../store/courses';
 import { loadEnrollments } from '../store/enrollments';
 import M from 'materialize-css';
 import { Collapsible, CollapsibleItem, Icon } from 'react-materialize';
-import { ClassOptions, EnrolledCourses, TaughtCourses } from './index';
+import { ClassOptions, EnrolledCourses, TaughtCourses, Settings } from './index';
 
 class AssociatedCourses extends React.Component {
   constructor(props) {
@@ -22,6 +22,7 @@ class AssociatedCourses extends React.Component {
     return (
       <div style={{ display: 'inline-block' }}>
         <Collapsible accordion>
+          <Settings />
           <ClassOptions />
           <TaughtCourses />
           {/* <CollapsibleItem

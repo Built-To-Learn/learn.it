@@ -81,7 +81,7 @@ class Landing extends Component {
                     <button id="room1" onClick={(e) => this.joinRoomWatch(e)}>
                         Join room as watcher
                     </button>
-                    <AccountInfoBtn />
+
 
                     <AssociatedCourses />
                 </div>

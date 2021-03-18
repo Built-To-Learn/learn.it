@@ -29,7 +29,7 @@ export { default as SuccessfulOnboard } from './successful_onboard';
 export { default as ViewParticipants } from './viewParticipants';
 export { default as AssociatedCourses } from './associated-courses';
 export { default as EnrolledCourses } from './enrolled-courses';
-export { default as AccountInfoBtn } from './account_info_btn';
+export { default as Settings } from './settings_sidebar';
 export { default as AccountInfo } from './account_info';
 export { default as Breakout } from './breakout';
 export { default as Chatroom } from './breakout-video';
