@@ -92,6 +92,7 @@ class Watcher extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div id="main_video_frame">
         {this.state.broadcaster === '' ? (
