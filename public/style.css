@@ -52,7 +52,7 @@ form div {
   align-items: center;
 }
 
-.landingbtn_text{
+.landingbtn_text {
   margin-top: 2px;
 }
 
@@ -145,7 +145,6 @@ video {
 }
 
 #chat-messages {
-  /* overflow: auto; */
   overflow-y: auto;
 }
 
@@ -161,3 +160,25 @@ video {
   position: absolute;
   right: 0;
 } */
+
+#right-pane-2-bottom {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+#right-pane-2-bottom > div > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 3px;
+}
+
+.left_btn {
+  width: 40%;
+}
+
+.right_btn {
+  width: 55%;
+}
