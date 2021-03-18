@@ -2,23 +2,33 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchView } from '../store/view';
 import { generateSignupLinks, setMerchant } from "../store"
+import { CollapsibleItem, Icon } from 'react-materialize';
 
 
-const AccountInfoBtn = ({auth, payment, buildSignups, fetchView}) => {
+const Settings = ({auth, payment, buildSignups, fetchView}) => {
 
   useEffect(() => {
     buildSignups(auth.email, auth.id, payment.merchant.merchantId)
   }, [])
 
   return (
-    <div
+    <CollapsibleItem
+      expanded={false}
+      header="Settings"
+      icon={<Icon>settings</Icon>}
+      node="div"
+      onSelect={() => {}}>
+
+      <div
         id="account_info"
         className="account_info_btn valign-wrapper"
-        onClick={() => fetchView('accountInfo')}
-    >
+        onClick={() => fetchView('accountInfo')}>
         <i className="small material-icons">account_circle</i>
         <span>Account Info</span>
-    </div>
+      </div>
+
+    </CollapsibleItem>
+
   )
 }
 
@@ -44,4 +54,4 @@ export default connect(mapState, (dispatch) => {
       }
     }
   };
-})(AccountInfoBtn);
+})(Settings);
