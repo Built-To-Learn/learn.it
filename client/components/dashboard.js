@@ -12,8 +12,6 @@ import { fetchClearView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
 import { fetchReturnToMain } from '../store/student-breakout';
 import { Button, Icon } from 'react-materialize';
-//import { ViewParticipants } from './viewParticipants';
-// import { peerConnections } from './broadcaster';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -28,6 +26,7 @@ class Dashboard extends Component {
       topPanel: 'chat',
     };
     this.resetRoom = this.resetRoom.bind(this);
+    this.revertToCamera = this.revertToCamera.bind(this);
   }
 
   resetRoom() {
@@ -36,6 +35,10 @@ class Dashboard extends Component {
     }
 
     this.props.fetchClearView();
+  }
+
+  revertToCamera() {
+    this.setState({ device: 'camera' });
   }
 
   // componentDidUpdate(prevProps) {
@@ -56,6 +59,7 @@ class Dashboard extends Component {
                 device={this.state.device}
                 audio={this.state.broadCastAudio}
                 video={this.state.video}
+                revert={this.revertToCamera}
               />
             ) : (
               ''
@@ -248,18 +252,42 @@ class Dashboard extends Component {
             ) : (
               ''
             )}
-            {this.state.type === 'breakout' &&
-            this.props.dashboard.teacher === this.props.auth.id ? (
-              <button
-                onClick={() =>
-                  this.props.fetchReturnToMain(
-                    this.state.room.slice(0, this.state.room.lastIndexOf('-')),
-                    'broadcast'
-                  )
-                }
-              >
-                Return to main
-              </button>
+
+            {this.state.type === 'breakout' ? (
+              <div>
+                <div>
+                  <Button
+                    node="button"
+                    className="left_btn black"
+                    small
+                    onClick={() => this.resetRoom()}
+                  >
+                    Leave
+                    <Icon left>exit_to_app</Icon>
+                  </Button>
+                  {this.props.dashboard.teacher === this.props.auth.id ? (
+                    <Button
+                      node="button"
+                      className="right_btn black"
+                      small
+                      onClick={() =>
+                        this.props.fetchReturnToMain(
+                          this.state.room.slice(
+                            0,
+                            this.state.room.lastIndexOf('-')
+                          ),
+                          'broadcast'
+                        )
+                      }
+                    >
+                      Return to main
+                      <Icon left>group</Icon>
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              </div>
             ) : (
               ''
             )}
