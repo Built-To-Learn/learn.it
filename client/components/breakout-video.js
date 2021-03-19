@@ -161,9 +161,8 @@ class Chatroom extends Component {
     });
 
     socket.on('disconnectPeer', (id) => {
-      console.log('removing', id);
       if (id === this.state.focus) {
-        this.focus.srcObject = this.selfVideo.srcObject;
+        this.setState({ focus: '' });
       }
       if (peerConnections[id]) {
         peerConnections[id].close();
@@ -181,7 +180,6 @@ class Chatroom extends Component {
           members: this.state.members.filter((peer) => peer !== id),
         });
       }
-      console.log('success');
     });
 
     socket.on('breakout_returnToMain', (room) => {
@@ -203,6 +201,8 @@ class Chatroom extends Component {
     });
     if (this.state.focus !== '') {
       this.focus.srcObject = this[this.state.focus].srcObject;
+    } else {
+      this.focus.srcObject = null;
     }
   }
 
@@ -212,14 +212,12 @@ class Chatroom extends Component {
   componentWillUnmount() {
     globalStream.getTracks().forEach((track) => track.stop());
     socket.close();
-    // this.props.fetchClearStudentBreakout();
-    // this.props.fetchClearBreakout();
   }
 
   render() {
     return (
       <div id="videos">
-        <div>
+        <div id="mini_videos">
           <video
             id="selfVideo"
             className="video_player"
@@ -248,7 +246,7 @@ class Chatroom extends Component {
             );
           })}
         </div>
-        <div>
+        <div id="focus_video_div">
           <video
             id="focus"
             key={this.state.focus}
