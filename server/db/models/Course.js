@@ -7,7 +7,7 @@ const Course = db.define('course', {
     id: {
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        defaultValue: Sequelize.UUIDV4,
     },
     title: {
         type: Sequelize.STRING,
@@ -20,6 +20,10 @@ const Course = db.define('course', {
     category: {
         type: Sequelize.STRING,
         allowNull: false,
+    },
+    description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
     },
 })
 

@@ -19,9 +19,14 @@ class SingleCourseView extends React.Component {
         const singleCourse = this.props.singleCourse
         return (
             <div>
+                <img
+                    style={{ height: '250px', width: '250px' }}
+                    src="/assets/default.jpeg"
+                ></img>
                 <p>Title: {singleCourse.title}</p>
                 <p>Subject: {singleCourse.subject}</p>
                 <p>Category: {singleCourse.category}</p>
+                <p>Description: {singleCourse.description}</p>
                 <p>Course Creator: {singleCourse.user.name}</p>
             </div>
         )
