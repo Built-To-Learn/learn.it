@@ -22,7 +22,7 @@ class SingleCourseView extends React.Component {
                 <p>Title: {singleCourse.title}</p>
                 <p>Subject: {singleCourse.subject}</p>
                 <p>Category: {singleCourse.category}</p>
-                <p>Course Description: </p>
+                <p>Course Creator: {singleCourse.user.name}</p>
             </div>
         )
         // if (this.props.courses.length !== 0) {
