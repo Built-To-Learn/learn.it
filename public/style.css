@@ -149,6 +149,11 @@ video {
   overflow-y: auto;
 }
 
+#question-like {
+  background: none;
+  border: none;
+}
+
 /* #chat-input {
   position: absolute;
   width: 270px;

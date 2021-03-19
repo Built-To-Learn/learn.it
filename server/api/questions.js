@@ -1,12 +1,13 @@
 const router = require('express').Router()
-const { models: { Question } } = require('../db')
+const { models: { Question, User } } = require('../db')
 
 router.get('/:courseId', async (req, res, next) => {
     try {
         const questions = await Question.findAll({
             where: {
                courseId: req.params.courseId 
-            }
+            },
+            includes: [ User ]
         })
 
         res.send(questions)
@@ -43,3 +44,5 @@ router.delete('/delete/:questionId', async (req, res, next) => {
         next(error)
     }
 })
+
+module.exports = router;

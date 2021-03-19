@@ -35,6 +35,8 @@ User.hasMany(Enrollment);
 Enrollment.belongsTo(User);
 Course.hasMany(Question);
 Question.belongsTo(Course);
+User.hasMany(Question);
+Question.belongsTo(User);
 
 const syncAndSeed = async () => {
 

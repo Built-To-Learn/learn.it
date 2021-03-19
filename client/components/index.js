@@ -30,3 +30,4 @@ export { default as AccountInfo } from './account_info';
 export { default as Breakout } from './breakout';
 export { default as Chatroom } from './breakout-video';
 export { default as ClassOptions } from './class-options';
+export { default as Questions } from './questions';

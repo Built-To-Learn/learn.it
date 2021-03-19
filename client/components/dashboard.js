@@ -7,6 +7,7 @@ import {
   ViewParticipants,
   Breakout,
   Chatroom,
+  Questions
 } from './index';
 import { fetchClearView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
@@ -63,7 +64,9 @@ class Dashboard extends Component {
               ''
             )}
           </div>
-          <div id="right-pane-1-bottom" className="border"></div>
+          <div id="right-pane-1-bottom" className="border">
+            <Questions/>
+          </div>
         </div>
         <div id="right-pane-2" className="border">
           <div id="right-pane-2-top" className="border">
