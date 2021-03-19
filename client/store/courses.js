@@ -65,6 +65,7 @@ export const loadUserCourses = () => {
             },
           })
         ).data;
+
         dispatch(_loadUserCourses(courses));
       }
     } catch (err) {
