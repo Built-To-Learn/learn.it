@@ -13,10 +13,6 @@ const Course = db.define('course', {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    subject: {
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
     category: {
         type: Sequelize.STRING,
         allowNull: false,

@@ -67,7 +67,6 @@ const syncAndSeed = async () => {
     ] = await Promise.all([
         Course.create({
             title: 'Geometry',
-            subject: 'Math',
             category: 'Traditional Schoolwork',
             userId: cody.id,
             description:
@@ -75,7 +74,6 @@ const syncAndSeed = async () => {
         }),
         Course.create({
             title: 'Basket Weaving 101',
-            subject: 'For Fun',
             category: 'Arts and Crafts',
             userId: cody.id,
             description:
@@ -83,7 +81,6 @@ const syncAndSeed = async () => {
         }),
         Course.create({
             title: 'Intro to Javascript',
-            subject: 'Coding',
             category: 'Programming',
             userId: cody.id,
             description:
@@ -91,14 +88,12 @@ const syncAndSeed = async () => {
         }),
         Course.create({
             title: 'Math is fun',
-            subject: 'Math',
             category: 'School',
             userId: cody.id,
             description: 'Hooray for Math',
         }),
         Course.create({
             title: 'Investing',
-            subject: 'Finance',
             category: 'School',
             userId: cody.id,
             description:
@@ -106,7 +101,6 @@ const syncAndSeed = async () => {
         }),
         Course.create({
             title: 'Become A Professional Clown',
-            subject: 'Running',
             category: 'Clown School',
             userId: murphy.id,
             description:
