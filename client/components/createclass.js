@@ -1,30 +1,28 @@
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { createCourse } from '../store/courses';
 import Parallax from './parallax.js';
 import Icons from './icons.js';
 import { Button, Icon } from 'react-materialize';
+
 /**
  * COMPONENT
  */
 const CreateCourse = (props) => {
-  const { handleSubmit, error, isLoggedIn } = props;
-  return (
-    <div>
-      {isLoggedIn ? (
+    const { handleSubmit, error, isLoggedIn } = props
+    return (
         <div>
-          <form onSubmit={handleSubmit} name={name}>
+
+            {isLoggedIn ? (
+                <div>
+      
+               <form onSubmit={handleSubmit} name={name}>
             <div>
               <label htmlFor="coursename">
                 <small>Course Name</small>
               </label>
               <input name="coursename" type="text" />
-            </div>
-            <div>
-              <label htmlFor="Subject">
-                <small>Subject</small>
-              </label>
-              <input name="subject" type="text" />
             </div>
             <div>
               <label htmlFor="Category">
@@ -33,6 +31,12 @@ const CreateCourse = (props) => {
               <input name="category" type="text" />
             </div>
             <div>
+              <label htmlFor="Course Description">
+               <small>Description</small>
+               </label>
+               <input name="description" type="text" />
+              </div>
+            <div>
               <Button node="button" className="blue" small type="submit">
                 Create Course
                 <Icon left>add</Icon>
@@ -40,34 +44,40 @@ const CreateCourse = (props) => {
             </div>
             {error && error.response && <div> {error.response.data} </div>}
           </form>
+                    {/* <a href="/viewcourses">link text</a> */}
+                </div>
+            ) : (
+                <p>Must Be Logged In to Create a Class</p>
+            )}
+
         </div>
-      ) : (
-        <p>Must Be Logged In to Create a Class</p>
-      )}
-    </div>
-  );
-};
+    )
+}
 
 const mapCreateCourse = (state) => {
-  return {
-    isLoggedIn: !!state.auth.id,
-  };
-};
+    return {
+        isLoggedIn: !!state.auth.id,
+    }
+}
 
-const mapDispatch = (dispatch) => {
-  return {
-    handleSubmit(evt) {
-      evt.preventDefault();
-      const title = evt.target.coursename.value;
-      const subject = evt.target.subject.value;
-      const category = evt.target.category.value;
-      const courseObj = { title, subject, category };
-      dispatch(createCourse(courseObj));
-    },
-  };
-};
+
+    return {
+        handleSubmit(evt) {
+            evt.preventDefault()
+            // const formName = evt.target.name
+            const title = evt.target.coursename.value
+            // const subject = evt.target.subject.value
+            const category = evt.target.category.value
+            const description = evt.target.description.value
+            // console.log('formName', formName)
+            const courseObj = { title, category, description }
+            dispatch(createCourse(courseObj))
+        },
+    }
+}
+
 
 export const CreateNewCourse = connect(
-  mapCreateCourse,
-  mapDispatch
-)(CreateCourse);
+    mapCreateCourse,
+    mapDispatch
+)(CreateCourse)
