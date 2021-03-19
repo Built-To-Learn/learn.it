@@ -54,6 +54,7 @@ export const loadCourses = () => {
 }
 
 export const loadUserCourses = () => {
+
     return async (dispatch) => {
         const token = window.localStorage.getItem('token')
         try {
@@ -70,7 +71,7 @@ export const loadUserCourses = () => {
         } catch (err) {
             console.log(err)
         }
-    }
+
 }
 
 /**

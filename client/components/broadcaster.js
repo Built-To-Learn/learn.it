@@ -103,12 +103,6 @@ class Broadcaster extends Component {
 
   async componentDidUpdate() {
     if (this.props.breakout.active === true) {
-      // try {
-      //   videoTrack.getTracks().forEach((track) => track.stop());
-      //   audioTrack.getTracks().forEach((track) => track.stop());
-      // } catch (er) {}
-      // globalStream.getTracks().forEach((track) => track.stop());
-
       socket.emit('breakout', this.props.room, this.props.breakout.rooms);
     } else {
       const video = document.getElementById('broadcast_watcher_video');
@@ -171,7 +165,10 @@ class Broadcaster extends Component {
               globalStream = newStream;
               video.srcObject = newStream;
             })
-            .catch((error) => console.error(error));
+            .catch((error) => {
+              console.error(error);
+              this.props.revert();
+            });
         }
       } else {
         try {
