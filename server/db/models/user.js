@@ -10,7 +10,7 @@ const User = db.define('user', {
     id: {
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4
+        defaultValue: Sequelize.UUIDV4,
     },
     name: {
         type: Sequelize.STRING,
@@ -32,11 +32,19 @@ const User = db.define('user', {
     githubId: {
         type: Sequelize.INTEGER,
     },
+    userPicture: {
+        type: Sequelize.STRING,
+        defaultValue: '/assets/default.jpeg',
+        allowNull: false,
+    },
     role: {
         type: Sequelize.ENUM,
-        values: ["STUDENT", "TEACHER"],
-        defaultValue: "STUDENT"
-    }
+        values: ['STUDENT', 'TEACHER'],
+        defaultValue: 'STUDENT',
+    },
+    merchantId: {
+        type: Sequelize.STRING,
+    },
 })
 
 module.exports = User
@@ -53,9 +61,9 @@ User.prototype.generateToken = function () {
 }
 
 User.prototype.isTeacher = function () {
-    if(this.role === "TEACHER"){
+    if (this.role === 'TEACHER') {
         return true
-    }else{
+    } else {
         const error = Error('No Teacher')
         error.status = 401
         throw error

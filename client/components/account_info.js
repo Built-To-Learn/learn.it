@@ -1,7 +1,7 @@
 import React from "react"
-import Payment from "./payment"
+import Onboard from "./onboard"
 import { connect } from "react-redux"
-import { updateUserInfo, generateSignupLinks, setMerchant } from "../store"
+import { updateUserInfo } from "../store"
 
 const AccountInfo = ({auth, handleSubmit, payment}) => {
   return (
@@ -30,7 +30,7 @@ const AccountInfo = ({auth, handleSubmit, payment}) => {
           </div>
 
           <div className="col s12 center">
-            <Payment />
+            <Onboard />
             <button className="btn" type="submit">Save</button>
           </div>
           <p className="red-text">

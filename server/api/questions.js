@@ -11,19 +11,17 @@ router.get('/:courseId', async (req, res, next) => {
         })
 
         res.send(questions)
-    }
-    catch (error) {
+    } catch (error) {
         next(error)
     }
 })
 
 router.post('/create', async (req, res, next) => {
     try {
-         const question = await Question.create(req.body)
+        const question = await Question.create(req.body)
 
-         res.status(201).send(question)
-    }
-    catch (error) {
+        res.status(201).send(question)
+    } catch (error) {
         next(error)
     }
 })
@@ -32,15 +30,14 @@ router.delete('/delete/:questionId', async (req, res, next) => {
     try {
         const question = await Question.findOne({
             where: {
-                id: req.params.questionId
-            }
+                id: req.params.questionId,
+            },
         })
 
-        await question.destroy();
-        
+        await question.destroy()
+
         res.sendStatus(204)
-    }
-    catch (error) {
+    } catch (error) {
         next(error)
     }
 })

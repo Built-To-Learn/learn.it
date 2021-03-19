@@ -12,8 +12,7 @@ import {
 import { fetchClearView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
 import { fetchReturnToMain } from '../store/student-breakout';
-//import { ViewParticipants } from './viewParticipants';
-// import { peerConnections } from './broadcaster';
+import { Button, Icon } from 'react-materialize';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -28,6 +27,7 @@ class Dashboard extends Component {
       topPanel: 'chat',
     };
     this.resetRoom = this.resetRoom.bind(this);
+    this.revertToCamera = this.revertToCamera.bind(this);
   }
 
   resetRoom() {
@@ -38,7 +38,18 @@ class Dashboard extends Component {
     this.props.fetchClearView();
   }
 
+  revertToCamera() {
+    this.setState({ device: 'camera' });
+  }
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.dashboard.room !== this.props.dashboard.room) {
+  //     this.setState({ room: this.props.dashboard.room });
+  //   }
+  // }
+
   render() {
+    console.log(this.props.auth.id, this.props.dashboard.teacher);
     return (
       <div id="sub-right" className="border">
         <div id="right-pane-1" className="border">
@@ -49,6 +60,7 @@ class Dashboard extends Component {
                 device={this.state.device}
                 audio={this.state.broadCastAudio}
                 video={this.state.video}
+                revert={this.revertToCamera}
               />
             ) : (
               ''
@@ -83,63 +95,202 @@ class Dashboard extends Component {
             )}
           </div>
           <div id="right-pane-2-bottom" className="border">
-            <button onClick={() => this.resetRoom()}>Leave Room</button>
+            {/* <button onClick={() => this.resetRoom()}>Leave Room</button> */}
             {this.state.type === 'broadcast' ? (
               <div>
-                <button onClick={() => this.setState({ device: 'camera' })}>
-                  Share Camera
-                </button>
-                <button onClick={() => this.setState({ device: 'screen' })}>
-                  Share Screen
-                </button>
-                <button
-                  onClick={() =>
-                    this.setState({
-                      broadCastAudio: !this.state.broadCastAudio,
-                    })
-                  }
-                >
-                  Mute
-                </button>
-                <button
-                  onClick={() => this.setState({ video: !this.state.video })}
-                >
-                  Video
-                </button>
-                <button
-                  onClick={() => this.setState({ topPanel: 'participants' })}
-                >
-                  Participants
-                </button>
-                <button onClick={() => this.setState({ topPanel: 'chat' })}>
-                  Chat
-                </button>
-                <button onClick={() => this.setState({ topPanel: 'breakout' })}>
-                  Breakout
-                </button>
+                <div>
+                  <Button
+                    node="button"
+                    className={`
+                      ${
+                        this.state.device === 'camera' ? 'blue' : 'black'
+                      } left_btn
+                    `}
+                    small
+                    onClick={() => this.setState({ device: 'camera' })}
+                  >
+                    Webcam
+                    <Icon left>camera_front</Icon>
+                  </Button>
+                  <Button
+                    node="button"
+                    className={`
+                      ${
+                        this.state.device === 'screen' ? 'blue' : 'black'
+                      } right_btn
+                    `}
+                    small
+                    onClick={() => this.setState({ device: 'screen' })}
+                  >
+                    Screen share
+                    <Icon left>screen_share</Icon>
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    node="button"
+                    className={`${
+                      !this.state.broadCastAudio ? 'black' : 'blue'
+                    } left_btn`}
+                    small
+                    onClick={() =>
+                      this.setState({
+                        broadCastAudio: !this.state.broadCastAudio,
+                      })
+                    }
+                  >
+                    {!this.state.broadCastAudio ? 'Audio off' : 'Audio on'}
+                    <Icon left>
+                      {!this.state.broadCastAudio ? 'volume_off' : 'volume_up'}
+                    </Icon>
+                  </Button>
+                  <Button
+                    node="button"
+                    className={`${
+                      !this.state.video ? 'black' : 'blue'
+                    } right_btn`}
+                    small
+                    onClick={() =>
+                      this.setState({
+                        video: !this.state.video,
+                      })
+                    }
+                  >
+                    {!this.state.video ? 'Video off' : 'Video on'}
+                    <Icon left>
+                      {!this.state.video ? 'videocam_off' : 'videocam'}
+                    </Icon>
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    node="button"
+                    className={`
+                      ${
+                        this.state.topPanel === 'chat' ? 'blue' : 'black'
+                      } left_btn
+                    `}
+                    small
+                    onClick={() => this.setState({ topPanel: 'chat' })}
+                  >
+                    Chat
+                    <Icon left>chat</Icon>
+                  </Button>
+                  <Button
+                    node="button"
+                    className={`
+                      ${
+                        this.state.topPanel === 'participants'
+                          ? 'blue'
+                          : 'black'
+                      } right_btn
+                    `}
+                    small
+                    onClick={() => this.setState({ topPanel: 'participants' })}
+                  >
+                    Participants
+                    <Icon left>people</Icon>
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    node="button"
+                    className="left_btn black"
+                    small
+                    onClick={() => this.resetRoom()}
+                  >
+                    Leave
+                    <Icon left>exit_to_app</Icon>
+                  </Button>
+                  <Button
+                    node="button"
+                    className={`
+                      ${
+                        this.state.topPanel === 'breakout' ? 'blue' : 'black'
+                      } right_btn
+                    `}
+                    small
+                    onClick={() => this.setState({ topPanel: 'breakout' })}
+                  >
+                    Breakout
+                    <Icon left>forum</Icon>
+                  </Button>
+                </div>
               </div>
             ) : (
               ''
             )}
 
             {this.state.type === 'watcher' ? (
-              <button onClick={() => this.setState({ mute: !this.state.mute })}>
-                Mute
-              </button>
+              <div>
+                <div>
+                  <Button
+                    node="button"
+                    className={`${
+                      !this.state.mute ? 'blue' : 'black'
+                    } left_btn`}
+                    small
+                    onClick={() =>
+                      this.setState({
+                        mute: !this.state.mute,
+                      })
+                    }
+                  >
+                    {!this.state.mute ? 'Audio on' : 'Mute'}
+                    <Icon left>
+                      {!this.state.mute ? 'volume_up' : 'volume_off'}
+                    </Icon>
+                  </Button>
+                  <Button
+                    node="button"
+                    className="right_btn black"
+                    small
+                    onClick={() => this.resetRoom()}
+                  >
+                    Leave
+                    <Icon left>exit_to_app</Icon>
+                  </Button>
+                </div>
+              </div>
             ) : (
               ''
             )}
+
             {this.state.type === 'breakout' ? (
-              <button
-                onClick={() =>
-                  this.props.fetchReturnToMain(
-                    this.state.room.slice(0, this.state.room.lastIndexOf('-')),
-                    'broadcast'
-                  )
-                }
-              >
-                Return to main
-              </button>
+              <div>
+                <div>
+                  <Button
+                    node="button"
+                    className="left_btn black"
+                    small
+                    onClick={() => this.resetRoom()}
+                  >
+                    Leave
+                    <Icon left>exit_to_app</Icon>
+                  </Button>
+                  {this.props.dashboard.teacher === this.props.auth.id ? (
+                    <Button
+                      node="button"
+                      className="right_btn black"
+                      small
+                      onClick={() =>
+                        this.props.fetchReturnToMain(
+                          this.state.room.slice(
+                            0,
+                            this.state.room.lastIndexOf('-')
+                          ),
+                          'broadcast'
+                        )
+                      }
+                    >
+                      Return to main
+                      <Icon left>group</Icon>
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              </div>
             ) : (
               ''
             )}
@@ -150,8 +301,8 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = ({ studentBreakout }) => {
-  return { studentBreakout: studentBreakout };
+const mapStateToProps = ({ studentBreakout, dashboard, auth }) => {
+  return { studentBreakout: studentBreakout, dashboard: dashboard, auth: auth };
 };
 
 const mapDispatch = (dispatch) => {

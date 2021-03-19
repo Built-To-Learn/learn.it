@@ -3,6 +3,8 @@ import M from 'materialize-css'
 import { connect } from 'react-redux'
 import { handleEnrollment } from '../store'
 import { enrollInCourse } from '../store/enrollments'
+import { fetchView } from '../store/view'
+import { loadSingleCourse } from '../store/single-course'
 
 class CourseCard extends React.Component {
     constructor(props) {
@@ -12,7 +14,7 @@ class CourseCard extends React.Component {
     render() {
         const course = this.props.course
         const userId = this.props.auth
-        // console.log('PROPS HERE', this.props)
+
         return (
             <div className="row">
                 <div className="col s13 m3">
@@ -42,6 +44,14 @@ class CourseCard extends React.Component {
                                 >
                                     Enroll
                                 </a>
+                            </p>
+                            <p
+                                onClick={() => {
+                                    this.props.fetchView('viewSingleCourse')
+                                    this.props.loadSingleCourse(course)
+                                }}
+                            >
+                                <a>View More Details</a>
                             </p>
                         </div>
                         <div className="card-reveal">
@@ -76,6 +86,9 @@ const mapDispatch = (dispatch) => {
         },
         enrollInCourse: (courseId, userId, courseTitle) =>
             dispatch(enrollInCourse(courseId, userId, courseTitle)),
+        fetchView: (view) => dispatch(fetchView(view)),
+
+        loadSingleCourse: (course) => dispatch(loadSingleCourse(course)),
     }
 }
 

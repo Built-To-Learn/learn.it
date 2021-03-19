@@ -1,57 +1,62 @@
-const router = require('express').Router()
+const router = require('express').Router();
 const {
-    models: { Enrollment, User, Course },
-} = require('../db')
+  models: { Enrollment, User, Course },
+} = require('../db');
 
 router.get('/', async (req, res, next) => {
-    try {
-        res.status(200).json(
-            await Enrollment.findAll({
-                include: [User, Course],
-            })
-        )
-    } catch (ex) {
-        next(ex)
-    }
-})
+  try {
+    res.status(200).json(
+      await Enrollment.findAll({
+        include: [User, Course],
+      })
+    );
+  } catch (ex) {
+    next(ex);
+  }
+});
 
 router.post('/', async (req, res, next) => {
-    try {
-        await Enrollment.create(req.body)
-        res.sendStatus(201)
-    } catch (ex) {
-        next(ex)
-    }
-})
+  try {
+    await Enrollment.create(req.body);
+    const enrollments = await Enrollment.findAll({
+      include: [Course],
+      where: { userId: req.body.userId },
+    });
+
+    res.send(enrollments);
+  } catch (ex) {
+    next(ex);
+  }
+});
 
 router.get('/:userId', async (req, res, next) => {
-    try {
-        const enrollments = await Enrollment.findAll({
-            include: [Course],
-            where: { userId: req.params.userId },
-        })
+  try {
+    const enrollments = await Enrollment.findAll({
+      include: [Course],
+      where: { userId: req.params.userId },
+    });
 
-        res.status(200).json(enrollments)
-    } catch (ex) {
-        next(ex)
-    }
-})
+    res.status(200).json(enrollments);
+  } catch (ex) {
+    next(ex);
+  }
+});
 
 router.delete('/:userId/:courseId', async (req, res, next) => {
-    try {
-        const enrollment = await Enrollment.findAll({
-            where: {
-                userId: req.params.userId,
-                courseId: req.params.courseId,
-            },
-        })
+  try {
+    const enrollment = await Enrollment.findAll({
+      where: {
+        userId: req.params.userId,
+        courseId: req.params.courseId,
+      },
+    });
 
-        await enrollment.destroy()
+    await enrollment.destroy();
 
-        res.sendStatus(204)
-    } catch (ex) {
-        next(ex)
-    }
-})
+    res.sendStatus(204);
+  } catch (ex) {
+    next(ex);
+  }
+});
 
-module.exports = router
+module.exports = router;
