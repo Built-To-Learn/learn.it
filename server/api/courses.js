@@ -37,8 +37,6 @@ router.post('/', async (req, res, next) => {
       },
       include: [User],
     });
-    //console.log('USERID', user.id);
-    console.log(courseWithUser);
     res.status(201).send(courseWithUser);
   } catch (ex) {
     next(ex);

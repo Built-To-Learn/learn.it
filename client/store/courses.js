@@ -38,8 +38,6 @@ export const createCourse = (courseObj) => async (dispatch) => {
           },
         })
       ).data;
-      //courseObj = { ...courseObj, id: uuid };
-      console.log('hitsi is the new coures', course);
       dispatch(_createCourse(course));
     }
   } catch (err) {
