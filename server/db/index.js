@@ -131,6 +131,48 @@ const syncAndSeed = async () => {
         courseId: geometry.id
     })
 
+    await Question.create({
+        text: 'Test',
+        upvotes: 5,
+        userId: cody.id,
+        courseId: geometry.id
+    })
+
+    await Question.create({
+        text: 'Test',
+        upvotes: 5,
+        userId: murphy.id,
+        courseId: geometry.id
+    })
+
+    await Question.create({
+        text: 'Test',
+        upvotes: 4,
+        userId: sal.id,
+        courseId: geometry.id
+    })
+
+    await Question.create({
+        text: 'Test',
+        upvotes: 5,
+        userId: cody.id,
+        courseId: geometry.id
+    })
+
+    await Question.create({
+        text: 'Test',
+        upvotes: 5,
+        userId: murphy.id,
+        courseId: geometry.id
+    })
+
+    await Question.create({
+        text: 'Test',
+        upvotes: 4,
+        userId: sal.id,
+        courseId: geometry.id
+    })
+
     return {
         students: {
             cody,
