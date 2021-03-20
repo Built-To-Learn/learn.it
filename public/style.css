@@ -234,3 +234,23 @@ form div {
 
   /* height: 300px; */
 }
+
+#questions-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 141px;
+  overflow-y: scroll;
+}
+
+#questions {
+  padding-top: .5rem;
+  overflow-y: scroll;
+}
+
+#question {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem 
+}
+

@@ -43,17 +43,22 @@ class Questions extends Component {
         const { likes } = this.state;
 
         return (
-            <div>
-                { questions.map( question => {
+            <div id='questions-container'>
+                <div id='questions'>
+                { questions.map( (question, idx) => {
                     const style = likes[question.id] ? 'favorite' : 'favorite_border'
                     return (
-                        <div>
-                            <small>{question.upvotes}</small>
-                            <button id='question-like'><i className='material-icons' id={'question' + question.id} onClick={(event) => this.handleToggle(event)}>{style}</i></button>
-                            <span>{question.user.name}: {question.text}</span>
+                        <div key={question.id}>
+                            <div id='question'>
+                                <small>{question.upvotes}</small>
+                                <button id='question-like'><i className='material-icons' id={'question' + question.id} onClick={(event) => this.handleToggle(event)}>{style}</i></button>
+                                <span>{question.user.name}: {question.text}</span>
+                            </div>
+                            {idx === questions.length - 1 ? null : <hr></hr>}
                         </div>
                     )
                 })}
+                </div>
             </div>
         )
     }
