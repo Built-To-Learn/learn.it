@@ -26,12 +26,14 @@ Course.belongsTo(User)
 Course.belongsToMany(User, { through: Enrollment })
 User.belongsToMany(Course, { through: Enrollment })
 
-Course.hasMany(Enrollment)
-Enrollment.belongsTo(Course)
-User.hasMany(Enrollment)
-Enrollment.belongsTo(User)
-Course.hasMany(Question)
-Question.belongsTo(Course)
+Course.hasMany(Enrollment);
+Enrollment.belongsTo(Course);
+User.hasMany(Enrollment);
+Enrollment.belongsTo(User);
+Course.hasMany(Question);
+Question.belongsTo(Course);
+User.hasMany(Question);
+Question.belongsTo(User);
 
 const syncAndSeed = async () => {
     await db.sync({ force: true })

@@ -21,6 +21,7 @@ export { default as CourseCard } from './course-card'
 export { default as CoursesView } from './courses-view'
 export { default as ViewCourses } from './view-courses'
 export { default as ClassSearch } from './find-a-class-search'
+export { default as Questions } from './questions';
 
 // Onboarding / Payment Components
 export { default as Onboard } from './onboard'

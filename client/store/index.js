@@ -24,6 +24,7 @@ const reducer = combineReducers({
     enrollments,
     dashboard,
     singleCourse,
+    questions
 })
 
 const middleware = composeWithDevTools(
