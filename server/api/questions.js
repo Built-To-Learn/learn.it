@@ -1,5 +1,7 @@
 const router = require('express').Router()
-const { models: { Question, User } } = require('../db')
+const {
+    models: { Question, User },
+  } = require('../db');
 
 router.get('/:courseId', async (req, res, next) => {
     try {
@@ -7,7 +9,7 @@ router.get('/:courseId', async (req, res, next) => {
             where: {
                courseId: req.params.courseId 
             },
-            includes: [ User ]
+            include: [ User ]
         })
 
         res.send(questions)
@@ -21,6 +23,31 @@ router.post('/create', async (req, res, next) => {
         const question = await Question.create(req.body)
 
         res.status(201).send(question)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.put('/update/:questionId', async (req, res, next) => {
+    try {
+        let question = await Question.findOne({
+            where: {
+                id: req.params.questionId
+            }
+        })
+
+        question.upvotes = question.upvotes + req.body.modifier
+
+        await question.save();
+
+        question = await Question.findOne({
+            where: {
+                id: req.params.questionId
+            },
+            include: [ User ]
+        })
+
+        res.send(question)
     } catch (error) {
         next(error)
     }

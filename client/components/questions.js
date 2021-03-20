@@ -1,25 +1,56 @@
 import React from "react";
 import { Component } from 'react';
 import { connect } from "react-redux";
+import { fetchQuestions, changeQuestion } from "../store/questions";
 
+
+// Questions Component
 class Questions extends Component {
+    constructor () {
+        super();
+
+        this.state = { likes: null }
+    }
+
+    componentDidMount () {
+        const { room, questions } = this.props;
+        const likes = {}
+        
+        this.props.init(room);
+
+        questions.map(question => {
+            likes[question.id] = false
+        })
+
+        this.setState({ likes: likes })
+    }
+
     handleToggle(event) {
-        const icon = document.getElementById(event.target.id)
-        const status = icon.innerHTML
-        icon.innerHTML = (status === 'favorite' ? 'favorite_border':'favorite')
+        const id = event.target.id.slice(8)
+        const likes = { ...this.state.likes }
+
+        console.log(`changing id ${id} from ${likes[id]} to ${!likes[id]}`)
+
+        this.props.changeQuestion(id, likes[id] ? 'decrement' : 'increment')
+
+        likes[id] = likes[id] ? false: true
+
+        this.setState({ likes: likes })
     }
 
     render () {
         const { questions } = this.props;
+        const { likes } = this.state;
 
         return (
             <div>
                 { questions.map( question => {
+                    const style = likes[question.id] ? 'favorite' : 'favorite_border'
                     return (
                         <div>
-                            <button id='question-like'><i className='material-icons' id={'question' + question.id} onClick={(event) => this.handleToggle(event)}>favorite_border</i></button>
                             <small>{question.upvotes}</small>
-                            <span>{question.user}: {question.text}</span>
+                            <button id='question-like'><i className='material-icons' id={'question' + question.id} onClick={(event) => this.handleToggle(event)}>{style}</i></button>
+                            <span>{question.user.name}: {question.text}</span>
                         </div>
                     )
                 })}
@@ -32,4 +63,9 @@ const mapState = (state) => ({
     questions: state.questions.questions
 })
 
-export default connect(mapState)(Questions)
+const mapDispatch = (dispatch) => ({
+    init: (courseId) => dispatch(fetchQuestions(courseId)),
+    changeQuestion: (questionId, type) => dispatch(changeQuestion(questionId, type))
+})
+
+export default connect(mapState, mapDispatch)(Questions)

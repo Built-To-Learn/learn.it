@@ -91,6 +91,7 @@ io.sockets.on('connection', (socket) => {
       const idx = values.indexOf(socket.id);
       const keys = Object.keys(roomManager);
       console.log('deleting manager');
+      // keys[idx] is the room
       delete roomManager[keys[idx]];
     }
     socket.broadcast.emit('disconnectPeer', socket.id);
