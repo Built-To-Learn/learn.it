@@ -12,6 +12,7 @@ import studentBreakout from './student-breakout'
 import enrollments from './enrollments'
 import dashboard from './dashboard'
 import singleCourse from './single-course'
+import questions from './questions'
 
 const reducer = combineReducers({
     auth,

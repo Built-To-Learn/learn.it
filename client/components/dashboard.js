@@ -77,7 +77,7 @@ class Dashboard extends Component {
             )}
           </div>
           <div id="right-pane-1-bottom" className="border">
-            <Questions/>
+            <Questions room={this.state.room}/>
           </div>
         </div>
         <div id="right-pane-2" className="border">
