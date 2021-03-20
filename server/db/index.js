@@ -60,12 +60,12 @@ const syncAndSeed = async () => {
     ])
 
     const [
-        math,
-        stocks,
-        running,
         geometry,
         basketweaving,
         coding,
+        math,
+        stocks,
+        clown,
     ] = await Promise.all([
         Course.create({
             title: 'Geometry',
@@ -110,6 +110,27 @@ const syncAndSeed = async () => {
         }),
     ])
 
+    await Question.create({
+        text: 'Test',
+        upvotes: 5,
+        userId: cody.id,
+        courseId: geometry.id
+    })
+
+    await Question.create({
+        text: 'Test',
+        upvotes: 5,
+        userId: murphy.id,
+        courseId: geometry.id
+    })
+
+    await Question.create({
+        text: 'Test',
+        upvotes: 4,
+        userId: sal.id,
+        courseId: geometry.id
+    })
+
     return {
         students: {
             cody,
@@ -119,7 +140,7 @@ const syncAndSeed = async () => {
         courses: {
             math,
             stocks,
-            running,
+            clown,
             geometry,
             basketweaving,
             coding,
@@ -134,5 +155,6 @@ module.exports = {
         Course,
         Enrollment,
         User,
+        Question
     },
 }
