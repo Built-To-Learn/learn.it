@@ -3,6 +3,8 @@ import { Component } from 'react';
 import { connect } from "react-redux";
 import { fetchQuestions, changeQuestion } from "../store/questions";
 
+
+// Questions Component
 class Questions extends Component {
     constructor () {
         super();
