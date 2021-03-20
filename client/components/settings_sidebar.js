@@ -8,7 +8,7 @@ import { CollapsibleItem, Icon } from 'react-materialize';
 const Settings = ({auth, payment, buildSignups, fetchView}) => {
 
   useEffect(() => {
-    buildSignups(auth.email, auth.id, payment.merchant.merchantId)
+    // buildSignups(auth.email, auth.id, payment.merchant.merchantId)
   }, [])
 
   return (
@@ -43,15 +43,18 @@ export default connect(mapState, (dispatch) => {
   return {
     fetchView: (view) => dispatch(fetchView(view)),
     buildSignups: async (email, userid, merchantId) => {
-      if(merchantId === null){
-        try {
-          // check if we have a merchant
-          await dispatch(setMerchant(userid))
-        } catch (error) {
-          // if that fails we generate signup links
-          await dispatch(generateSignupLinks(email, userid))
-        }
-      }
+      // for paypal onboarding
+      // if(merchantId === null){
+      //   try {
+      //     // check if we have a merchant
+      //     await dispatch(setMerchant(userid))
+      //   } catch (error) {
+      //     // if that fails we generate signup links
+      //     await dispatch(generateSignupLinks(email, userid))
+      //   }
+      // }
+
+      // generate accountLinks for stripe signup
     }
   };
 })(Settings);

@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const fetch = require("node-fetch")
 const axios = require("axios")
+const stripe = require('stripe')(process.env.STRIPE_SK_TEST)
 const {models: { User }} = require("../db")
 
 router.post('/login', async (req, res, next) => {
@@ -39,6 +40,13 @@ router.get('/github/callback', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
     try {
+        // create stripe user
+        const account = await stripe.accounts.create({
+            type: 'express',
+            email: req.body.email
+        });
+
+        req.body.stripeAcc = account.id
         const user = await User.create(req.body)
         res.send({ token: await user.generateToken() })
     } catch (err) {
@@ -110,6 +118,22 @@ router.post('/paypal/merchant/:trackingId', async (req, res, next) => {
         next("No Merchant Found")
     }
 
+})
+
+router.post("/stripe/accountlink", async (req, res, next) => {
+    try {
+        const { stripeAcc } = req.body
+        const accountLink = await stripe.accountLinks.create({
+            account: stripeAcc,
+            refresh_url: 'https://localhost:8080/reauth',
+            return_url: 'https://localhost:8080/success',
+            type: 'account_onboarding',
+        });
+
+        res.send(accountLink)
+    } catch (ex) {
+        next(ex)
+    }
 })
 
 module.exports = router

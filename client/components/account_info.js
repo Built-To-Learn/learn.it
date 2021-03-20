@@ -1,5 +1,6 @@
 import React from "react"
 import Onboard from "./onboard"
+import StripeOnboard from './onboard_stripe'
 import { connect } from "react-redux"
 import { updateUserInfo } from "../store"
 
@@ -30,7 +31,8 @@ const AccountInfo = ({auth, handleSubmit, payment}) => {
           </div>
 
           <div className="col s12 center">
-            <Onboard />
+            {/* <Onboard /> */}
+            <StripeOnboard />
             <button className="btn" type="submit">Save</button>
           </div>
           <p className="red-text">

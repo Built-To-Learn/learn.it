@@ -37,7 +37,7 @@ const User = db.define('user', {
         values: ["STUDENT", "TEACHER"],
         defaultValue: "STUDENT"
     },
-    merchantId: {
+    stripeAcc: {
         type: Sequelize.STRING
     }
 })
