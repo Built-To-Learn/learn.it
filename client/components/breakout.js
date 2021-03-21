@@ -38,11 +38,14 @@ class Breakout extends Component {
   }
 
   async createRooms() {
+    console.log(this.state.participants);
     await this.props.fetchBreakout({
       active: true,
       rooms: this.state.participants,
     });
-    this.props.fetchStudentBreakout(`${this.props.room}-${this.state.teacher}`);
+    await this.props.fetchStudentBreakout(
+      `${this.props.room}-${this.state.teacher}`
+    );
   }
 
   componentDidUpdate(prevProps) {

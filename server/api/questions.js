@@ -1,14 +1,15 @@
 const router = require('express').Router()
 const {
-    models: { Question },
-} = require('../db')
+    models: { Question, User },
+  } = require('../db');
 
 router.get('/:courseId', async (req, res, next) => {
     try {
         const questions = await Question.findAll({
             where: {
-                courseId: req.params.courseId,
+               courseId: req.params.courseId 
             },
+            include: [ User ]
         })
 
         res.send(questions)
@@ -22,6 +23,31 @@ router.post('/create', async (req, res, next) => {
         const question = await Question.create(req.body)
 
         res.status(201).send(question)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.put('/update/:questionId', async (req, res, next) => {
+    try {
+        let question = await Question.findOne({
+            where: {
+                id: req.params.questionId
+            }
+        })
+
+        question.upvotes = question.upvotes + req.body.modifier
+
+        await question.save();
+
+        question = await Question.findOne({
+            where: {
+                id: req.params.questionId
+            },
+            include: [ User ]
+        })
+
+        res.send(question)
     } catch (error) {
         next(error)
     }
@@ -43,4 +69,4 @@ router.delete('/delete/:questionId', async (req, res, next) => {
     }
 })
 
-module.exports = router
+module.exports = router;

@@ -4,7 +4,12 @@ import { loadCourses, loadUserCourses } from '../store/courses';
 import { loadEnrollments } from '../store/enrollments';
 import M from 'materialize-css';
 import { Collapsible, CollapsibleItem, Icon } from 'react-materialize';
-import { ClassOptions, EnrolledCourses, TaughtCourses, Settings } from './index';
+import {
+  ClassOptions,
+  EnrolledCourses,
+  TaughtCourses,
+  Settings,
+} from './index';
 
 class AssociatedCourses extends React.Component {
   constructor(props) {
@@ -25,16 +30,6 @@ class AssociatedCourses extends React.Component {
           <Settings />
           <ClassOptions />
           <TaughtCourses />
-          {/* <CollapsibleItem
-            expanded={false}
-            header="Taught Classes"
-            icon={<Icon>school</Icon>}
-            node="div"
-          >
-            {usersTaughtCourses.map((course) => (
-              <p key={course.id}>{course.title}</p>
-            ))}
-          </CollapsibleItem> */}
           <EnrolledCourses />
         </Collapsible>
       </div>

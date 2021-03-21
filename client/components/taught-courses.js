@@ -5,12 +5,28 @@ import { loadEnrollments } from '../store/enrollments';
 import M from 'materialize-css';
 import { Collapsible, CollapsibleItem, Icon } from 'react-materialize';
 import { loadCourses, loadUserCourses } from '../store/courses';
+import { fetchRoom } from '../store/dashboard';
+import { fetchView, fetchClearView } from '../store/view';
 
 class TaughtCourses extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.joinRoomBroadcast = this.joinRoomBroadcast.bind(this);
   }
+
+  async joinRoomBroadcast(teacher, e) {
+    // this.setState({ room: e.target.id, type: 'broadcast' });
+    e.persist();
+    await this.props.fetchClearView();
+    this.props.fetchRoom({
+      room: e.target.id,
+      type: 'broadcast',
+      teacher: teacher,
+    });
+    this.props.fetchView('dashboard');
+  }
+
   componentDidMount() {
     // this.props.getEnrollments(this.props.auth)
     this.props.getUserCourses();
@@ -19,8 +35,8 @@ class TaughtCourses extends React.Component {
 
   render() {
     //const userId = this.props.auth;
-    const usersTaughtCourses = this.props.courses;
-
+    const usersTaughtCourses = this.props.courses.user;
+    console.log(this.props.courses);
     return (
       <CollapsibleItem
         expanded={false}
@@ -30,7 +46,15 @@ class TaughtCourses extends React.Component {
         onSelect={() => {}}
       >
         {usersTaughtCourses.map((course) => (
-          <p key={course.id}>{course.title}</p>
+          <p
+            id={course.id}
+            onClick={(e) => {
+              this.joinRoomBroadcast(course.userId, e);
+            }}
+            key={course.id}
+          >
+            {course.title}
+          </p>
         ))}
       </CollapsibleItem>
     );
@@ -56,6 +80,15 @@ const mapDispatch = (dispatch) => {
 
     getEnrollments: (userId) => {
       dispatch(loadEnrollments(userId));
+    },
+    fetchRoom: (data) => {
+      dispatch(fetchRoom(data));
+    },
+    fetchView: (view) => {
+      dispatch(fetchView(view));
+    },
+    fetchClearView: () => {
+      dispatch(fetchClearView());
     },
   };
 };
