@@ -40,6 +40,11 @@ const User = db.define('user', {
     stripeAcc: {
         type: Sequelize.STRING,
         allowNull: true
+    },
+    onboarded: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: true
     }
 })
 

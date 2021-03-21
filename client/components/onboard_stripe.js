@@ -1,17 +1,35 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
-const StripeOnboard = () => {
-  return (
-    <div>
-      Stripe Onboard
-    </div>
-  )
+const StripeOnboard = ({auth, payment}) => {
+  if(auth.onboarded){
+    return (
+      <div>
+        <a className="btn disabled">Stripe Linked</a>
+      </div>
+    )
+  }
+
+  if(payment.onboardUrl){
+    return (
+      <div>
+        <a className="btn" href={payment.onboardUrl}>Link Stripe</a>
+      </div>
+    )
+  }else{
+    return (
+      <div>
+        <a className="btn disabled" >Link Stripe</a>
+      </div>
+    )
+  }
+
 }
 
-const mapState = (state) => {
+const mapState = ({auth, payment}) => {
   return {
-      state,
+      auth,
+      payment
   }
 }
 

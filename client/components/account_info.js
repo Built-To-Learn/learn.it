@@ -34,7 +34,6 @@ const AccountInfo = ({auth, handleSubmit, payment}) => {
             <button className="btn" type="submit">Save</button>
           </div>
           <p className="red-text">
-            {(!payment.merchant.primary_email_confirmed && payment.links && payment.merchant.payments_receivable) && "please confirm your email"}
           </p>
         </form>
       </div>

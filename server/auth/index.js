@@ -66,14 +66,42 @@ router.get('/me', async (req, res, next) => {
     }
 })
 
+//////// STRIPE ROUTES HERE ////////
+
+
+router.get('/stripe/:acc', async (req, res, next) => {
+    try {
+        const account = await stripe.accounts.retrieve(req.params.acc);
+        res.send(account)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
+// manually signup user for stripe if it failed when signup for platform
+router.post('/stripe', async (req, res, next) => {
+    const { id, email } = req.body
+    console.log(id)
+    const user = await User.findOne({ where: { id } })
+
+    const account = await stripe.accounts.create({
+        type: 'express',
+        email
+    });
+
+    user.stripeAcc = account.id
+    await user.save()
+    res.sendStatus(204)
+})
+
 // create an onboarding link for new accounts
 router.post("/stripe/accountlink", async (req, res, next) => {
     try {
         const { stripeAcc } = req.body
         const accountLink = await stripe.accountLinks.create({
             account: stripeAcc,
-            refresh_url: 'https://localhost:8080/reauth',
-            return_url: 'https://localhost:8080/success',
+            refresh_url: 'http://localhost:8080/reauth',
+            return_url: 'http://localhost:8080/success',
             type: 'account_onboarding',
         });
 

@@ -24,6 +24,8 @@ export { default as ClassSearch } from './find-a-class-search';
 
 // Onboarding / Payment Components
 export { default as StripeOnboard} from './onboard_stripe'
+export { default as SuccessfulOnboard } from './onboard_success'
+export { default as FailedOnboard } from './onboard_failed'
 
 export { default as ViewParticipants } from './viewParticipants';
 export { default as AssociatedCourses } from './associated-courses';

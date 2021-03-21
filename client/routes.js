@@ -9,6 +9,8 @@ import {
   Dashboard,
   Parallax,
   Landing,
+  SuccessfulOnboard,
+  FailedOnboard
 } from './components';
 import { CreateNewCourse } from './components/createclass.js';
 import { me } from './store';
@@ -33,6 +35,8 @@ class Routes extends Component {
             <Route exact path="/home" component={Landing} />
             <Route exact path="/createcourse" component={CreateNewCourse} />
             <Route exact path="/viewcourses" component={CoursesView} />
+            <Route path="/success" component={SuccessfulOnboard} />
+            <Route path="/reauth" component={FailedOnboard} />
             <Redirect to="/home" />
           </Switch>
         ) : (

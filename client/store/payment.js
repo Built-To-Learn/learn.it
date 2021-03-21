@@ -2,32 +2,29 @@ import axios from 'axios'
 const GENERATE_SIGNUP = "GENERATE_SIGNUP"
 
 
-const generateSignup = (links) => ({
+const generateSignup = (onboardUrl) => ({
   type: GENERATE_SIGNUP,
-  links
+  onboardUrl
 })
 
 export const generateAccountLinks = (stripeAcc) => async (dispatch) => {
-  const links = await axios.post('/auth/stripe/accountlink', {
-    stripeAcc
-  })
+  const { url } = (await axios.post('/auth/stripe/accountlink', { stripeAcc })).data
+  dispatch(generateSignup(url))
+}
 
-  console.log(links)
+export const checkAccStatus = async (stripeAcc) => {
+  const {charges_enabled} = (await axios.get(`/auth/stripe/${stripeAcc}`)).data
+  return charges_enabled
 }
 
 const initState = {
-  merchant:{
-    merchantId: null,
-    payments_receivable: false,
-    primary_email_confirmed: false
-  }
-
+  onboardUrl: ""
 }
 
 export default function(state = initState, action){
   switch(action.type){
     case GENERATE_SIGNUP:
-      return {...state, links: [...action.links]}
+      return {onboardUrl: action.onboardUrl}
     default:
       return state
   }

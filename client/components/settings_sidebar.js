@@ -8,7 +8,10 @@ import { CollapsibleItem, Icon } from 'react-materialize';
 const Settings = ({auth, payment, buildSignups, fetchView}) => {
 
   useEffect(() => {
-    buildSignups(auth.stripeAcc)
+    if(auth.stripeAcc && !auth.onboarded){
+      buildSignups(auth.stripeAcc)
+    }
+
   }, [])
 
   return (
