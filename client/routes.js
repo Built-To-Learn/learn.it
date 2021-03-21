@@ -9,7 +9,6 @@ import {
   Dashboard,
   Parallax,
   Landing,
-  SuccessfulOnboard
 } from './components';
 import { CreateNewCourse } from './components/createclass.js';
 import { me } from './store';
@@ -34,7 +33,6 @@ class Routes extends Component {
             <Route exact path="/home" component={Landing} />
             <Route exact path="/createcourse" component={CreateNewCourse} />
             <Route exact path="/viewcourses" component={CoursesView} />
-            <Route exact path="/onboard/success" component={SuccessfulOnboard}/>
             <Redirect to="/home" />
           </Switch>
         ) : (

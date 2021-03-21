@@ -66,60 +66,7 @@ router.get('/me', async (req, res, next) => {
     }
 })
 
-router.get('/paypal/token', async (req, res, next) => {
-    try {
-        const url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
-        const authStr = `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
-        const base64 = Buffer.from(authStr).toString('base64')
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Accept-Language': 'en_US',
-                'Authorization': `Basic ${base64}`,
-            },
-            body: 'grant_type=client_credentials'
-        })
-            .then(res => res.json())
-            .then(data => res.send(data))
-            .catch(ex => next(ex))
-    } catch (ex) {
-        next(ex)
-    }
-
-})
-
-router.post('/paypal/merchant/:trackingId', async (req, res, next) => {
-    try {
-        const trackingId = req.params.trackingId
-        const { token_type, access_token }  = req.body
-        const config = {
-            headers: {
-                Authorization: `${token_type} ${access_token}`,
-                "Content-Type": "application/json"
-            }
-        }
-
-        let url = `https://api-m.sandbox.paypal.com/v1/customer/partners/${process.env.PAYPAL_SANDBOX_MERCHANT_ID}/merchant-integrations?tracking_id=${trackingId}`
-
-
-        const { merchant_id } = (await axios.get(url, config)).data
-
-        if(merchant_id){
-            url = `https://api-m.sandbox.paypal.com/v1/customer/partners/${process.env.PAYPAL_SANDBOX_MERCHANT_ID}/merchant-integrations/${merchant_id}`
-
-            const {payments_receivable, primary_email_confirmed} = (await axios.get(url, config)).data
-
-            res.send({merchant_id, payments_receivable, primary_email_confirmed})
-        }
-    } catch (ex) {
-        next("No Merchant Found")
-    }
-
-})
-
+// create an onboarding link for new accounts
 router.post("/stripe/accountlink", async (req, res, next) => {
     try {
         const { stripeAcc } = req.body

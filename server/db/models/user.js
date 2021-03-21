@@ -38,7 +38,8 @@ const User = db.define('user', {
         defaultValue: "STUDENT"
     },
     stripeAcc: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true
     }
 })
 
