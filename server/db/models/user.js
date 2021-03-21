@@ -42,9 +42,15 @@ const User = db.define('user', {
         values: ['STUDENT', 'TEACHER'],
         defaultValue: 'STUDENT',
     },
-    merchantId: {
+    stripeAcc: {
         type: Sequelize.STRING,
+        allowNull: true
     },
+    onboarded: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: true
+    }
 })
 
 module.exports = User

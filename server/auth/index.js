@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const fetch = require("node-fetch")
 const axios = require("axios")
+const stripe = require('stripe')(process.env.STRIPE_SK_TEST)
 const {models: { User }} = require("../db")
 
 router.post('/login', async (req, res, next) => {
@@ -39,6 +40,13 @@ router.get('/github/callback', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
     try {
+        // create stripe user
+        const account = await stripe.accounts.create({
+            type: 'express',
+            email: req.body.email
+        });
+
+        req.body.stripeAcc = account.id
         const user = await User.create(req.body)
         res.send({ token: await user.generateToken() })
     } catch (err) {
@@ -58,58 +66,49 @@ router.get('/me', async (req, res, next) => {
     }
 })
 
-router.get('/paypal/token', async (req, res, next) => {
-    try {
-        const url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
-        const authStr = `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
-        const base64 = Buffer.from(authStr).toString('base64')
+//////// STRIPE ROUTES HERE ////////
 
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Accept-Language': 'en_US',
-                'Authorization': `Basic ${base64}`,
-            },
-            body: 'grant_type=client_credentials'
-        })
-            .then(res => res.json())
-            .then(data => res.send(data))
-            .catch(ex => next(ex))
+
+router.get('/stripe/:acc', async (req, res, next) => {
+    try {
+        const account = await stripe.accounts.retrieve(req.params.acc);
+        res.send(account)
     } catch (ex) {
         next(ex)
     }
-
 })
 
-router.post('/paypal/merchant/:trackingId', async (req, res, next) => {
+// manually signup user for stripe if it failed when signup for platform
+router.post('/stripe', async (req, res, next) => {
+    const { id, email } = req.body
+    console.log(id)
+    const user = await User.findOne({ where: { id } })
+
+    const account = await stripe.accounts.create({
+        type: 'express',
+        email
+    });
+
+    user.stripeAcc = account.id
+    await user.save()
+    res.sendStatus(204)
+})
+
+// create an onboarding link for new accounts
+router.post("/stripe/accountlink", async (req, res, next) => {
     try {
-        const trackingId = req.params.trackingId
-        const { token_type, access_token }  = req.body
-        const config = {
-            headers: {
-                Authorization: `${token_type} ${access_token}`,
-                "Content-Type": "application/json"
-            }
-        }
+        const { stripeAcc } = req.body
+        const accountLink = await stripe.accountLinks.create({
+            account: stripeAcc,
+            refresh_url: 'http://localhost:8080/reauth',
+            return_url: 'http://localhost:8080/success',
+            type: 'account_onboarding',
+        });
 
-        let url = `https://api-m.sandbox.paypal.com/v1/customer/partners/${process.env.PAYPAL_SANDBOX_MERCHANT_ID}/merchant-integrations?tracking_id=${trackingId}`
-
-
-        const { merchant_id } = (await axios.get(url, config)).data
-
-        if(merchant_id){
-            url = `https://api-m.sandbox.paypal.com/v1/customer/partners/${process.env.PAYPAL_SANDBOX_MERCHANT_ID}/merchant-integrations/${merchant_id}`
-
-            const {payments_receivable, primary_email_confirmed} = (await axios.get(url, config)).data
-
-            res.send({merchant_id, payments_receivable, primary_email_confirmed})
-        }
+        res.send(accountLink)
     } catch (ex) {
-        next("No Merchant Found")
+        next(ex)
     }
-
 })
 
 module.exports = router

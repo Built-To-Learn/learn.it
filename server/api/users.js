@@ -48,7 +48,7 @@ router.put('/:userId', async (req, res, next) => {
 
         await user.update(req.body)
         res.sendStatus(204)
-    } catch (error) {
+    } catch (ex) {
         next(ex)
     }
 })
