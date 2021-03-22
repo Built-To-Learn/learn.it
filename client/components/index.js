@@ -27,6 +27,7 @@ export { default as Questions } from './questions';
 export { default as StripeOnboard} from './onboard_stripe'
 export { default as SuccessfulOnboard } from './onboard_success'
 export { default as FailedOnboard } from './onboard_failed'
+export { default as Tip } from './tip'
 
 export { default as ViewParticipants } from './viewParticipants'
 export { default as AssociatedCourses } from './associated-courses'
