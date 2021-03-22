@@ -20,7 +20,16 @@ router.get('/:courseId', async (req, res, next) => {
 
 router.post('/create', async (req, res, next) => {
     try {
-        const question = await Question.create(req.body)
+        const id = (await Question.create(req.body)).id
+
+        const question = await Question.findOne({
+            where: {
+                id: id
+            },
+            include: [ User ]
+        })
+
+        console.log(question)
 
         res.status(201).send(question)
     } catch (error) {
