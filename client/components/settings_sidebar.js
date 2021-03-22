@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchView } from '../store/view';
-import { generateAccountLinks } from "../store"
+import { generateAccountLinks, setBalance } from "../store"
 import { CollapsibleItem, Icon } from 'react-materialize';
 
-
-const Settings = ({auth, payment, buildSignups, fetchView}) => {
+const Settings = ({auth, getBalance, buildSignups, fetchView}) => {
 
   useEffect(() => {
-    if(auth.stripeAcc && !auth.onboarded){
-      buildSignups(auth.stripeAcc)
-    }
+    if(auth.stripeAcc){
+      if(!auth.onboarded){
+        buildSignups(auth.stripeAcc)
+      }
 
+      getBalance(auth.stripeAcc)
+    }
   }, [])
 
   return (
@@ -47,6 +49,9 @@ export default connect(mapState, (dispatch) => {
     fetchView: (view) => dispatch(fetchView(view)),
     buildSignups: (stripeAcc) => {
       dispatch(generateAccountLinks(stripeAcc))
+    },
+    getBalance: (stripeAcc) => {
+      dispatch(setBalance(stripeAcc))
     }
   };
 })(Settings);
