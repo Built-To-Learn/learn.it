@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 const stripePromise = loadStripe("pk_test_51ILK1lLfvWrZDmuZMXaRPM2DZJTsiWZCLF0kN6XuqF9jMLq5eYjh59Vaqvr1XshlKGPRbF2Q1PRxFv1G72IZBCpf000VL6GWuC");
 
-const Tip = ({dashboard, handleClick}) => {
+const Tip = ({auth, dashboard, handleClick}) => {
   const [teacher, setTeacher] = useState({})
   useEffect(() => {
     const init = async () => {
@@ -25,8 +25,9 @@ const Tip = ({dashboard, handleClick}) => {
 
 }
 
-const mapState = ({dashboard}) => {
+const mapState = ({auth, dashboard}) => {
   return {
+      auth,
       dashboard
   }
 }

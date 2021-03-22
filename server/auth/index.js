@@ -78,6 +78,18 @@ router.get('/stripe/:acc', async (req, res, next) => {
     }
 })
 
+router.get('/stripe/balance/:acc', async (req, res, next) => {
+    try {
+        const balance = await stripe.balance.retrieve({
+            stripeAccount: req.params.acc
+        });
+
+        res.send(balance)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
 // manually signup user for stripe if it failed when signup for platform
 router.post('/stripe', async (req, res, next) => {
     const { id, email } = req.body

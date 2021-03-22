@@ -1,13 +1,17 @@
 import React from "react"
-import StripeOnboard from './onboard_stripe'
+import {StripeOnboard, Earnings} from '../components'
 import { connect } from "react-redux"
 import { updateUserInfo } from "../store"
 
-const AccountInfo = ({auth, handleSubmit, payment}) => {
+const AccountInfo = ({auth, handleSubmit}) => {
   return (
       <div className="section container">
         <h1 className="center-align">Account Info</h1>
         <form style={{width: "50%"}} className="row" onSubmit={(evt) => handleSubmit(auth, evt)}>
+          <div className="col s12 center">
+            <Earnings />
+          </div>
+
           <div className="col s12">
               <label htmlFor="fullname">
                   <small>Full Name</small>
@@ -33,8 +37,7 @@ const AccountInfo = ({auth, handleSubmit, payment}) => {
             <StripeOnboard />
             <button className="btn" type="submit">Save</button>
           </div>
-          <p className="red-text">
-          </p>
+
         </form>
       </div>
   )
@@ -42,8 +45,7 @@ const AccountInfo = ({auth, handleSubmit, payment}) => {
 
 const mapState = ({auth, payment}) => {
   return {
-    auth,
-    payment
+    auth
   }
 }
 
