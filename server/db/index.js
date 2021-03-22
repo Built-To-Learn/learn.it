@@ -37,7 +37,7 @@ Question.belongsTo(User);
 
 const syncAndSeed = async () => {
     await db.sync({ force: true })
-    const [cody, murphy, sal] = await Promise.all([
+    const [cody, murphy, sal, admin] = await Promise.all([
         User.create({
             name: 'Cody',
             username: 'cody123',
@@ -57,6 +57,23 @@ const syncAndSeed = async () => {
             password: '123',
             role: 'TEACHER',
         }),
+        User.create({
+            name: 'admin',
+            username: 'admin',
+            email: 'admin@email.com',
+            password: '123',
+            onboarded: true,
+            stripeAcc: 'acct_1IXbI3PtzjF0VE0i',
+            role: 'TEACHER'
+        }),
+        User.create({
+            name: 'bob',
+            username: 'batmanAndBobin',
+            email: 'bob@email.com',
+            password: '123',
+            onboarded: true,
+            stripeAcc: 'acct_1IXZZGQ1nM9zmUEJ',
+        })
     ])
 
     const [
@@ -108,6 +125,12 @@ const syncAndSeed = async () => {
             description:
                 "Clowning is a noble calling. In the Udemy course, Clown for fun and profit: Learning the art of clowning, you'll be steeped in the ancient art and history of clowning. You get to pick a wig and clown outfit, find your clown's personality, and learn how to actually make a living as a professional clown. It's not all balloons and birthday parties, folks.",
         }),
+        Course.create({
+            title: 'Pay me!',
+            category: 'Enrichment',
+            userId: admin.id,
+            description: 'Give me money',
+        })
     ])
 
     await Question.create({

@@ -7,7 +7,8 @@ import {
   ViewParticipants,
   Breakout,
   Chatroom,
-  Questions
+  Questions,
+  Tip
 } from './index';
 import { fetchClearView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
@@ -241,6 +242,9 @@ class Dashboard extends Component {
                       {!this.state.mute ? 'volume_up' : 'volume_off'}
                     </Icon>
                   </Button>
+
+                  <Tip />
+
                   <Button
                     node="button"
                     className="right_btn black"
