@@ -111,4 +111,25 @@ router.post("/stripe/accountlink", async (req, res, next) => {
     }
 })
 
+router.post('/stripe/checkout', async (req, res, next) => {
+    try {
+        const {items, destination} = req.body
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: items,
+            payment_intent_data: {
+              transfer_data: {
+                destination
+              }
+            },
+            success_url: 'http://localhost:8080/success/tip',
+            cancel_url: 'http://localhost:8080/failed/tip'
+        })
+
+        res.send(session)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
 module.exports = router
