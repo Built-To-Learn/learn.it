@@ -7,7 +7,8 @@ const Question = db.define('question', {
         allowNull: false
     },
     upvotes: {
-        type: INTEGER
+        type: INTEGER,
+        defaultValue: 0
     }
 })
 

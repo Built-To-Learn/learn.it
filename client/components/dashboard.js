@@ -7,7 +7,8 @@ import {
   ViewParticipants,
   Breakout,
   Chatroom,
-  Questions
+  Questions,
+  Modal
 } from './index';
 import { fetchClearView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
@@ -296,6 +297,7 @@ class Dashboard extends Component {
             )}
           </div>
         </div>
+        <Modal room={this.state.room}/>
       </div>
     );
   }

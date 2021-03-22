@@ -22,6 +22,7 @@ export { default as CoursesView } from './courses-view'
 export { default as ViewCourses } from './view-courses'
 export { default as ClassSearch } from './find-a-class-search'
 export { default as Questions } from './questions';
+export { default as Modal } from './modal'
 
 // Onboarding / Payment Components
 export { default as StripeOnboard} from './onboard_stripe'
