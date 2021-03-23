@@ -1,7 +1,7 @@
 const { Sequelize, INTEGER } = require('sequelize');
 const db = require('./db');
 
-const User = require('./models/User');
+const User = require('./models/user');
 const Course = require('./models/Course');
 const Question = require('./models/Question');
 const Schedule = require('./models/Schedule');
