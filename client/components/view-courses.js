@@ -12,7 +12,7 @@ class ViewCourses extends Component {
         onClick={() => this.props.fetchView('viewClasses')}
       >
         <Icon>apps</Icon>
-        <span className="landingbtn_text">View all classes</span>
+        <a className="clickable waves-effect">View all classes</a>
       </div>
     );
   }

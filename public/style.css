@@ -19,6 +19,11 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+.clickable {
+  cursor: pointer;
+  color: black;
+}
+
 .parallax-container .parallax {
   position: absolute;
   top: 0;
@@ -244,35 +249,55 @@ form div {
 }
 
 #questions {
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-y: scroll;
 }
 
 #question {
   display: flex;
   align-items: center;
-  padding: 0 1rem 
+  padding: 0 1rem;
 }
 
 /* Modal Animation */
 @-webkit-keyframes slideIn {
-  from {bottom: -300px; opacity: 0} 
-  to {bottom: 0; opacity: 1}
+  from {
+    bottom: -300px;
+    opacity: 0;
+  }
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
-  from {bottom: -300px; opacity: 0}
-  to {bottom: 0; opacity: 1}
+  from {
+    bottom: -300px;
+    opacity: 0;
+  }
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeIn {
-  from {opacity: 0} 
-  to {opacity: 1}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
-  from {opacity: 0} 
-  to {opacity: 1}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -284,8 +309,8 @@ form div {
   top: 0;
   width: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
   -webkit-animation-name: fadeIn;
   -webkit-animation-duration: 0.4s;
   animation-name: fadeIn;
@@ -301,7 +326,7 @@ form div {
   -webkit-animation-duration: 0.4s;
   animation-name: slideIn;
   animation-duration: 0.4s;
-  border: 1px solid #ec6f75
+  border: 1px solid #ec6f75;
 }
 
 .modal-close {

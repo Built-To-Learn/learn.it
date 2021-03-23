@@ -44,13 +44,14 @@ class EnrolledCourses extends React.Component {
           onSelect={() => {}}
         >
           {enrolledCourses.map((enrollment, idx) => (
-            <p
+            <a
+              className="clickable waves-effect"
               id={enrollment.course.id}
               onClick={(e) => this.joinRoomWatch(enrollment.course.userId, e)}
               key={enrollment.course.id}
             >
               {enrollment.course.title}
-            </p>
+            </a>
           ))}
         </CollapsibleItem>
       );

@@ -12,7 +12,7 @@ class FindAClass extends Component {
         onClick={() => this.props.fetchView('findAClass')}
       >
         <Icon>find_in_page</Icon>
-        <span className="landingbtn_text">Find a class</span>
+        <a className="clickable waves-effect">Find a class</a>
       </div>
     );
   }
