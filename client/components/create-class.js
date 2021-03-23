@@ -12,7 +12,7 @@ class CreateAClass extends Component {
                 onClick={() => this.props.fetchView('createAClass')}
             >
                 <Icon>add</Icon>
-                <span className="landingbtn_text">Create a class</span>
+                <a className="clickable waves-effect">Create a class</a>
             </div>
         )
     }

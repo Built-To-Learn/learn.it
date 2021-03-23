@@ -46,7 +46,8 @@ class TaughtCourses extends React.Component {
         onSelect={() => {}}
       >
         {usersTaughtCourses.map((course) => (
-          <p
+          <a
+            className="clickable waves-effect"
             id={course.id}
             onClick={(e) => {
               this.joinRoomBroadcast(course.userId, e);
@@ -54,7 +55,7 @@ class TaughtCourses extends React.Component {
             key={course.id}
           >
             {course.title}
-          </p>
+          </a>
         ))}
       </CollapsibleItem>
     );
