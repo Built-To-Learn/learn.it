@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {
   db,
-  models: { Course, Teacher, User },
+  models: { Course, Teacher, User, Schedule },
 } = require('../db');
 const { Op } = db.Sequelize;
 
@@ -10,6 +10,7 @@ router.get('/user', async (req, res, next) => {
     const user = await User.findByToken(req.headers.authorization);
     const courses = await Course.findAll({
       where: { userId: user.id },
+      include: [Schedule],
     });
     res.send(courses);
   } catch (ex) {
@@ -19,7 +20,7 @@ router.get('/user', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    res.status(200).json(await Course.findAll({ include: [User] }));
+    res.status(200).json(await Course.findAll({ include: [User, Schedule] }));
   } catch (ex) {
     next(ex);
   }
@@ -35,7 +36,7 @@ router.post('/', async (req, res, next) => {
       where: {
         id: course.id,
       },
-      include: [User],
+      include: [User, Schedule],
     });
     res.status(201).send(courseWithUser);
   } catch (ex) {
@@ -53,6 +54,7 @@ router.get('/courseSearch/:search', async (req, res, next) => {
       },
       order: [['title', 'ASC']],
       limit: 20,
+      include: [Schedule, User],
     });
     res.status(200).send(courses);
   } catch (ex) {
@@ -63,7 +65,7 @@ router.get('/courseSearch/:search', async (req, res, next) => {
 router.get('/:courseId', async (req, res, next) => {
   try {
     const course = await Course.findOne({
-      include: [Teacher],
+      include: [Teacher, Schedule],
       where: { id: req.params.courseId },
     });
   } catch (ex) {
@@ -75,6 +77,7 @@ router.put('/:courseId', async (req, res, next) => {
   try {
     const course = await Course.findOne({
       where: { id: req.params.courseId },
+      include: [Schedule],
     });
 
     await course.update(req.body);
@@ -91,6 +94,7 @@ router.delete('/:courseId', async (req, res, next) => {
     });
 
     await course.destroy();
+    // does this need a save?
     res.sendStatus(204);
   } catch (error) {
     next(ex);
