@@ -54,9 +54,9 @@ const initState = {
 export default function(state = initState, action){
   switch(action.type){
     case GENERATE_SIGNUP:
-      return {onboardUrl: action.onboardUrl}
+      return {...state, onboardUrl: action.onboardUrl}
     case SET_BALANCE:
-      return {balance: action.balance}
+      return {...state, balance: action.balance}
     default:
       return state
   }

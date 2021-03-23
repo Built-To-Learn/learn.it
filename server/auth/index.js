@@ -126,7 +126,7 @@ router.post("/stripe/accountlink", async (req, res, next) => {
         const accountLink = await stripe.accountLinks.create({
             account: stripeAcc,
             refresh_url: 'http://localhost:8080/reauth',
-            return_url: 'http://localhost:8080/home',
+            return_url: 'http://localhost:8080/success',
             type: 'account_onboarding',
         });
 
@@ -147,7 +147,7 @@ router.post('/stripe/checkout', async (req, res, next) => {
                 destination
               }
             },
-            success_url: 'http://localhost:8080/success/home',
+            success_url: 'http://localhost:8080/home',
             cancel_url: 'http://localhost:8080/reauth'
         })
 
