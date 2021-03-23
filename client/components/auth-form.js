@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { authenticate } from '../store'
 
 const AuthForm = (props) => {
+    const [loading, setLoading] = useState(false)
     const { name, displayName, handleSubmit, error } = props
 
     if(name === "login"){
@@ -70,9 +71,17 @@ const AuthForm = (props) => {
                             </label>
                             <input name="password" type="password" />
                         </div>
+
                         <div>
-                            <button className="btn" type="submit">{displayName}</button>
+                            <button onClick={() => setLoading(true)}className="btn" type="submit">{displayName}</button>
                         </div>
+
+                        {loading ?
+                        <div className="progress">
+                            <div className="indeterminate"></div>
+                        </div>
+                        : ''}
+
                         {error && error.response && <div> {error.response.data} </div>}
                     </form>
                 </div>
