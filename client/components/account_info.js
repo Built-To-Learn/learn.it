@@ -8,8 +8,9 @@ const AccountInfo = ({auth, handleSubmit}) => {
       <div className="section container">
         <h1 className="center-align">Account Info</h1>
         <form style={{width: "50%"}} className="row" onSubmit={(evt) => handleSubmit(auth, evt)}>
+
           <div className="col s12 center">
-            <Earnings />
+            {auth.onboarded && <Earnings />}
           </div>
 
           <div className="col s12">
