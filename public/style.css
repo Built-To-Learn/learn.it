@@ -228,6 +228,7 @@ form div {
 
 #single_course_content {
   height: 50%;
+  overflow: auto;
 }
 
 #calendar_div {
@@ -235,9 +236,6 @@ form div {
   overflow: auto;
 }
 #calendar {
-  /* height: 50%; */
-
-  /* height: 300px; */
 }
 
 #questions-container {

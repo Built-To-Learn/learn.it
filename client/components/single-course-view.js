@@ -1,6 +1,7 @@
 //switch view, and pass down id to getSingleCourseViewRoute
 import React from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import M from 'materialize-css';
 import CourseCard from './course-card';
@@ -15,7 +16,7 @@ import {
   Caption,
 } from 'react-materialize';
 
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 
 const localizer = momentLocalizer(moment);
@@ -23,15 +24,76 @@ const localizer = momentLocalizer(moment);
 class SingleCourseView extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { events: [] };
+    this.handleSelect = this.handleSelect.bind(this);
+    this.editCalendar = this.editCalendar.bind(this);
   }
   async componentDidMount() {
-    this.props.singleCourse;
-    console.log('SINGLE COURSE in component', singleCourse);
+    const events = this.props.singleCourse.schedules.map((schedule) => {
+      return {
+        ...schedule,
+        start: new Date(schedule.start),
+        end: new Date(schedule.end),
+        title: this.props.singleCourse.title,
+      };
+    });
+
+    this.setState({ events: events });
+  }
+
+  async editCalendar(e) {
+    const token = await window.localStorage.getItem('token');
+
+    if (token) {
+      axios.post(
+        '/api/schedule/deleteEvent',
+        {
+          id: e.id,
+          courseId: e.courseId,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      this.setState({
+        events: this.state.events.filter((el) => el.id !== e.id),
+      });
+    }
+  }
+
+  async handleSelect({ start, end }) {
+    // const startDate = start;
+    // const endDate = end;
+    const token = await window.localStorage.getItem('token');
+
+    if (token) {
+      const event = (
+        await axios.post(
+          '/api/schedule/createEvent',
+          {
+            course: this.props.singleCourse,
+            schedule: { start: start, end: end },
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        )
+      ).data;
+      event.start = new Date(event.start);
+      event.end = new Date(event.end);
+      event.title = this.props.singleCourse.title;
+      this.setState({
+        events: [...this.state.events, event],
+      });
+    }
   }
 
   render() {
     const singleCourse = this.props.singleCourse;
-    console.log(singleCourse);
     return (
       <div id="single_course_view">
         <div id="single_course_content">
@@ -76,36 +138,6 @@ class SingleCourseView extends React.Component {
                 </h5>
               </Caption>
             </Slide>
-            {/* <Slide
-                        image={
-                            <img
-                                alt=""
-                                src="https://lorempixel.com/780/580/nature/3"
-                            />
-                        }
-                    >
-                        <Caption placement="right">
-                            <h3>Right Aligned Caption</h3>
-                            <h5 className="light grey-text text-lighten-3">
-                                Here's our small slogan.
-                            </h5>
-                        </Caption>
-                    </Slide>
-                    <Slide
-                        image={
-                            <img
-                                alt=""
-                                src="https://lorempixel.com/580/250/nature/4"
-                            />
-                        }
-                    >
-                        <Caption placement="center">
-                            <h3>This is our big Tagline!</h3>
-                            <h5 className="light grey-text text-lighten-3">
-                                Here's our small slogan.
-                            </h5>
-                        </Caption>
-                    </Slide> */}
           </Slider>
           <Row>
             <Col m={12} s={12}>
@@ -124,43 +156,42 @@ class SingleCourseView extends React.Component {
           <p>Category: {singleCourse.category}</p>
         </div>
         <div id="calendar_div">
-          <Calendar
-            id="calendar"
-            localizer={localizer}
-            events={[]}
-            //events={myEventsList}
-            startAccessor="start"
-            endAccessor="end"
-          />
+          {this.props.auth.id === this.props.singleCourse.user.id ? (
+            <Calendar
+              selectable
+              id="calendar"
+              localizer={localizer}
+              events={this.state.events}
+              defaultView={Views.WEEK}
+              startAccessor="start"
+              endAccessor="end"
+              onSelectEvent={(e) => this.editCalendar(e)}
+              onSelectSlot={(e) => this.handleSelect(e)}
+            />
+          ) : (
+            <Calendar
+              id="calendar"
+              localizer={localizer}
+              events={this.state.events}
+              defaultView={Views.WEEK}
+              startAccessor="start"
+              endAccessor="end"
+              // onSelectEvent={(e) => this.editCalendar(e)}
+              // onSelectSlot={(e) => this.handleSelect(e)}
+            />
+          )}
         </div>
       </div>
     );
-    // if (this.props.courses.length !== 0) {
-    //     const courses = this.props.courses.all
-
-    //     return courses.map((course) => {
-    //         return (
-    //             <CourseCard
-    //                 className="course_list"
-    //                 course={course}
-    //                 key={course.id}
-    //             />
-    //         )
-    //     })
-    // } else {
-    //     return <div>No Courses</div>
-    // }
   }
 }
 
-/**
- * CONTAINER
- */
 const mapState = (state) => {
   return {
     isLoggedIn: !!state.auth.id,
     courses: state.courses,
     singleCourse: state.singleCourse,
+    auth: state.auth,
   };
 };
 
