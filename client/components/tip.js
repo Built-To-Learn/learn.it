@@ -8,7 +8,6 @@ const Tip = ({auth, dashboard, handleClick}) => {
   const [teacher, setTeacher] = useState({})
   useEffect(() => {
     const init = async () => {
-        // get stripeAcc of teacher pass to handle click
       const teacher = (await axios.get(`/api/users/${dashboard.teacher}`)).data
       setTeacher(teacher)
     }
@@ -37,7 +36,7 @@ const mapDispatch = (dispatch) => {
       async handleClick(teacher){
         const stripe = await stripePromise
         const items = [{
-          name: "tip test",
+          name: "teacher tip",
           amount: 1000,
           currency: "usd",
           quantity: 1

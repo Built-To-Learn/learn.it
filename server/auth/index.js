@@ -67,8 +67,6 @@ router.get('/me', async (req, res, next) => {
 })
 
 //////// STRIPE ROUTES HERE ////////
-
-
 router.get('/stripe/:acc', async (req, res, next) => {
     try {
         const account = await stripe.accounts.retrieve(req.params.acc);
@@ -109,7 +107,6 @@ router.post('/stripe/payout/:acc', async (req, res, next) => {
 // manually signup user for stripe if it failed when signup for platform
 router.post('/stripe', async (req, res, next) => {
     const { id, email } = req.body
-    console.log(id)
     const user = await User.findOne({ where: { id } })
 
     const account = await stripe.accounts.create({
@@ -129,7 +126,7 @@ router.post("/stripe/accountlink", async (req, res, next) => {
         const accountLink = await stripe.accountLinks.create({
             account: stripeAcc,
             refresh_url: 'http://localhost:8080/reauth',
-            return_url: 'http://localhost:8080/success',
+            return_url: 'http://localhost:8080/home',
             type: 'account_onboarding',
         });
 
@@ -150,8 +147,8 @@ router.post('/stripe/checkout', async (req, res, next) => {
                 destination
               }
             },
-            success_url: 'http://localhost:8080/success/tip',
-            cancel_url: 'http://localhost:8080/failed/tip'
+            success_url: 'http://localhost:8080/success/home',
+            cancel_url: 'http://localhost:8080/reauth'
         })
 
         res.send(session)

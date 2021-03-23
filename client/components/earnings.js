@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { setBalance } from '../store'
 import axios from 'axios'
 
 const Earnings = ({auth, payment, handleClick}) => {
