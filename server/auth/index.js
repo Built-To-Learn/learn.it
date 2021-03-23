@@ -88,6 +88,22 @@ router.get('/stripe/balance/:acc', async (req, res, next) => {
     }
 })
 
+router.post('/stripe/payout/:acc', async (req, res, next) => {
+    try {
+        const { amount } = req.body
+        const payout = await stripe.payouts.create({
+            amount,
+            currency: 'usd',
+          }, {
+            stripeAccount: req.params.acc,
+          });
+
+        res.send(payout)
+    } catch (ex) {
+        next(ex)
+    }
+})
+
 // manually signup user for stripe if it failed when signup for platform
 router.post('/stripe', async (req, res, next) => {
     const { id, email } = req.body

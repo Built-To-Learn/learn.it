@@ -1,11 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import axios from 'axios'
 
 const Earnings = ({auth, payment, handleClick}) => {
 
   return(
     <div className="">
-      <button className="btn" onClick={() => handleClick()}>
+      <button className="btn" onClick={() => handleClick(payment.balance.available, auth.stripeAcc)}>
         Available: ${payment.balance.available}
       </button>
 
@@ -25,8 +26,9 @@ const mapState = ({auth, payment}) => {
 
 const mapDispatch = (dispatch) => {
   return {
-      async handleClick(){
-
+      async handleClick(amount, acc){
+        await axios.post(`/auth/stripe/payout/${acc}`, {amount: amount * 100})
+        await dispatch(setBalance(acc))
       }
   }
 }
