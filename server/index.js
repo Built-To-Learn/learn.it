@@ -29,7 +29,6 @@ const init = async () => {
       await db.sync();
     }
     // start listening (and create a 'server' object representing our server)
-    console.log("STRIPE", process.env.STRIPE_SK_TEST)
     httpServer.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`));
   } catch (ex) {
     console.log(ex);
