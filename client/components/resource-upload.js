@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Resource = () => {  
+const ResourceUpload = () => {  
   const [file, setFile] = useState(null);
 
   const submitFile = async (event) => {
@@ -34,4 +34,4 @@ const Resource = () => {
   );
 };
 
-export default Resource;
+export default ResourceUpload;

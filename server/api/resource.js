@@ -5,10 +5,8 @@ const FileType = require('file-type'); //checks file type
 const multiparty = require('multiparty'); // parse http  requests
 
 AWS.config.update({
-    // accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    // secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    accessKeyId: "AKIAZJQUHJDDUN2UJKT4",
-    secretAccessKey: "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"
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   });
   
   
@@ -26,12 +24,12 @@ AWS.config.update({
     };
     return s3.upload(params).promise();
   };
-  
+
   // Define POST route
   router.post('/test-upload', (request, response) => {
-    console.log("inside POST")
+    // console.log("inside POST")
     const form = new multiparty.Form();
-    console.log("FORM", form)
+    // console.log("FORM", form)
     form.parse(request, async (error, fields, files) => {
       if (error) {
         console.log("ERROR INSIDE")
@@ -53,4 +51,29 @@ AWS.config.update({
     });
   });
 
+  router.get('/', async(request, response) => {
+      try {
+        console.log("INSIDE RESOURCE ROUTE")
+
+        AWS.config.setPromisesDependency()
+        AWS.config.update({
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          });
+          const s3 = new AWS.S3()
+          const data = await s3.listObjectsV2({
+              Bucket: "built-to-learn"
+          }).promise()
+
+        console.log(response)
+        return response.status(200).send(data);
+      } catch (err) {
+          console.log(err)
+        // console.log("THIS IS MY ERROR", err)
+        // return response.status(500).send(err);
+      }
+  
+  });
+   
+ 
   module.exports = router

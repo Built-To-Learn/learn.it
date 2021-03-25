@@ -11,12 +11,13 @@ import {
     Landing,
     SuccessfulOnboard,
     FailedOnboard,
-    Resource,
+    Resources,
 } from './components'
 import { CreateNewCourse } from './components/createclass.js'
 import { me } from './store'
 import CoursesView from './components/courses-view.js'
 import AssociatedCourses from './components/associated-courses.js'
+
 
 /**
  * COMPONENT
@@ -60,7 +61,7 @@ class Routes extends Component {
                             path="/createcourse"
                             component={CreateNewCourse}
                         />
-                        <Route exact path="/resource" component={Resource} />
+                        <Route exact path="/resource" component={Resources} />
                     </Switch>
                 )}
             </div>
