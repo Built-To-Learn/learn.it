@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import CourseCard from './course-card';
+import { TextInput, Icon } from 'react-materialize';
 
 class ClassSearch extends Component {
   constructor(props) {
@@ -33,24 +34,23 @@ class ClassSearch extends Component {
   render() {
     return (
       <div>
-        <textarea
-          value={this.state.text}
-          onChange={(e) => this.onChange(e)}
-        ></textarea>
-        <ul>
-          {this.state.results.map((course, idx) => {
-            return (
-              <CourseCard className="course_list" course={course} key={idx} />
-              // <li
-              //   id={result.id}
-              //   key={result.id}
-              //   onClick={(e) => this.addClass(e)}
-              // >
-              //   {result.title}
-              // </li>
-            );
-          })}
-        </ul>
+        <div id="search_for_class">
+          <TextInput
+            icon={<Icon>search</Icon>}
+            value={this.state.text}
+            onChange={(e) => this.onChange(e)}
+            placeholder="Search for a class"
+          ></TextInput>
+        </div>
+        <div>
+          <ul id="find_a_class_course_list">
+            {this.state.results.map((course, idx) => {
+              return (
+                <CourseCard className="course_list" course={course} key={idx} />
+              );
+            })}
+          </ul>
+        </div>
       </div>
     );
   }

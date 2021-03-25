@@ -151,6 +151,21 @@ form div {
   align-items: center;
 }
 
+#search_for_class {
+  margin: 2rem;
+}
+
+#find_a_class_course_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.course_card {
+  width: 30%;
+  padding: 1rem;
+}
+
 #broadcast_watcher_video {
   width: 100%;
   height: 100%;
