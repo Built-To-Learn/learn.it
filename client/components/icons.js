@@ -16,15 +16,15 @@ const Icons = () => {
           <div className="col s12 m4">
             <div className="icon-block">
               <h2 className="center brown-text">
-                <i className="material-icons">flash_on</i>
+                <i className="material-icons">library_books</i>
               </h2>
-              <h5 className="center">Speeds up development</h5>
+              <h5 className="center">Find your classroom</h5>
 
               <p className="light">
-                We did most of the heavy lifting for you to provide a default
-                stylings that incorporate our custom components. Additionally,
-                we refined animations and transitions to provide a smoother
-                experience for developers.
+                Learn.it is a free virtual learning platform. Simply join a
+                class of your interest to get started. There are no limits on
+                how many classes you can join or attend. Let your learning
+                journey start today!
               </p>
             </div>
           </div>
@@ -34,14 +34,12 @@ const Icons = () => {
               <h2 className="center brown-text">
                 <i className="material-icons">group</i>
               </h2>
-              <h5 className="center">User Experience Focused</h5>
+              <h5 className="center">Community of peers</h5>
 
               <p className="light">
-                By utilizing elements and principles of Material Design, we were
-                able to create a framework that incorporates components and
-                animations that provide more feedback to users. Additionally, a
-                single underlying responsive system across all platforms allow
-                for a more unified user experience.
+                You won't be learning alone. Learn.it's platform supports live
+                teacher sessions, interactive breakout sessions, chat, Q&A, and
+                community messaging boards.
               </p>
             </div>
           </div>
@@ -49,15 +47,14 @@ const Icons = () => {
           <div className="col s12 m4">
             <div className="icon-block">
               <h2 className="center brown-text">
-                <i className="material-icons">settings</i>
+                <i className="material-icons">assignment_ind</i>
               </h2>
-              <h5 className="center">Easy to work with</h5>
+              <h5 className="center">Become a teacher</h5>
 
               <p className="light">
-                We have provided detailed documentation as well as specific code
-                examples to help new users get started. We are also always open
-                to feedback and can answer any questions a user may have about
-                Materialize.
+                Learn.it's members are also teachers. To become a teacher,
+                simply create a course and class schedule. No fancy prepared
+                content is necessary, just you!
               </p>
             </div>
           </div>

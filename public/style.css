@@ -23,7 +23,9 @@ form div {
   cursor: pointer;
   color: black;
 }
-
+#index-banner {
+  font-weight: bold;
+}
 .parallax-container .parallax {
   position: absolute;
   top: 0;
@@ -147,6 +149,21 @@ form div {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+#search_for_class {
+  margin: 2rem;
+}
+
+#find_a_class_course_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.course_card {
+  width: 30%;
+  padding: 1rem;
 }
 
 #broadcast_watcher_video {
