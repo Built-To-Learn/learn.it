@@ -9,6 +9,7 @@ import {
     AssociatedCourses,
     EnrolledCourses,
     SingleCourseView,
+    Home
 } from './index'
 import { CreateNewCourse } from './createclass'
 import { fetchView } from '../store/view'
@@ -112,6 +113,7 @@ class Landing extends Component {
                     ) : (
                         ''
                     )}
+                    {view === 'welcome' ? <Home /> : ''}
                     {view === 'findAClass' ? <ClassSearch /> : ''}
                     {view === 'createAClass' ? <CreateNewCourse /> : ''}
                     {view === 'viewClasses' ? <CoursesView /> : ''}

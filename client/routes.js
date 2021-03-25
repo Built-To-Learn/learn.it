@@ -33,6 +33,7 @@ class Routes extends Component {
         {isLoggedIn ? (
           <Switch>
             <Route exact path="/home" component={Landing} />
+            <Route exact path="/welcome" component={Home} />
             <Route exact path="/createcourse" component={CreateNewCourse} />
             <Route exact path="/viewcourses" component={CoursesView} />
             <Route path="/success" component={SuccessfulOnboard} />
