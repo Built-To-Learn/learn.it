@@ -23,7 +23,9 @@ form div {
   cursor: pointer;
   color: black;
 }
-
+#index-banner {
+  font-weight: bold;
+}
 .parallax-container .parallax {
   position: absolute;
   top: 0;
