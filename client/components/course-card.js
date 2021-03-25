@@ -24,7 +24,7 @@ class CourseCard extends React.Component {
         <div className="card-content">
           <span className="card-title activator grey-text text-darken-4">
             {course.title}
-            <i className="material-icons right">more_vert</i>
+            <i className="material-icons right three_dots">more_vert</i>
           </span>
           <p>
             <a
@@ -47,7 +47,7 @@ class CourseCard extends React.Component {
         <div className="card-reveal">
           <span className="card-title grey-text text-darken-4">
             {course.title}
-            <i className="material-icons right">close</i>
+            <i className="material-icons right close_X">close</i>
           </span>
           <p>
             Here is some more information about this product that is only
