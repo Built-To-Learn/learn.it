@@ -160,6 +160,17 @@ form div {
   flex-wrap: wrap;
   justify-content: space-around;
 }
+.three_dots {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.close_X {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
 
 .course_card {
   width: 30%;
