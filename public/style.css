@@ -164,7 +164,7 @@ form div {
 }
 
 .create_course_labels {
-  font-size: 2rem;
+  font-size: 1rem;
 }
 
 #create_a_class_form {
@@ -173,12 +173,11 @@ form div {
   width: 75%;
 }
 #create_class_btn {
-  margin-top: 1rem;
   align-self: center;
   width: 50%;
-  font-size: 2rem;
-  padding: 1rem;
-  height: 4rem;
+  font-size: 1.5rem;
+
+  height: 3rem;
 }
 
 #create_course_text_area {
@@ -291,12 +290,40 @@ form div {
   object-fit: cover;
 }
 
+#single_course_info_div{
+  display: flex;
+}
+
+#single_course_owner_image{
+  width:10%;
+
+}
+
+#single_course_btn_control_div{
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+#single_course_owner_image > img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%
+}
+
+#single_course_info {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
 #single_course_content {
   height: 45%;
   overflow: auto;
 }
 
-#calendar_div {
+#single_course_btm_div {
   height: 55%;
   overflow: auto;
   padding: 1rem;
