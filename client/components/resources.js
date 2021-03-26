@@ -25,10 +25,13 @@ class Resources extends Component {
           const {resources} = this.props;
 
           return( <div>
+              <h3>Checkout the Course Resources</h3>
               <ResourceUpload/>
               {resources.map((resource) => {
                 return (
-                    <p key= {resource.ETag} >{resource.Key}</p>
+                    <div>
+                        <a href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resource.Key}</a>
+                    </div>
                 );
               })}
 
@@ -36,7 +39,7 @@ class Resources extends Component {
           )
      
         } else {
-          return <div>No Resources</div>;
+          return <ResourceUpload/>
         }
       }
 
