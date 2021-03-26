@@ -45,7 +45,7 @@ class CreateCourse extends Component {
     const { error, isLoggedIn } = this.props;
     return (
       <div>
-        <h1 className="center-align">Create A Course</h1>
+        <h2 className="center-align">Create A Course</h2>
         {isLoggedIn ? (
           <div id="create_a_class_div">
             <form
