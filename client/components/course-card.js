@@ -28,6 +28,7 @@ class CourseCard extends React.Component {
           </span>
           <p>
             <a
+              className="hover_text"
               onClick={() =>
                 this.props.enrollInCourse(course.id, userId, course.title)
               }
@@ -36,6 +37,7 @@ class CourseCard extends React.Component {
             </a>
           </p>
           <p
+            className="hover_text"
             onClick={() => {
               this.props.fetchView('viewSingleCourse');
               this.props.loadSingleCourse(course);

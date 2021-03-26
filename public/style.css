@@ -34,6 +34,7 @@ form div {
   bottom: 0;
   z-index: -1;
 }
+
 /* .parallax-container {
     min-height: 380px;
     line-height: 0;
@@ -151,6 +152,42 @@ form div {
   align-items: center;
 }
 
+.hover_text:hover {
+  cursor: pointer;
+}
+
+#create_a_class_div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.create_course_labels {
+  font-size: 2rem;
+}
+
+#create_a_class_form {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+#create_class_btn {
+  margin-top: 1rem;
+  align-self: center;
+  width: 50%;
+  font-size: 2rem;
+  padding: 1rem;
+  height: 4rem;
+}
+
+#create_course_text_area {
+  height: 10rem;
+  resize: none;
+  border-color: gray;
+  border-radius: 5px;
+}
+
 #search_for_class {
   margin: 2rem;
 }
@@ -255,15 +292,18 @@ form div {
 }
 
 #single_course_content {
-  height: 50%;
+  height: 45%;
   overflow: auto;
 }
 
 #calendar_div {
-  height: 50%;
+  height: 55%;
   overflow: auto;
+  padding: 1rem;
 }
-#calendar {
+
+#calendar_top_text {
+  margin-bottom: 1rem;
 }
 
 #questions-container {
