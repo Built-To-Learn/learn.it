@@ -47,7 +47,8 @@ class Resources extends Component {
 
 const mapState = (state) => {
     return{
-        resources: state.resources
+        resources: state.resources,
+        singleCourse: state.singleCourse
     }
 
 

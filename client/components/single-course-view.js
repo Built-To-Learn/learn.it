@@ -6,6 +6,7 @@ import { Button, Icon } from 'react-materialize';
 import M from 'materialize-css';
 import CourseCard from './course-card';
 import singleCourse from '../store/single-course';
+import Resources from './resources.js'
 import {
   CardPanel,
   Row,
@@ -219,7 +220,7 @@ class SingleCourseView extends React.Component {
           </div>
           ) : (
           <div id="single_course_btm_div">
-            Matt's Component
+            <Resources/>
           </div>
           )
         }
