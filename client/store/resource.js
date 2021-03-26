@@ -28,12 +28,12 @@ export const loadResources = () => {
 /**
  * REDUCER
  */
-const initialState = {resources: []}
+const initialState = []
 
 export default function (state = initialState, action) {
     switch (action.type) {
         case LOAD_RESOURCES:
-            return {resources: [...state.resources, action.resources]}
+            return  action.resources
 
         default:
             return state

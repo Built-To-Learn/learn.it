@@ -16,22 +16,40 @@ class Resources extends Component {
     }
 
 
+    render() {
+        console.log("PROPS",this.props)
+        const {resources} = this.props
+        console.log("COMPONENT RESOURCES", resources)
+        
+        if (this.props.resources.length !== 0) {
+          const {resources} = this.props;
 
-    render () {
+          return( <div>
+              <ResourceUpload/>
+              {resources.map((resource) => {
+                return (
+                    <p key= {resource.ETag} >{resource.Key}</p>
+                );
+              })}
 
+          </div> 
+          )
+     
+        } else {
+          return <div>No Resources</div>;
+        }
+      }
 
-        return (
-            <div id='questions-container'>
-                <ResourceUpload/>
-                
-            </div>
-        )
-    }
 }
 
-const mapState = (state) => ({
+const mapState = (state) => {
+    return{
+        resources: state.resources
+    }
 
-})
+
+}
+
 
 const mapDispatch = (dispatch) => ({
     getResources: () => {
