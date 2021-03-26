@@ -29,7 +29,7 @@ const Settings = ({auth, getBalance, buildSignups, fetchView}) => {
         className="account_info_btn valign-wrapper"
         onClick={() => fetchView('accountInfo')}>
         <i className="small material-icons">account_circle</i>
-        <span>Account Info</span>
+        <a className="clickable waves-effect">Account Info</a>
       </div>
 
     </CollapsibleItem>

@@ -43,15 +43,21 @@ class EnrolledCourses extends React.Component {
           node="div"
           onSelect={() => {}}
         >
-          {enrolledCourses.map((enrollment, idx) => (
-            <p
-              id={enrollment.course.id}
-              onClick={(e) => this.joinRoomWatch(enrollment.course.userId, e)}
-              key={enrollment.course.id}
-            >
-              {enrollment.course.title}
-            </p>
-          ))}
+          <ul>
+            {enrolledCourses.map((enrollment, idx) => (
+              <li key={enrollment.course.id}>
+                <a
+                  className="clickable waves-effect"
+                  id={enrollment.course.id}
+                  onClick={(e) =>
+                    this.joinRoomWatch(enrollment.course.userId, e)
+                  }
+                >
+                  {enrollment.course.title}
+                </a>
+              </li>
+            ))}
+          </ul>
         </CollapsibleItem>
       );
     } else {

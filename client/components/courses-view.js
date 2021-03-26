@@ -17,12 +17,19 @@ class CoursesView extends React.Component {
   render() {
     if (this.props.courses.length !== 0) {
       const courses = this.props.courses.all;
-
-      return courses.map((course) => {
-        return (
-          <CourseCard className="course_list" course={course} key={course.id} />
-        );
-      });
+      return (
+        <ul id="find_a_class_course_list">
+          {courses.map((course) => {
+            return (
+              <CourseCard
+                className="course_list"
+                course={course}
+                key={course.id}
+              />
+            );
+          })}
+        </ul>
+      );
     } else {
       return <div>No Courses</div>;
     }

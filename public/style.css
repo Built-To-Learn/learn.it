@@ -19,6 +19,13 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+.clickable {
+  cursor: pointer;
+  color: black;
+}
+#index-banner {
+  font-weight: bold;
+}
 .parallax-container .parallax {
   position: absolute;
   top: 0;
@@ -27,6 +34,7 @@ form div {
   bottom: 0;
   z-index: -1;
 }
+
 /* .parallax-container {
     min-height: 380px;
     line-height: 0;
@@ -144,6 +152,68 @@ form div {
   align-items: center;
 }
 
+.hover_text:hover {
+  cursor: pointer;
+}
+
+#create_a_class_div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.create_course_labels {
+  font-size: 2rem;
+}
+
+#create_a_class_form {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+#create_class_btn {
+  margin-top: 1rem;
+  align-self: center;
+  width: 50%;
+  font-size: 2rem;
+  padding: 1rem;
+  height: 4rem;
+}
+
+#create_course_text_area {
+  height: 10rem;
+  resize: none;
+  border-color: gray;
+  border-radius: 5px;
+}
+
+#search_for_class {
+  margin: 2rem;
+}
+
+#find_a_class_course_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.three_dots {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.close_X {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.course_card {
+  width: 30%;
+  padding: 1rem;
+}
+
 #broadcast_watcher_video {
   width: 100%;
   height: 100%;
@@ -222,17 +292,18 @@ form div {
 }
 
 #single_course_content {
-  height: 50%;
+  height: 45%;
+  overflow: auto;
 }
 
 #calendar_div {
-  height: 50%;
+  height: 55%;
   overflow: auto;
+  padding: 1rem;
 }
-#calendar {
-  /* height: 50%; */
 
-  /* height: 300px; */
+#calendar_top_text {
+  margin-bottom: 1rem;
 }
 
 #questions-container {
@@ -244,35 +315,55 @@ form div {
 }
 
 #questions {
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-y: scroll;
 }
 
 #question {
   display: flex;
   align-items: center;
-  padding: 0 1rem 
+  padding: 0 1rem;
 }
 
 /* Modal Animation */
 @-webkit-keyframes slideIn {
-  from {bottom: -300px; opacity: 0} 
-  to {bottom: 0; opacity: 1}
+  from {
+    bottom: -300px;
+    opacity: 0;
+  }
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
-  from {bottom: -300px; opacity: 0}
-  to {bottom: 0; opacity: 1}
+  from {
+    bottom: -300px;
+    opacity: 0;
+  }
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeIn {
-  from {opacity: 0} 
-  to {opacity: 1}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
-  from {opacity: 0} 
-  to {opacity: 1}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -284,8 +375,8 @@ form div {
   top: 0;
   width: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
   -webkit-animation-name: fadeIn;
   -webkit-animation-duration: 0.4s;
   animation-name: fadeIn;
@@ -301,7 +392,7 @@ form div {
   -webkit-animation-duration: 0.4s;
   animation-name: slideIn;
   animation-duration: 0.4s;
-  border: 1px solid #ec6f75
+  border: 1px solid #ec6f75;
 }
 
 .modal-close {
