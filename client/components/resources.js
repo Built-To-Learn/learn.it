@@ -15,6 +15,10 @@ class Resources extends Component {
         this.props.getResources(this.props.singleCourse.title);
     }
 
+    getSecondPart(str) {
+        return str.split('/')[1];
+    }
+
 
     render() {
 
@@ -25,9 +29,10 @@ class Resources extends Component {
               <h3>Checkout the Course Resources</h3>
               <ResourceUpload/>
               {resources.map((resource,idx) => {
+                const resourceTitle = this.getSecondPart(resource.Key)        
                 return (
                     <div key = {idx}>
-                        <a key= {resource.ETag}href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resource.Key}</a>
+                        <a key= {resource.ETag}href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resourceTitle}</a>
                     </div>
                 );
               })}
