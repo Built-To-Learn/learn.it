@@ -6,7 +6,7 @@ import { Button, Icon } from 'react-materialize';
 import M from 'materialize-css';
 import CourseCard from './course-card';
 import singleCourse from '../store/single-course';
-import Resources from './resources.js'
+import Resources from './resources.js';
 import {
   CardPanel,
   Row,
@@ -93,8 +93,27 @@ class SingleCourseView extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.singleCourse &&
+      prevProps.singleCourse.id !== this.props.singleCourse.id
+    ) {
+      const events = this.props.singleCourse.schedules.map((schedule) => {
+        return {
+          ...schedule,
+          start: new Date(schedule.start),
+          end: new Date(schedule.end),
+          title: this.props.singleCourse.title,
+        };
+      });
+
+      this.setState({ events: events });
+    }
+  }
+
   render() {
     const singleCourse = this.props.singleCourse;
+    console.log(singleCourse);
     return (
       <div id="single_course_view">
         <div id="single_course_content">
@@ -149,42 +168,37 @@ class SingleCourseView extends React.Component {
               </CardPanel>
             </Col>
           </Row>
-          <div id='single_course_info_div'>
-            <div id='single_course_owner_image'>
-              <img
-                src="/assets/default.jpeg"
-              >
-              </img>
+          <div id="single_course_info_div">
+            <div id="single_course_owner_image">
+              <img src="/assets/default.jpeg"></img>
             </div>
-            <div id='single_course_info'>
+            <div id="single_course_info">
               <p>Course Creator: {singleCourse.user.name}</p>
               <p>Category: {singleCourse.category}</p>
             </div>
           </div>
-          <div id='single_course_btn_control_div'>
-             <Button
-                      node="button"
-                      className={`${this.state.view === 'calendar' ? 'blue' : 'black'}`}
-                      small
-                      onClick={() =>
-                        this.setState({view: 'calendar'})
-                      }
-                    >
-                      Calendar
-                      <Icon left>perm_contact_calendar</Icon>
-                    </Button>
-                    <Button
-                      node="button"
-                      className={`${this.state.view === 'resources' ? 'blue' : 'black'}`}
-                      small
-                      onClick={() => this.setState({view: 'resources'})
-                      }
-                    >
-                      Resources
-                      <Icon left>insert_drive_file</Icon>
-                    </Button>
+          <div id="single_course_btn_control_div">
+            <Button
+              node="button"
+              className={`${this.state.view === 'calendar' ? 'blue' : 'black'}`}
+              small
+              onClick={() => this.setState({ view: 'calendar' })}
+            >
+              Calendar
+              <Icon left>perm_contact_calendar</Icon>
+            </Button>
+            <Button
+              node="button"
+              className={`${
+                this.state.view === 'resources' ? 'blue' : 'black'
+              }`}
+              small
+              onClick={() => this.setState({ view: 'resources' })}
+            >
+              Resources
+              <Icon left>insert_drive_file</Icon>
+            </Button>
           </div>
-
         </div>
         {this.state.view === 'calendar' ? (
           <div id="single_course_btm_div">
@@ -206,25 +220,22 @@ class SingleCourseView extends React.Component {
                   onSelectSlot={(e) => this.handleSelect(e)}
                 />
               </div>
-              ) : (
-                <Calendar
-                  id="calendar"
-                  localizer={localizer}
-                  events={this.state.events}
-                  defaultView={Views.WEEK}
-                  startAccessor="start"
-                  endAccessor="end"
-                />
-              )
-            }
+            ) : (
+              <Calendar
+                id="calendar"
+                localizer={localizer}
+                events={this.state.events}
+                defaultView={Views.WEEK}
+                startAccessor="start"
+                endAccessor="end"
+              />
+            )}
           </div>
-          ) : (
+        ) : (
           <div id="single_course_btm_div">
-            <Resources/>
+            <Resources />
           </div>
-          )
-        }
-
+        )}
       </div>
     );
   }

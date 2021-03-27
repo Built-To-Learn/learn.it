@@ -7,6 +7,7 @@ import { Collapsible, CollapsibleItem, Icon } from 'react-materialize';
 import { fetchRoom } from '../store/dashboard';
 import { fetchView, fetchClearView } from '../store/view';
 import ReactTooltip from 'react-tooltip';
+import { loadSingleCourse } from '../store/single-course';
 
 class EnrolledCourses extends React.Component {
   constructor(props) {
@@ -64,6 +65,10 @@ class EnrolledCourses extends React.Component {
                     data-tip
                     data-for="func_info_btn"
                     className="hover_text"
+                    onClick={() => {
+                      this.props.fetchView('viewSingleCourse');
+                      this.props.loadSingleCourse(enrollment.course);
+                    }}
                   >
                     info_outline
                   </Icon>
@@ -147,6 +152,7 @@ const mapDispatch = (dispatch) => {
     fetchClearView: () => {
       dispatch(fetchClearView());
     },
+    loadSingleCourse: (course) => dispatch(loadSingleCourse(course)),
   };
 };
 
