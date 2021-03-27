@@ -52,9 +52,11 @@ AWS.config.update({
     });
   });
 
-  router.get('/', async(request, response) => {
+  router.get('/:courseTitle', async(request, response) => {
       try {
         console.log("INSIDE RESOURCE ROUTE")
+
+        const courseTitle = request.params.courseTitle
 
         AWS.config.setPromisesDependency()
         AWS.config.update({
@@ -63,7 +65,8 @@ AWS.config.update({
           });
           const s3 = new AWS.S3()
           const data = await s3.listObjectsV2({
-              Bucket: "built-to-learn"
+              Bucket: "built-to-learn",
+              Prefix: courseTitle
           }).promise()
 
         console.log(response)

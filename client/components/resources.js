@@ -12,7 +12,7 @@ class Resources extends Component {
     }
 
     componentDidMount () {
-        this.props.getResources();
+        this.props.getResources(this.props.singleCourse.title);
     }
 
 
@@ -56,8 +56,8 @@ const mapState = (state) => {
 
 
 const mapDispatch = (dispatch) => ({
-    getResources: () => {
-        dispatch(loadResources());
+    getResources: (courseTitle) => {
+        dispatch(loadResources(courseTitle));
       },
     
 

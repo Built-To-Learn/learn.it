@@ -17,9 +17,9 @@ export const _loadResources = (resources) => ({
  * THUNK CREATORS
  */
 //
-export const loadResources = () => {
+export const loadResources = (courseTitle) => {
     return async (dispatch) => {
-        const resources = (await axios.get(`/api/resource/`)).data.Contents
+        const resources = (await axios.get(`/api/resource/${courseTitle}`)).data.Contents
         dispatch(_loadResources(resources))
     }
 }
