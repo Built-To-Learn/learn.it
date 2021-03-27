@@ -14,6 +14,7 @@ import dashboard from './dashboard';
 import singleCourse from './single-course';
 import questions from './questions';
 import resources from './resource';
+import discussion from './discussion';
 
 const reducer = combineReducers({
   auth,
@@ -27,7 +28,8 @@ const reducer = combineReducers({
   dashboard,
   singleCourse,
   questions,
-  resources
+  resources,
+  discussion,
 });
 
 const middleware = composeWithDevTools(

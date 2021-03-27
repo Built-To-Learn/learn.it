@@ -475,3 +475,9 @@ form div {
   padding-right: 4px !important;
   padding-left: 4px !important;
 }
+
+#discussion {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
