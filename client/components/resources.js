@@ -12,25 +12,22 @@ class Resources extends Component {
     }
 
     componentDidMount () {
-        this.props.getResources();
+        this.props.getResources(this.props.singleCourse.title);
     }
 
 
     render() {
-        console.log("PROPS",this.props)
-        const {resources} = this.props
-        console.log("COMPONENT RESOURCES", resources)
-        
+
         if (this.props.resources.length !== 0) {
           const {resources} = this.props;
 
           return( <div>
               <h3>Checkout the Course Resources</h3>
               <ResourceUpload/>
-              {resources.map((resource) => {
+              {resources.map((resource,idx) => {
                 return (
-                    <div>
-                        <a href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resource.Key}</a>
+                    <div key = {idx}>
+                        <a key= {resource.ETag}href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resource.Key}</a>
                     </div>
                 );
               })}
@@ -47,16 +44,16 @@ class Resources extends Component {
 
 const mapState = (state) => {
     return{
-        resources: state.resources
+        resources: state.resources,
+        singleCourse: state.singleCourse
     }
-
 
 }
 
 
 const mapDispatch = (dispatch) => ({
-    getResources: () => {
-        dispatch(loadResources());
+    getResources: (courseTitle) => {
+        dispatch(loadResources(courseTitle));
       },
     
 

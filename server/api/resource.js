@@ -26,22 +26,21 @@ AWS.config.update({
   };
 
   // Define POST route
-  router.post('/test-upload', (request, response) => {
+  router.post('/test-upload/:title', (request, response) => {
     // console.log("inside POST")
     const form = new multiparty.Form();
+    const title = request.params.title
     // console.log("FORM", form)
     form.parse(request, async (error, fields, files) => {
       if (error) {
-        console.log("ERROR INSIDE")
         return response.status(500).send(error);
       };
   
       try {
-        console.log("INSIDE POST ROUTE")
         const path = files.file[0].path;
         const buffer = fs.readFileSync(path);
         const type = await FileType.fromBuffer(buffer);
-        const fileName = `bucketFolder/${Date.now().toString()}`;
+        const fileName = `${title}/${Date.now().toString()}`;
         const data = await uploadFile(buffer, fileName, type);
         return response.status(200).send(data);
       } catch (err) {
@@ -51,9 +50,10 @@ AWS.config.update({
     });
   });
 
-  router.get('/', async(request, response) => {
+  router.get('/:courseTitle', async(request, response) => {
       try {
-        console.log("INSIDE RESOURCE ROUTE")
+
+        const courseTitle = request.params.courseTitle
 
         AWS.config.setPromisesDependency()
         AWS.config.update({
@@ -62,15 +62,14 @@ AWS.config.update({
           });
           const s3 = new AWS.S3()
           const data = await s3.listObjectsV2({
-              Bucket: "built-to-learn"
+              Bucket: "built-to-learn",
+              Prefix: courseTitle
           }).promise()
 
-        console.log(response)
         return response.status(200).send(data);
       } catch (err) {
           console.log(err)
-        // console.log("THIS IS MY ERROR", err)
-        // return response.status(500).send(err);
+
       }
   
   });
