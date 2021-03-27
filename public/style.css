@@ -290,26 +290,24 @@ form div {
   object-fit: cover;
 }
 
-#single_course_info_div{
+#single_course_info_div {
   display: flex;
 }
 
-#single_course_owner_image{
-  width:10%;
-
+#single_course_owner_image {
+  width: 10%;
 }
 
-#single_course_btn_control_div{
+#single_course_btn_control_div {
   margin-top: 0.5rem;
   display: flex;
   justify-content: space-around;
 }
 
-
 #single_course_owner_image > img {
   object-fit: cover;
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
 #single_course_info {
@@ -350,6 +348,17 @@ form div {
   display: flex;
   align-items: center;
   padding: 0 1rem;
+}
+
+.fuctional_course_list_item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fuctional_course_list_item > div {
+  display: flex;
 }
 
 /* Modal Animation */
@@ -458,4 +467,11 @@ form div {
   padding: 2px 16px;
   background-color: #ec6f75;
   color: white;
+}
+
+.tooltipClass {
+  font-size: 1rem !important;
+  padding: 2px !important;
+  padding-right: 4px !important;
+  padding-left: 4px !important;
 }
