@@ -5,8 +5,10 @@ const LOAD_QUESTIONS = 'LOAD_QUESTIONS'
 const DELETE_QUESTION = 'DELETE_QUESTION'
 const CREATE_QUESTION = 'CREATE_QUESTION'
 const TOGGLE_LIKE = 'TOGGLE_LIKE'
+const SET_NEW = 'SET_NEW'
+const DESELECT_NEW = 'DESELECT_NEW'
 
-const initialState = { questions: [] }
+const initialState = { questions: [], newQuestion: null }
 
 // Helper Functions
 const upvoteSort = (questions) => {
@@ -18,6 +20,9 @@ export const loadQuestions = (questions) => ({ type: LOAD_QUESTIONS, questions }
 export const removeQuestion = (question) => ({ type: DELETE_QUESTION, question })
 export const initQuestion = (question) => ({ type: CREATE_QUESTION, question })
 export const likeToggle = (question) => ({ type: TOGGLE_LIKE, question })
+export const setNew = (question) => ({ type: SET_NEW, question })
+export const deselectNew = () => ({ type: DESELECT_NEW })
+
 
 // Thunks
 export const fetchQuestions = (courseId) => {
@@ -47,10 +52,15 @@ export const toggleLike = (questionId, userId, isLiked) => {
     }
 }
 
-export const createQuestion = (question) => {
+export const createQuestion = (question, createLocally) => {
     return async (dispatch) => {
-        const newQuestion = (await axios.post('/api/questions/create', question)).data
-        dispatch(initQuestion(newQuestion))
+        if (createLocally) {
+            const newQuestion = (await axios.post('/api/questions/create', question)).data
+            dispatch(setNew(newQuestion))
+            dispatch(initQuestion(newQuestion))
+        } else {
+            dispatch(initQuestion(question))
+        }
     }
 }
 
@@ -67,6 +77,10 @@ export default function (state=initialState, action) {
             return { questions: updatedQuestions }
         case CREATE_QUESTION:
             return { questions: [...state.questions, action.question] }
+        case SET_NEW:
+            return { ...state, newQuestion: action.question }
+        case DESELECT_NEW:
+            return { ...state, newQuestion: null }
         default:
             return state
     }

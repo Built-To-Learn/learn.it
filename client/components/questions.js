@@ -1,30 +1,49 @@
 import React from "react";
 import { Component } from 'react';
 import { connect } from "react-redux";
-import { fetchQuestions, toggleLike } from "../store/questions";
+import { createQuestion, fetchQuestions, toggleLike } from "../store/questions";
+import { io } from 'socket.io-client';
 
 class Questions extends Component {
     constructor () {
         super();
 
-        this.state = {}
+        const socket = io();
+
+        this.state = { socket: socket }
     }
 
     componentDidMount () {
         const { room, questions, id } = this.props;
+        const { socket } = this.state;
         const likes = {}
         
         this.props.init(room);
 
         questions.map(question => {
-            const liked = false
+            let liked = false
             question.likes.map(like => {
                 if (like.userId === id) { liked = true }
             })
             likes[question.id] = liked 
         })
 
-        this.setState({ likes: likes })
+        this.setState({ ...this.state, likes: likes })
+
+        socket.on('connect', () => {
+            socket.emit('joinQuestions', room);
+          });
+        socket.on('newQuestion', (newQuestion) => {
+            this.props.createQuestion(newQuestion, false)
+        });
+    }
+
+    componentDidUpdate () {
+        const { socket } = this.state;
+        const { newQuestion, id, room } = this.props;
+        if (newQuestion) {
+            if (newQuestion.userId === id) { socket.emit('newQuestion', room, newQuestion) }
+        }
     }
 
     handleToggle(event) {
@@ -35,12 +54,14 @@ class Questions extends Component {
 
         likes[id] = !likes[id]
 
-        this.setState({ likes: likes })
+        this.setState({ ...this.state, likes: likes })
     }
 
     render () {
         const { questions } = this.props;
         const { likes } = this.state;
+
+        if (!likes) { return null }
 
         return (
             <div id='questions-container'>
@@ -66,12 +87,14 @@ class Questions extends Component {
 
 const mapState = (state) => ({
     questions: state.questions.questions,
+    newQuestion: state.questions.newQuestion,
     id: state.auth.id
 })
 
 const mapDispatch = (dispatch) => ({
     init: (courseId) => dispatch(fetchQuestions(courseId)),
-    toggleLike: (questionId, userId, isLiked) => dispatch(toggleLike(questionId, userId, isLiked))
+    toggleLike: (questionId, userId, isLiked) => dispatch(toggleLike(questionId, userId, isLiked)),
+    createQuestion: (question, createLocally) => dispatch(createQuestion(question, createLocally))
 })
 
 export default connect(mapState, mapDispatch)(Questions)

@@ -138,14 +138,18 @@ io.sockets.on('connection', (socket) => {
       socket.to(`${mainRoom}-${i}`).emit('breakout_returnToMain', mainRoom);
     }
   });
-
   socket.on('joinChat', (room) => {
     socket.join(room);
   });
+  socket.on('joinQuestions', (room) => {
+    socket.join(room);
+  });
   socket.on('newMessage', (message, room) => {
-    console.log(message, room);
     socket.to(room).emit('newMessage', message);
   });
+  socket.on('newQuestion', (room, newQuestion) => {
+    socket.to(room).emit('newQuestion', newQuestion)
+  })
 });
 
 
