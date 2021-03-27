@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const {
-    models: { Question, User },
+    models: { Question, User, Like },
   } = require('../db');
 
 router.get('/:courseId', async (req, res, next) => {
@@ -9,10 +9,25 @@ router.get('/:courseId', async (req, res, next) => {
             where: {
                courseId: req.params.courseId 
             },
-            include: [ User ]
+            include: [ User, Like ]
         })
 
         res.send(questions)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/question/:questionId', async (req, res, next) => {
+    try {
+        const question = await Question.findOne({
+            where: {
+                id: req.params.questionId
+            },
+            include: [ User, Like ]
+        })
+
+        res.send(question)
     } catch (error) {
         next(error)
     }
@@ -26,10 +41,8 @@ router.post('/create', async (req, res, next) => {
             where: {
                 id: id
             },
-            include: [ User ]
+            include: [ User, Like ]
         })
-
-        console.log(question)
 
         res.status(201).send(question)
     } catch (error) {
@@ -53,7 +66,7 @@ router.put('/update/:questionId', async (req, res, next) => {
             where: {
                 id: req.params.questionId
             },
-            include: [ User ]
+            include: [ User, Like ]
         })
 
         res.send(question)
@@ -67,7 +80,7 @@ router.delete('/delete/:questionId', async (req, res, next) => {
         const question = await Question.findOne({
             where: {
                 id: req.params.questionId,
-            },
+            }
         })
 
         await question.destroy()

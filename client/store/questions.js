@@ -4,7 +4,7 @@ import axios from 'axios'
 const LOAD_QUESTIONS = 'LOAD_QUESTIONS'
 const DELETE_QUESTION = 'DELETE_QUESTION'
 const CREATE_QUESTION = 'CREATE_QUESTION'
-const UPDATE_QUESTION = 'UPDATE_QUESTION'
+const TOGGLE_LIKE = 'TOGGLE_LIKE'
 
 const initialState = { questions: [] }
 
@@ -17,7 +17,7 @@ const upvoteSort = (questions) => {
 export const loadQuestions = (questions) => ({ type: LOAD_QUESTIONS, questions })
 export const removeQuestion = (question) => ({ type: DELETE_QUESTION, question })
 export const initQuestion = (question) => ({ type: CREATE_QUESTION, question })
-export const updateQuestion = (question) => ({ type: UPDATE_QUESTION, question })
+export const likeToggle = (question) => ({ type: TOGGLE_LIKE, question })
 
 // Thunks
 export const fetchQuestions = (courseId) => {
@@ -34,10 +34,16 @@ export const deleteQuestion = (questionId) => {
     }
 }
 
-export const changeQuestion = (questionId, type) => {
+export const toggleLike = (questionId, userId, isLiked) => {
     return async (dispatch) => {
-        const question = (await axios.put(`/api/questions/update/${questionId}`, {modifier: type === 'increment' ? 1 : -1})).data
-        dispatch(updateQuestion(question))
+        if (isLiked) {
+            await axios.delete('/api/likes/delete', { questionId: questionId, userId: userId })
+        } else {
+            await axios.post('/api/likes/create', { questionId: questionId, userId: userId })
+        }
+
+        const question = (await axios.get(`/api/questions/question/${questionId}`)).data;
+        dispatch(likeToggle(question))
     }
 }
 
@@ -55,7 +61,7 @@ export default function (state=initialState, action) {
             return { questions: action.questions }
         case DELETE_QUESTION:
             return { questions: state.questions.filter(question => question !== action.question) }
-        case UPDATE_QUESTION:
+        case TOGGLE_LIKE:
             const questions = state.questions.filter(question => question.id !== action.question.id)
             const updatedQuestions = upvoteSort([...questions, action.question])
             return { questions: updatedQuestions }

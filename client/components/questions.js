@@ -1,25 +1,27 @@
 import React from "react";
 import { Component } from 'react';
 import { connect } from "react-redux";
-import { fetchQuestions, changeQuestion } from "../store/questions";
+import { fetchQuestions, toggleLike } from "../store/questions";
 
-
-// Questions Component
 class Questions extends Component {
     constructor () {
         super();
 
-        this.state = { likes: null }
+        this.state = {}
     }
 
     componentDidMount () {
-        const { room, questions } = this.props;
+        const { room, questions, id } = this.props;
         const likes = {}
         
         this.props.init(room);
 
         questions.map(question => {
-            likes[question.id] = false
+            const liked = false
+            question.likes.map(like => {
+                if (like.userId === id) { liked = true }
+            })
+            likes[question.id] = liked 
         })
 
         this.setState({ likes: likes })
@@ -29,11 +31,9 @@ class Questions extends Component {
         const id = event.target.id.slice(8)
         const likes = { ...this.state.likes }
 
-        console.log(`changing id ${id} from ${likes[id]} to ${!likes[id]}`)
+        this.props.toggleLike(id, this.props.id, this.state.likes[id])
 
-        this.props.changeQuestion(id, likes[id] ? 'decrement' : 'increment')
-
-        likes[id] = likes[id] ? false: true
+        likes[id] = !likes[id]
 
         this.setState({ likes: likes })
     }
@@ -50,7 +50,7 @@ class Questions extends Component {
                     return (
                         <div key={question.id}>
                             <div id='question'>
-                                <small>{question.upvotes}</small>
+                                <small>{question.likes.length}</small>
                                 <button id='question-like'><i className='material-icons' id={'question' + question.id} onClick={(event) => this.handleToggle(event)}>{style}</i></button>
                                 <span>{question.user.name}: {question.text}</span>
                             </div>
@@ -65,12 +65,13 @@ class Questions extends Component {
 }
 
 const mapState = (state) => ({
-    questions: state.questions.questions
+    questions: state.questions.questions,
+    id: state.auth.id
 })
 
 const mapDispatch = (dispatch) => ({
     init: (courseId) => dispatch(fetchQuestions(courseId)),
-    changeQuestion: (questionId, type) => dispatch(changeQuestion(questionId, type))
+    toggleLike: (questionId, userId, isLiked) => dispatch(toggleLike(questionId, userId, isLiked))
 })
 
 export default connect(mapState, mapDispatch)(Questions)
