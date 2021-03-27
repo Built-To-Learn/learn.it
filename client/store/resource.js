@@ -20,7 +20,6 @@ export const _loadResources = (resources) => ({
 export const loadResources = () => {
     return async (dispatch) => {
         const resources = (await axios.get(`/api/resource/`)).data.Contents
-        console.log("myresources", resources )
         dispatch(_loadResources(resources))
     }
 }

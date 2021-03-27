@@ -26,9 +26,10 @@ AWS.config.update({
   };
 
   // Define POST route
-  router.post('/test-upload', (request, response) => {
+  router.post('/test-upload/:title', (request, response) => {
     // console.log("inside POST")
     const form = new multiparty.Form();
+    const title = request.params.title
     // console.log("FORM", form)
     form.parse(request, async (error, fields, files) => {
       if (error) {
@@ -41,7 +42,7 @@ AWS.config.update({
         const path = files.file[0].path;
         const buffer = fs.readFileSync(path);
         const type = await FileType.fromBuffer(buffer);
-        const fileName = `bucketFolder/${Date.now().toString()}`;
+        const fileName = `${title}/${Date.now().toString()}`;
         const data = await uploadFile(buffer, fileName, type);
         return response.status(200).send(data);
       } catch (err) {

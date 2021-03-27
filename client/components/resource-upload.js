@@ -1,20 +1,21 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import {connect} from 'react-redux'
 
-const ResourceUpload = () => {  
+const ResourceUpload = (props) => {  
   const [file, setFile] = useState(null);
 
   const submitFile = async (event) => {
     try {
       event.preventDefault()
-      console.log('hello')
+      const title = props.title
       if (!file) {
         throw new Error('Select a file first!');
       }
       const formData = new FormData();
       formData.append('file', file[0]);
-      await axios.post(`/api/resource/test-upload`, formData, {
+      await axios.post(`/api/resource/test-upload/${title}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -34,4 +35,8 @@ const ResourceUpload = () => {
   );
 };
 
-export default ResourceUpload;
+const mapState = state => ({
+  title: state.singleCourse.title
+})
+
+export default connect(mapState)(ResourceUpload);
