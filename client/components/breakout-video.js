@@ -210,7 +210,10 @@ class Chatroom extends Component {
     this.setState({ focus: e.target.id });
   }
   componentWillUnmount() {
-    globalStream.getTracks().forEach((track) => track.stop());
+    try {
+      globalStream.getTracks().forEach((track) => track.stop());
+    } catch {}
+
     socket.close();
   }
 

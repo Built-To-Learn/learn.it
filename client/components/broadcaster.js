@@ -188,9 +188,9 @@ class Broadcaster extends Component {
 
   componentWillUnmount() {
     try {
+      globalStream.getTracks().forEach((track) => track.stop());
       videoTrack.getTracks().forEach((track) => track.stop());
       audioTrack.getTracks().forEach((track) => track.stop());
-      globalStream.getTracks().forEach((track) => track.stop());
     } catch (er) {}
 
     socket.close();

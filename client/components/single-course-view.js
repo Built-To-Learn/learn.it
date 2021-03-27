@@ -113,7 +113,6 @@ class SingleCourseView extends React.Component {
 
   render() {
     const singleCourse = this.props.singleCourse;
-    console.log(singleCourse);
     return (
       <div id="single_course_view">
         <div id="single_course_content">
