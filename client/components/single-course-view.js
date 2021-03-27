@@ -2,10 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-
+import { Button, Icon } from 'react-materialize';
 import M from 'materialize-css';
 import CourseCard from './course-card';
 import singleCourse from '../store/single-course';
+import Resources from './resources.js'
 import {
   CardPanel,
   Row,
@@ -24,7 +25,7 @@ const localizer = momentLocalizer(moment);
 class SingleCourseView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { events: [] };
+    this.state = { events: [], view: 'calendar' };
     this.handleSelect = this.handleSelect.bind(this);
     this.editCalendar = this.editCalendar.bind(this);
   }
@@ -148,39 +149,82 @@ class SingleCourseView extends React.Component {
               </CardPanel>
             </Col>
           </Row>
-          <img
-            style={{ height: '50px', width: '50px' }}
-            src="/assets/default.jpeg"
-          ></img>
-          <p>Course Creator: {singleCourse.user.name}</p>
-          <p>Category: {singleCourse.category}</p>
+          <div id='single_course_info_div'>
+            <div id='single_course_owner_image'>
+              <img
+                src="/assets/default.jpeg"
+              >
+              </img>
+            </div>
+            <div id='single_course_info'>
+              <p>Course Creator: {singleCourse.user.name}</p>
+              <p>Category: {singleCourse.category}</p>
+            </div>
+          </div>
+          <div id='single_course_btn_control_div'>
+             <Button
+                      node="button"
+                      className={`${this.state.view === 'calendar' ? 'blue' : 'black'}`}
+                      small
+                      onClick={() =>
+                        this.setState({view: 'calendar'})
+                      }
+                    >
+                      Calendar
+                      <Icon left>perm_contact_calendar</Icon>
+                    </Button>
+                    <Button
+                      node="button"
+                      className={`${this.state.view === 'resources' ? 'blue' : 'black'}`}
+                      small
+                      onClick={() => this.setState({view: 'resources'})
+                      }
+                    >
+                      Resources
+                      <Icon left>insert_drive_file</Icon>
+                    </Button>
+          </div>
+
         </div>
-        <div id="calendar_div">
-          {this.props.auth.id === this.props.singleCourse.user.id ? (
-            <Calendar
-              selectable
-              id="calendar"
-              localizer={localizer}
-              events={this.state.events}
-              defaultView={Views.WEEK}
-              startAccessor="start"
-              endAccessor="end"
-              onSelectEvent={(e) => this.editCalendar(e)}
-              onSelectSlot={(e) => this.handleSelect(e)}
-            />
+        {this.state.view === 'calendar' ? (
+          <div id="single_course_btm_div">
+            {this.props.auth.id === this.props.singleCourse.user.id ? (
+              <div>
+                <div id="calendar_top_text">
+                  Click / Drag to add meeting times. Click on an event to remove
+                  it from the schedule.
+                </div>
+                <Calendar
+                  selectable
+                  id="calendar"
+                  localizer={localizer}
+                  events={this.state.events}
+                  defaultView={Views.WEEK}
+                  startAccessor="start"
+                  endAccessor="end"
+                  onSelectEvent={(e) => this.editCalendar(e)}
+                  onSelectSlot={(e) => this.handleSelect(e)}
+                />
+              </div>
+              ) : (
+                <Calendar
+                  id="calendar"
+                  localizer={localizer}
+                  events={this.state.events}
+                  defaultView={Views.WEEK}
+                  startAccessor="start"
+                  endAccessor="end"
+                />
+              )
+            }
+          </div>
           ) : (
-            <Calendar
-              id="calendar"
-              localizer={localizer}
-              events={this.state.events}
-              defaultView={Views.WEEK}
-              startAccessor="start"
-              endAccessor="end"
-              // onSelectEvent={(e) => this.editCalendar(e)}
-              // onSelectSlot={(e) => this.handleSelect(e)}
-            />
-          )}
-        </div>
+          <div id="single_course_btm_div">
+            <Resources/>
+          </div>
+          )
+        }
+
       </div>
     );
   }

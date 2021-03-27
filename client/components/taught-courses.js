@@ -36,7 +36,7 @@ class TaughtCourses extends React.Component {
   render() {
     //const userId = this.props.auth;
     const usersTaughtCourses = this.props.courses.user;
-    console.log(this.props.courses);
+
     return (
       <CollapsibleItem
         expanded={false}
@@ -45,18 +45,21 @@ class TaughtCourses extends React.Component {
         node="div"
         onSelect={() => {}}
       >
-        {usersTaughtCourses.map((course) => (
-          <a
-            className="clickable waves-effect"
-            id={course.id}
-            onClick={(e) => {
-              this.joinRoomBroadcast(course.userId, e);
-            }}
-            key={course.id}
-          >
-            {course.title}
-          </a>
-        ))}
+        <ul>
+          {usersTaughtCourses.map((course) => (
+            <li key={course.id}>
+              <a
+                className="clickable waves-effect"
+                id={course.id}
+                onClick={(e) => {
+                  this.joinRoomBroadcast(course.userId, e);
+                }}
+              >
+                {course.title}
+              </a>
+            </li>
+          ))}
+        </ul>
       </CollapsibleItem>
     );
   }

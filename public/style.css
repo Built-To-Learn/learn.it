@@ -34,6 +34,7 @@ form div {
   bottom: 0;
   z-index: -1;
 }
+
 /* .parallax-container {
     min-height: 380px;
     line-height: 0;
@@ -151,6 +152,41 @@ form div {
   align-items: center;
 }
 
+.hover_text:hover {
+  cursor: pointer;
+}
+
+#create_a_class_div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.create_course_labels {
+  font-size: 1rem;
+}
+
+#create_a_class_form {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+#create_class_btn {
+  align-self: center;
+  width: 50%;
+  font-size: 1.5rem;
+
+  height: 3rem;
+}
+
+#create_course_text_area {
+  height: 10rem;
+  resize: none;
+  border-color: gray;
+  border-radius: 5px;
+}
+
 #search_for_class {
   margin: 2rem;
 }
@@ -159,6 +195,17 @@ form div {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+}
+.three_dots {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.close_X {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 
 .course_card {
@@ -243,16 +290,47 @@ form div {
   object-fit: cover;
 }
 
+#single_course_info_div{
+  display: flex;
+}
+
+#single_course_owner_image{
+  width:10%;
+
+}
+
+#single_course_btn_control_div{
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+#single_course_owner_image > img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%
+}
+
+#single_course_info {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
 #single_course_content {
-  height: 50%;
+  height: 45%;
   overflow: auto;
 }
 
-#calendar_div {
-  height: 50%;
+#single_course_btm_div {
+  height: 55%;
   overflow: auto;
+  padding: 1rem;
 }
-#calendar {
+
+#calendar_top_text {
+  margin-bottom: 1rem;
 }
 
 #questions-container {

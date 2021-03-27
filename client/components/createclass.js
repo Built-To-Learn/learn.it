@@ -45,12 +45,16 @@ class CreateCourse extends Component {
     const { error, isLoggedIn } = this.props;
     return (
       <div>
+        <h2 className="center-align">Create A Course</h2>
         {isLoggedIn ? (
-          <div>
-            <form onSubmit={(e) => this.handleSubmitForm(e)}>
+          <div id="create_a_class_div">
+            <form
+              id="create_a_class_form"
+              onSubmit={(e) => this.handleSubmitForm(e)}
+            >
               <div>
-                <label htmlFor="coursename">
-                  <small>Course Name</small>
+                <label className="create_course_labels" htmlFor="coursename">
+                  Course Name
                 </label>
                 <input
                   name="coursename"
@@ -60,8 +64,8 @@ class CreateCourse extends Component {
                 />
               </div>
               <div>
-                <label htmlFor="Category">
-                  <small>Category</small>
+                <label className="create_course_labels" htmlFor="Category">
+                  Category
                 </label>
                 <input
                   name="category"
@@ -71,22 +75,30 @@ class CreateCourse extends Component {
                 />
               </div>
               <div>
-                <label htmlFor="Course Description">
-                  <small>Description</small>
+                <label
+                  className="create_course_labels"
+                  htmlFor="Course Description"
+                >
+                  Description
                 </label>
-                <input
+                <textarea
+                  id="create_course_text_area"
                   name="description"
                   value={this.state.description}
                   type="text"
                   onChange={(e) => this.handleChange(e)}
                 />
               </div>
-              <div>
-                <Button node="button" className="blue" small type="submit">
-                  Create Course
-                  <Icon left>add</Icon>
-                </Button>
-              </div>
+
+              <Button
+                id="create_class_btn"
+                node="button"
+                className="blue"
+                type="submit"
+              >
+                Create Course
+                <Icon left>add</Icon>
+              </Button>
               {error && error.response && <div> {error.response.data} </div>}
             </form>
             {/* <a href="/viewcourses">link text</a> */}
