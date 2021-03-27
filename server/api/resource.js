@@ -33,12 +33,10 @@ AWS.config.update({
     // console.log("FORM", form)
     form.parse(request, async (error, fields, files) => {
       if (error) {
-        console.log("ERROR INSIDE")
         return response.status(500).send(error);
       };
   
       try {
-        console.log("INSIDE POST ROUTE")
         const path = files.file[0].path;
         const buffer = fs.readFileSync(path);
         const type = await FileType.fromBuffer(buffer);
@@ -54,7 +52,6 @@ AWS.config.update({
 
   router.get('/:courseTitle', async(request, response) => {
       try {
-        console.log("INSIDE RESOURCE ROUTE")
 
         const courseTitle = request.params.courseTitle
 
@@ -69,12 +66,10 @@ AWS.config.update({
               Prefix: courseTitle
           }).promise()
 
-        console.log(response)
         return response.status(200).send(data);
       } catch (err) {
           console.log(err)
-        // console.log("THIS IS MY ERROR", err)
-        // return response.status(500).send(err);
+
       }
   
   });

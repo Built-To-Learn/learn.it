@@ -20,7 +20,6 @@ class Resources extends Component {
 
         if (this.props.resources.length !== 0) {
           const {resources} = this.props;
-          console.log("RESOURCES",resources)
 
           return( <div>
               <h3>Checkout the Course Resources</h3>

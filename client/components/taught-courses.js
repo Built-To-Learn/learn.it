@@ -36,7 +36,7 @@ class TaughtCourses extends React.Component {
   render() {
     //const userId = this.props.auth;
     const usersTaughtCourses = this.props.courses.user;
-    console.log(this.props.courses);
+
     return (
       <CollapsibleItem
         expanded={false}
