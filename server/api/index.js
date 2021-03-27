@@ -7,7 +7,7 @@ router.use('/questions', require('./questions'));
 router.use('/schedule', require('./schedule'));
 router.use('/resource', require('./resource'));
 router.use('/likes', require('./likes'));
-
+router.use('/discussion', require('./discussion'));
 
 router.use((req, res, next) => {
   const error = new Error('Not Found');

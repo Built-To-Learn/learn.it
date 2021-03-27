@@ -9,6 +9,7 @@ import { fetchRoom } from '../store/dashboard';
 import { fetchView, fetchClearView } from '../store/view';
 import ReactTooltip from 'react-tooltip';
 import { loadSingleCourse } from '../store/single-course';
+import { fetchDiscussion } from '../store/discussion';
 
 class TaughtCourses extends React.Component {
   constructor(props) {
@@ -75,7 +76,15 @@ class TaughtCourses extends React.Component {
                   Course Info
                 </ReactTooltip>
 
-                <Icon data-tip data-for="func_chat_btn" className="hover_text">
+                <Icon
+                  data-tip
+                  data-for="func_chat_btn"
+                  className="hover_text"
+                  onClick={() => {
+                    this.props.fetchView('discussion');
+                    this.props.fetchDiscussion(course);
+                  }}
+                >
                   chat
                 </Icon>
                 <ReactTooltip id="func_chat_btn" className="tooltipClass">
@@ -134,7 +143,9 @@ const mapDispatch = (dispatch) => {
     fetchClearView: () => {
       dispatch(fetchClearView());
     },
-
+    fetchDiscussion: (course) => {
+      dispatch(fetchDiscussion(course));
+    },
     loadSingleCourse: (course) => dispatch(loadSingleCourse(course)),
   };
 };
