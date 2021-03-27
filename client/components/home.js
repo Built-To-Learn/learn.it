@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import { loadCourses } from '../store/courses';
+import CourseCard from "./course-card"
 
-/**
- * COMPONENT
- */
+
 export const Home = ({auth, courses, getCourses}) => {
 
   useEffect(() => {
@@ -39,9 +38,6 @@ export const Home = ({auth, courses, getCourses}) => {
   )
 }
 
-/**
- * CONTAINER
- */
 const mapState = state => {
   return {
     auth: state.auth,
