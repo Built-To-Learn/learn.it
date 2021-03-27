@@ -10,7 +10,7 @@ router.get('/user', async (req, res, next) => {
     const user = await User.findByToken(req.headers.authorization);
     const courses = await Course.findAll({
       where: { userId: user.id },
-      include: [Schedule],
+      include: [Schedule, User],
     });
     res.send(courses);
   } catch (ex) {
@@ -65,7 +65,7 @@ router.get('/courseSearch/:search', async (req, res, next) => {
 router.get('/:courseId', async (req, res, next) => {
   try {
     const course = await Course.findOne({
-      include: [Teacher, Schedule],
+      include: [Teacher, Schedule, User],
       where: { id: req.params.courseId },
     });
   } catch (ex) {
@@ -77,7 +77,7 @@ router.put('/:courseId', async (req, res, next) => {
   try {
     const course = await Course.findOne({
       where: { id: req.params.courseId },
-      include: [Schedule],
+      include: [Schedule, Teacher, User],
     });
 
     await course.update(req.body);
