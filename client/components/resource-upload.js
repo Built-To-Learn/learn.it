@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux'
+import { loadResources } from '../store/resource'
 
 const ResourceUpload = (props) => {  
   const [file, setFile] = useState(null);
@@ -20,6 +21,11 @@ const ResourceUpload = (props) => {
           'Content-Type': 'multipart/form-data',
         },
       });
+
+      console.log("PROPS", props)
+
+      props.getResources(title)
+
       // handle success
     } catch (error) {
       console.log(error)
@@ -39,4 +45,10 @@ const mapState = state => ({
   title: state.singleCourse.title
 })
 
-export default connect(mapState)(ResourceUpload);
+const mapDispatch = (dispatch) => ({
+  getResources: (courseTitle) => {
+    dispatch(loadResources(courseTitle));
+  },
+})
+
+export default connect(mapState, mapDispatch)(ResourceUpload);

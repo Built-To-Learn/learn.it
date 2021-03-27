@@ -17,10 +17,7 @@ class Resources extends Component {
 
 
     render() {
-        console.log("PROPS",this.props)
-        const {resources} = this.props
-        console.log("COMPONENT RESOURCES", resources)
-        
+
         if (this.props.resources.length !== 0) {
           const {resources} = this.props;
 
@@ -50,7 +47,6 @@ const mapState = (state) => {
         resources: state.resources,
         singleCourse: state.singleCourse
     }
-
 
 }
 
