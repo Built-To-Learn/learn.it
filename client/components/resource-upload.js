@@ -22,8 +22,6 @@ const ResourceUpload = (props) => {
         },
       });
 
-      console.log("PROPS", props)
-
       props.getResources(title)
 
       // handle success
