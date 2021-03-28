@@ -1,62 +1,77 @@
-import { loadStripe } from "@stripe/stripe-js";
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import axios from 'axios'
-const stripePromise = loadStripe("pk_test_51ILK1lLfvWrZDmuZMXaRPM2DZJTsiWZCLF0kN6XuqF9jMLq5eYjh59Vaqvr1XshlKGPRbF2Q1PRxFv1G72IZBCpf000VL6GWuC");
+import { loadStripe } from '@stripe/stripe-js';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
+const stripePromise = loadStripe(
+  'pk_test_51ILK1lLfvWrZDmuZMXaRPM2DZJTsiWZCLF0kN6XuqF9jMLq5eYjh59Vaqvr1XshlKGPRbF2Q1PRxFv1G72IZBCpf000VL6GWuC'
+);
+import { Button, Icon } from 'react-materialize';
 
-const Tip = ({auth, dashboard, handleClick}) => {
-  const [teacher, setTeacher] = useState({})
+const Tip = ({ auth, dashboard, handleClick }) => {
+  // console.log(auth);
+  const [teacher, setTeacher] = useState({});
   useEffect(() => {
     const init = async () => {
-      const teacher = (await axios.get(`/api/users/${dashboard.teacher}`)).data
-      setTeacher(teacher)
-    }
+      const teacher = (await axios.get(`/api/users/${dashboard.teacher}`)).data;
+      setTeacher(teacher);
+    };
 
-    init()
+    init();
+  }, []);
 
-  }, [])
-
-  return(
+  return (
     <div>
-      <button className="btn" onClick={() => handleClick(teacher)}>Tip</button>
+      {console.log(auth)}
+      <Button
+        node="button"
+        className={`blue ${!auth.onboarded ? 'disabled' : ''}`}
+        small
+        onClick={() => handleClick(teacher)}
+      >
+        {!auth.onboarded ? 'Setup payments' : 'Tip'}
+        <Icon left>attach_money</Icon>
+      </Button>
+      {/* <button className="btn" onClick={() => handleClick(teacher)}>Tip</button> */}
     </div>
-  )
+  );
+};
 
-}
-
-const mapState = ({auth, dashboard}) => {
+const mapState = ({ auth, dashboard }) => {
   return {
-      auth,
-      dashboard
-  }
-}
+    auth,
+    dashboard,
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
-      async handleClick(teacher){
-        const stripe = await stripePromise
-        const items = [{
-          name: "teacher tip",
+    async handleClick(teacher) {
+      const stripe = await stripePromise;
+      const items = [
+        {
+          name: 'teacher tip',
           amount: 1000,
-          currency: "usd",
-          quantity: 1
-        }]
+          currency: 'usd',
+          quantity: 1,
+        },
+      ];
 
-        const session = (await axios.post('/auth/stripe/checkout', {
+      const session = (
+        await axios.post('/auth/stripe/checkout', {
           items,
-          destination: teacher.stripeAcc
-        })).data
+          destination: teacher.stripeAcc,
+        })
+      ).data;
 
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
 
-        const result = await stripe.redirectToCheckout({
-          sessionId: session.id,
-        });
-
-        if (result.error) {
-          console.log(result.error)
-        }
+      if (result.error) {
+        console.log(result.error);
       }
-  }
-}
+    },
+  };
+};
 
-export default connect(mapState, mapDispatch)(Tip)
+export default connect(mapState, mapDispatch)(Tip);

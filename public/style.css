@@ -112,6 +112,7 @@ form div {
 
 #dashboard {
   height: calc(100vh - 64px);
+  /* height: 100%; */
   display: flex;
 }
 
@@ -145,6 +146,10 @@ form div {
 
 #right-pane-1-top {
   height: 80%;
+}
+
+#right-pane-1-bottom {
+  height: 20%;
 }
 
 #main_video_frame {
@@ -332,6 +337,9 @@ form div {
   overflow: auto;
   padding: 1rem;
 }
+#calendar_container {
+  height: 95%;
+}
 
 #calendar_top_text {
   margin-bottom: 1rem;
@@ -341,7 +349,7 @@ form div {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 141px;
+  height: 100%;
   overflow-y: scroll;
 }
 
@@ -354,6 +362,17 @@ form div {
   display: flex;
   align-items: center;
   padding: 0 1rem;
+}
+
+.fuctional_course_list_item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fuctional_course_list_item > div {
+  display: flex;
 }
 
 /* Modal Animation */
@@ -466,4 +485,83 @@ form div {
   padding: 2px 16px;
   background-color: #ec6f75;
   color: white;
+}
+
+.tooltipClass {
+  font-size: 1rem !important;
+  padding: 2px !important;
+  padding-right: 4px !important;
+  padding-left: 4px !important;
+}
+
+#discussion {
+  width: 100%;
+  /* height: calc(100vh - 190px); */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* #discussion_header {
+
+} */
+
+#discussion_body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+#discussion_text {
+  /* height: 100%; */
+  overflow: auto;
+}
+
+#discussion_text > ul {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 340px);
+  align-items: center;
+}
+
+.discussion_course_header {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#discussion_text > ul > li {
+  width: 95%;
+}
+
+#discussion_post {
+  align-self: center;
+  width: 75%;
+  display: flex;
+  align-items: center;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+#discussion_post > div {
+  width: 100%;
+}
+.discussion_post_btn {
+  margin-right: 1rem;
+  min-width: 7rem;
+}
+
+#discussion_input {
+  flex-grow: 1;
+}
+
+.post_username {
+  font-weight: bold;
+}
+
+.post_date {
+  margin-left: 1rem;
 }

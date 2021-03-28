@@ -2,6 +2,7 @@ import React from "react";
 import { Component } from 'react';
 import { connect } from "react-redux";
 import { createQuestion } from "../store/questions";
+import { io } from 'socket.io-client';
 
 class Modal extends Component {
     constructor () {
@@ -28,9 +29,11 @@ class Modal extends Component {
     }
 
     handleSubmit (event) {
+        const socket = io();
         event.preventDefault();
         this.handleClose(event);
-        this.props.createQuestion({ userId: this.props.id, courseId: this.props.room, text: this.state.input })
+        this.props.createQuestion({ userId: this.props.id, courseId: this.props.room, text: this.state.input }, true)
+        socket.emit('newQuestion')
     }
 
     render () {
@@ -58,7 +61,7 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = (dispatch) => ({
-    createQuestion: (question) => dispatch(createQuestion(question))
+    createQuestion: (question, createLocally) => dispatch(createQuestion(question, createLocally))
 })
 
 export default connect(mapState, mapDispatch)(Modal);

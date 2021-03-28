@@ -6,6 +6,9 @@ import M from 'materialize-css';
 import { Collapsible, CollapsibleItem, Icon } from 'react-materialize';
 import { fetchRoom } from '../store/dashboard';
 import { fetchView, fetchClearView } from '../store/view';
+import ReactTooltip from 'react-tooltip';
+import { loadSingleCourse } from '../store/single-course';
+import { fetchDiscussion } from '../store/discussion';
 
 class EnrolledCourses extends React.Component {
   constructor(props) {
@@ -45,7 +48,10 @@ class EnrolledCourses extends React.Component {
         >
           <ul>
             {enrolledCourses.map((enrollment, idx) => (
-              <li key={enrollment.course.id}>
+              <li
+                key={enrollment.course.id}
+                className="fuctional_course_list_item"
+              >
                 <a
                   className="clickable waves-effect"
                   id={enrollment.course.id}
@@ -55,6 +61,52 @@ class EnrolledCourses extends React.Component {
                 >
                   {enrollment.course.title}
                 </a>
+                <div>
+                  <Icon
+                    data-tip
+                    data-for="func_info_btn"
+                    className="hover_text"
+                    onClick={() => {
+                      this.props.fetchView('viewSingleCourse');
+                      this.props.loadSingleCourse(enrollment.course);
+                    }}
+                  >
+                    info_outline
+                  </Icon>
+                  <ReactTooltip id="func_info_btn" className="tooltipClass">
+                    Course Info
+                  </ReactTooltip>
+
+                  <Icon
+                    data-tip
+                    data-for="func_chat_btn"
+                    className="hover_text"
+                    onClick={() => {
+                      this.props.fetchView('discussion');
+                      this.props.fetchDiscussion(enrollment.course);
+                    }}
+                  >
+                    chat
+                  </Icon>
+                  <ReactTooltip id="func_chat_btn" className="tooltipClass">
+                    Discussion Board
+                  </ReactTooltip>
+
+                  <Icon
+                    data-tip
+                    data-for="func_video_btn"
+                    onClick={(e) =>
+                      this.joinRoomWatch(enrollment.course.userId, e)
+                    }
+                    className="hover_text"
+                  >
+                    ondemand_video
+                  </Icon>
+
+                  <ReactTooltip id="func_video_btn" className="tooltipClass">
+                    Classroom
+                  </ReactTooltip>
+                </div>
               </li>
             ))}
           </ul>
@@ -105,6 +157,10 @@ const mapDispatch = (dispatch) => {
     fetchClearView: () => {
       dispatch(fetchClearView());
     },
+    fetchDiscussion: (course) => {
+      dispatch(fetchDiscussion(course));
+    },
+    loadSingleCourse: (course) => dispatch(loadSingleCourse(course)),
   };
 };
 
