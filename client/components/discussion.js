@@ -125,8 +125,8 @@ class Discussion extends Component {
     this.props.discussion.discussion.forEach((el) => {
       const temp = new Date(el.createdAt);
       const dateStr = `${
-        month[temp.getUTCMonth()]
-      } ${temp.getUTCDate()} ${temp.getUTCFullYear()} ${temp.getUTCHours()}:${temp.getUTCMinutes()}`;
+        month[temp.getMonth()]
+      } ${temp.getDate()} ${temp.getFullYear()} ${temp.getHours()}:${temp.getMinutes()}`;
       el.datestr = dateStr;
     });
 
