@@ -202,7 +202,7 @@ class SingleCourseView extends React.Component {
         {this.state.view === 'calendar' ? (
           <div id="single_course_btm_div">
             {this.props.auth.id === this.props.singleCourse.user.id ? (
-              <div>
+              <div id="calendar_container">
                 <div id="calendar_top_text">
                   Click / Drag to add meeting times. Click on an event to remove
                   it from the schedule.
@@ -220,14 +220,17 @@ class SingleCourseView extends React.Component {
                 />
               </div>
             ) : (
-              <Calendar
-                id="calendar"
-                localizer={localizer}
-                events={this.state.events}
-                defaultView={Views.WEEK}
-                startAccessor="start"
-                endAccessor="end"
-              />
+              // {/* </div> */}
+              <div id="calendar_container">
+                <Calendar
+                  id="calendar"
+                  localizer={localizer}
+                  events={this.state.events}
+                  defaultView={Views.WEEK}
+                  startAccessor="start"
+                  endAccessor="end"
+                />
+              </div>
             )}
           </div>
         ) : (
