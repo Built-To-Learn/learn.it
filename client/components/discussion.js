@@ -1,14 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import discussion, {
+import {
   fetchAddDiscussion,
   fetchClearDiscussion,
   fetchDiscussion,
   fetchAddExternalDiscussion,
 } from '../store/discussion';
 import { io } from 'socket.io-client';
+import {
+  Button,
+  Icon,
+  Textarea,
+  TextInput,
+  CardPanel,
+} from 'react-materialize';
 
 let socket;
+
+const month = new Array(12);
+month[0] = 'January';
+month[1] = 'February';
+month[2] = 'March';
+month[3] = 'April';
+month[4] = 'May';
+month[5] = 'June';
+month[6] = 'July';
+month[7] = 'August';
+month[8] = 'September';
+month[9] = 'October';
+month[10] = 'November';
+month[11] = 'December';
 
 class Discussion extends Component {
   constructor(props) {
@@ -62,6 +83,11 @@ class Discussion extends Component {
       );
     }
 
+    setTimeout(() => {
+      const chat = document.getElementById('discussion_text');
+      chat.scrollTop = chat.scrollHeight;
+    }, 100);
+
     // if (
     //   this.props.discussion.discussion.length >
     //   prevProps.discussion.discussion.length
@@ -91,28 +117,67 @@ class Discussion extends Component {
       'leaveDiscussionRoom',
       `discussion-${this.props.discussion.course.id}`
     );
+    socket.close();
+    this.props.fetchClearDiscussion();
   }
 
   render() {
+    this.props.discussion.discussion.forEach((el) => {
+      const temp = new Date(el.createdAt);
+      const dateStr = `${
+        month[temp.getUTCMonth()]
+      } ${temp.getUTCDate()} ${temp.getUTCFullYear()} ${temp.getUTCHours()}:${temp.getUTCMinutes()}`;
+      el.datestr = dateStr;
+    });
+
     return (
       <div id="discussion">
-        <div id="discussion_header">{this.props.discussion.course.title}</div>
+        <div id="discussion_header">
+          <CardPanel className="blue">
+            <span className="white-text discussion_course_header">
+              {this.props.discussion.course.title} Discussion Board
+            </span>
+          </CardPanel>
+        </div>
         <div id="discussion_body">
           <div id="discussion_text">
             <ul>
               {this.props.discussion.discussion.map((post) => {
-                return <li key={post.id}>{post.text}</li>;
+                return (
+                  <li key={post.id}>
+                    <CardPanel className="white discussion_post_body">
+                      <div>
+                        <span className="black-text post_username">
+                          {post.user.name}
+                        </span>
+                        <span className="black-text post_date">
+                          {post.datestr}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="black-text post_text">
+                          {post.text}
+                        </span>
+                      </div>
+                    </CardPanel>
+                  </li>
+                );
               })}
             </ul>
           </div>
           <form id="discussion_post" onSubmit={(e) => this.onSubmit(e)}>
-            <input
+            <TextInput
               id="discussion_input"
               value={this.state.discussion_input}
               name="discussion_input"
               onChange={(e) => this.onChange(e)}
-            ></input>
-            <button>Submit</button>
+              placeholder="Create a discussion item"
+              icon="comment"
+            ></TextInput>
+            <Button node="button" className="blue discussion_post_btn" small>
+              Post
+              <Icon right>keyboard_return</Icon>
+            </Button>
           </form>
         </div>
       </div>
@@ -134,6 +199,7 @@ export default connect(
       fetchDiscussion: (course) => dispatch(fetchDiscussion(course)),
       fetchAddExternalDiscussion: (discussion) =>
         dispatch(fetchAddExternalDiscussion(discussion)),
+      fetchClearDiscussion: () => dispatch(fetchClearDiscussion()),
     };
   }
 )(Discussion);
