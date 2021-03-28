@@ -352,6 +352,25 @@ form div {
   padding: 0 1rem;
 }
 
+#resource-upload{
+  display:flex;
+  align-items: center
+}
+
+#resource-upload > div{
+  height: 70px
+}
+#resource-upload > button{
+  height: 50px
+}
+
+
+#upload-btn{
+  height: 50px;
+  display: flex;
+  align-items: center;  
+} 
+
 /* Modal Animation */
 @-webkit-keyframes slideIn {
   from {
