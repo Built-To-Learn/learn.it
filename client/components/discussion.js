@@ -124,9 +124,14 @@ class Discussion extends Component {
   render() {
     this.props.discussion.discussion.forEach((el) => {
       const temp = new Date(el.createdAt);
+      let mins = temp.getMinutes();
+      console.log(mins);
+      if (mins.toString().length === 1) {
+        mins = `0${mins.toString()}`;
+      }
       const dateStr = `${
         month[temp.getMonth()]
-      } ${temp.getDate()} ${temp.getFullYear()} ${temp.getHours()}:${temp.getMinutes()}`;
+      } ${temp.getDate()} ${temp.getFullYear()} ${temp.getHours()}:${mins}`;
       el.datestr = dateStr;
     });
 
