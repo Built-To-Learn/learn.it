@@ -15,25 +15,34 @@ class Resources extends Component {
         this.props.getResources(this.props.singleCourse.title);
     }
 
+    getSecondPart(str) {
+        return str.split('/')[1];
+    }
+
 
     render() {
 
         if (this.props.resources.length !== 0) {
-          const {resources} = this.props;
+          const {resources, singleCourse} = this.props;
+          const courseTitle = singleCourse.title
+         
 
           return( <div>
-              <h3>Checkout the Course Resources</h3>
+              <h3>{courseTitle} Resources</h3>
               <ResourceUpload/>
               {resources.map((resource,idx) => {
+                const resourceTitle = this.getSecondPart(resource.Key)        
                 return (
                     <div key = {idx}>
-                        <a key= {resource.ETag}href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resource.Key}</a>
+                        <div className="collection" style = {{width: "30vw"}}>
+                            <a className="collection-item" key= {resource.ETag} href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resourceTitle}</a>
+                        </div>
                     </div>
                 );
               })}
 
           </div> 
-          )
+          ) 
      
         } else {
           return <ResourceUpload/>

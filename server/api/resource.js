@@ -37,11 +37,13 @@ AWS.config.update({
       };
   
       try {
+        console.log("FILE",files)
         const path = files.file[0].path;
         const buffer = fs.readFileSync(path);
         const type = await FileType.fromBuffer(buffer);
-        const fileName = `${title}/${Date.now().toString()}`;
-        const data = await uploadFile(buffer, fileName, type);
+        const fileName = `${title}/${files.file[0].originalFilename}`;
+        const fileNameNoExt = fileName.split('.').slice(0, -1).join('.')
+        const data = await uploadFile(buffer, fileNameNoExt, type);
         return response.status(200).send(data);
       } catch (err) {
         console.log("THIS IS MY ERROR", err)

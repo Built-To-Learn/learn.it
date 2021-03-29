@@ -358,6 +358,26 @@ form div {
   padding: 0 1rem;
 }
 
+
+#resource-upload{
+  display:flex;
+  align-items: center
+}
+
+#resource-upload > div{
+  height: 70px
+}
+#resource-upload > button{
+  height: 50px
+}
+
+
+#upload-btn{
+  height: 50px;
+  display: flex;
+  align-items: center;  
+} 
+
 .fuctional_course_list_item {
   width: 100%;
   display: flex;
@@ -368,6 +388,7 @@ form div {
 .fuctional_course_list_item > div {
   display: flex;
 }
+
 
 /* Modal Animation */
 @-webkit-keyframes slideIn {
