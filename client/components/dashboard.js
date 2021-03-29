@@ -9,7 +9,7 @@ import {
   Chatroom,
   Questions,
   Modal,
-  Tip
+  Tip,
 } from './index';
 import { fetchClearView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
@@ -79,7 +79,7 @@ class Dashboard extends Component {
             )}
           </div>
           <div id="right-pane-1-bottom" className="border">
-            <Questions room={this.state.room}/>
+            <Questions room={this.state.room} />
           </div>
         </div>
         <div id="right-pane-2" className="border">
@@ -243,9 +243,6 @@ class Dashboard extends Component {
                       {!this.state.mute ? 'volume_up' : 'volume_off'}
                     </Icon>
                   </Button>
-
-                  <Tip />
-
                   <Button
                     node="button"
                     className="right_btn black"
@@ -255,6 +252,9 @@ class Dashboard extends Component {
                     Leave
                     <Icon left>exit_to_app</Icon>
                   </Button>
+                </div>
+                <div>
+                  <Tip />
                 </div>
               </div>
             ) : (
@@ -301,7 +301,7 @@ class Dashboard extends Component {
             )}
           </div>
         </div>
-        <Modal room={this.state.room}/>
+        <Modal room={this.state.room} />
       </div>
     );
   }

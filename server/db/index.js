@@ -5,7 +5,8 @@ const User = require('./models/user');
 const Course = require('./models/Course');
 const Question = require('./models/Question');
 const Schedule = require('./models/Schedule');
-const Like = require ('./models/Like')
+const Like = require('./models/Like');
+const Discussion = require('./models/Discussion');
 
 // Through Table
 const Enrollment = db.define('enrollment', {
@@ -30,6 +31,11 @@ Course.belongsTo(User);
 
 Course.belongsToMany(User, { through: Enrollment });
 User.belongsToMany(Course, { through: Enrollment });
+
+User.hasMany(Discussion);
+Discussion.belongsTo(User);
+Course.hasMany(Discussion);
+Discussion.belongsTo(Course);
 
 Course.hasMany(Enrollment);
 Enrollment.belongsTo(Course);
@@ -205,6 +211,18 @@ const syncAndSeed = async () => {
     courseId: geometry.id,
   });
 
+  await Discussion.create({
+    text: 'Test1',
+    userId: sal.id,
+    courseId: geometry.id,
+  });
+
+  await Discussion.create({
+    text: 'Another post',
+    userId: sal.id,
+    courseId: geometry.id,
+  });
+
   return {
     students: {
       cody,
@@ -231,6 +249,7 @@ module.exports = {
     User,
     Question,
     Schedule,
-    Like
+    Like,
+    Discussion,
   },
 };

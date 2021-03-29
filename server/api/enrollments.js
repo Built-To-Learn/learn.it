@@ -1,13 +1,13 @@
 const router = require('express').Router();
 const {
-  models: { Enrollment, User, Course },
+  models: { Enrollment, User, Course, Schedule },
 } = require('../db');
 
 router.get('/', async (req, res, next) => {
   try {
     res.status(200).json(
       await Enrollment.findAll({
-        include: [User, Course],
+        include: [User, { model: Course, include: [User, Schedule] }],
       })
     );
   } catch (ex) {
@@ -19,7 +19,7 @@ router.post('/', async (req, res, next) => {
   try {
     await Enrollment.create(req.body);
     const enrollments = await Enrollment.findAll({
-      include: [Course],
+      include: [{ model: Course, include: [User, Schedule] }],
       where: { userId: req.body.userId },
     });
 
@@ -32,7 +32,7 @@ router.post('/', async (req, res, next) => {
 router.get('/:userId', async (req, res, next) => {
   try {
     const enrollments = await Enrollment.findAll({
-      include: [Course],
+      include: [{ model: Course, include: [User, Schedule] }],
       where: { userId: req.params.userId },
     });
 

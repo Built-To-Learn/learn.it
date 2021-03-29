@@ -188,10 +188,11 @@ class Broadcaster extends Component {
 
   componentWillUnmount() {
     try {
+      globalStream.getTracks().forEach((track) => track.stop());
       videoTrack.getTracks().forEach((track) => track.stop());
       audioTrack.getTracks().forEach((track) => track.stop());
     } catch (er) {}
-    globalStream.getTracks().forEach((track) => track.stop());
+
     socket.close();
     this.props.fetchClearPeer();
     this.props.fetchClearBreakout();

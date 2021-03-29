@@ -3,7 +3,6 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 
-
 // logging middleware
 app.use(morgan('dev'));
 
@@ -16,7 +15,6 @@ app.engine('html', require('ejs').renderFile);
 // auth and api routes
 app.use('/auth', require('./auth'));
 app.use('/api', require('./api'));
-
 
 const githubURL = process.env.GITHUB_CLIENT_ID
   ? `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}`
@@ -51,7 +49,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).send(err.message || 'Internal server error.');
 });
-
 
 const httpServer = require('http').createServer(app);
 
@@ -138,15 +135,28 @@ io.sockets.on('connection', (socket) => {
       socket.to(`${mainRoom}-${i}`).emit('breakout_returnToMain', mainRoom);
     }
   });
-
   socket.on('joinChat', (room) => {
     socket.join(room);
   });
+  socket.on('joinQuestions', (room) => {
+    socket.join(room);
+  });
   socket.on('newMessage', (message, room) => {
-    console.log(message, room);
     socket.to(room).emit('newMessage', message);
   });
+  socket.on('newQuestion', (room, newQuestion) => {
+    socket.to(room).emit('newQuestion', newQuestion);
+  });
+
+  socket.on('joinDiscussionRoom', (room) => {
+    socket.join(room);
+  });
+
+  socket.on('discussionMessage', (room, message) => {
+    socket.to(room).emit('discussionMessage', message);
+  });
+
+  socket.on('leaveDiscussionRoom', (room) => {
+    socket.leave(room);
+  });
 });
-
-
-
