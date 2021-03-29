@@ -167,14 +167,16 @@ class SingleCourseView extends React.Component {
               </CardPanel>
             </Col>
           </Row>
-          <div id="single_course_info_div">
-            <div id="single_course_owner_image">
+
+          <div class="row single_course_info_div">
+            <div class="col s3" id="single_course_owner_image">
               <img src="/assets/default.jpeg"></img>
             </div>
-            <div id="single_course_info">
+            <div class="col s9" id="single_course_info">
               <p>Course Creator: {singleCourse.user.name}</p>
               <p>Category: {singleCourse.category}</p>
             </div>
+
           </div>
           <div id="single_course_btn_control_div">
             <Button
