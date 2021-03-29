@@ -5,8 +5,8 @@ import { Carousel } from 'react-materialize';
 import { enrollInCourse } from '../store/enrollments';
 import { fetchView } from '../store/view';
 import { loadSingleCourse } from '../store/single-course';
-
-export const Home = ({auth, courses, getCourses, enrollInCourse, fetchView, loadSingleCourse}) => {
+import { Link } from 'react-router-dom'
+export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchView, loadSingleCourse}) => {
 
   useEffect(() => {
     getCourses()
@@ -14,8 +14,8 @@ export const Home = ({auth, courses, getCourses, enrollInCourse, fetchView, load
 
   const childrenMapped = courses.map(course => {
     return (
-      <div className="carousel-item ">
-        <div key={course.id} className="card carousel-card">
+      <div className="carousel-item">
+        <div key={course.id} className="card small carousel-card">
           <div className="card-image waves-effect waves-block waves-light">
             <img className="activator" src="assets/elearning.png" />
           </div>
@@ -25,28 +25,31 @@ export const Home = ({auth, courses, getCourses, enrollInCourse, fetchView, load
               {course.title}
               <i className="material-icons right three_dots">more_vert</i>
             </span>
-          </div>
 
-          <div>
-            <p>
-              <a
+            <div>
+              <p>
+                <a
+                  className="hover_text"
+                  onClick={() => enrollInCourse(course.id, userId, course.title) }
+                >
+                  Enroll
+                </a>
+              </p>
+
+              <p
                 className="hover_text"
-                onClick={() => enrollInCourse(course.id, userId, course.title) }
+                onClick={() => {
+                  fetchView('viewSingleCourse');
+                  loadSingleCourse(course);
+                }}
               >
-                Enroll
-              </a>
-            </p>
+                <a>View More Details</a>
+              </p>
+            </div>
 
-            <p
-              className="hover_text"
-              onClick={() => {
-                fetchView('viewSingleCourse');
-                loadSingleCourse(course);
-              }}
-            >
-              <a>View More Details</a>
-            </p>
           </div>
+
+
 
           <div className="card-reveal">
             <span className="card-title grey-text text-darken-4">
@@ -65,31 +68,47 @@ export const Home = ({auth, courses, getCourses, enrollInCourse, fetchView, load
 
   return (
     <div className="section center">
-      <h3>Welcome, {auth.email}</h3>
+      <div className="container section">
+        {auth.onboarded ?
+        <div className="left-align">
+          {/* <h4>Your Earnings</h4> */}
+          <p>Congratulations on setting up your teaching profile with stripe!</p>
+        </div>
+        :
+        <div>
+          <p>
+            Setup your teaching profile by onboarding with <a className="btn" href={payment.onboardUrl}>Stripe</a>
+          </p>
 
-      <div className="valign-wrapper">
-        {childrenMapped.length > 0 ?
-        <Carousel
-          children={
-            childrenMapped
+        </div> }
+      </div>
+
+      <div className="section container">
+        <h4 className="left-align">Top Picks</h4>
+        <div id="class-carousel-wrapper">
+          {childrenMapped.length > 0 ?
+          <Carousel
+            children={
+              childrenMapped
+            }
+
+            options={{
+              dist: 0,
+              duration: 200,
+              fullWidth: false,
+              indicators: false,
+              noWrap: false,
+              numVisible: 3,
+              onCycleTo: null,
+              padding: 50,
+              shift: 0
+            }}
+
+          />
+          : ""
           }
-
-          options={{
-            dist: 0,
-            duration: 200,
-            fullWidth: false,
-            indicators: false,
-            noWrap: false,
-            numVisible: 3,
-            onCycleTo: null,
-            padding: 50,
-            shift: 0
-          }}
-
-        />
-        : ""
-        }
-    </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -97,7 +116,8 @@ export const Home = ({auth, courses, getCourses, enrollInCourse, fetchView, load
 const mapState = state => {
   return {
     auth: state.auth,
-    courses: state.courses.all.slice(0, 3)
+    courses: state.courses.all.slice(0, 3),
+    payment: state.payment
   }
 }
 

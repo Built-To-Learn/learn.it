@@ -55,10 +55,12 @@ form div {
     }
 } */
 
+#class-carousel-wrapper {
+  margin-top: -13%;
+}
+
 .carousel {
   height: 500px !important;
-}
-.carousel-card {
 }
 
 .landingbtn {

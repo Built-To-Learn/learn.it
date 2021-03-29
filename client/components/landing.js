@@ -1,22 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-<<<<<<< HEAD
-    Dashboard,
-    ClassSearch,
-    CoursesView,
-    AccountInfoBtn,
-    AccountInfo,
-    AssociatedCourses,
-    EnrolledCourses,
-    SingleCourseView,
-    Home
-} from './index'
-import { CreateNewCourse } from './createclass'
-import { fetchView } from '../store/view'
-import { fetchClearStudentBreakout } from '../store/student-breakout'
-import { fetchRoom } from '../store/dashboard'
-=======
   Dashboard,
   ClassSearch,
   CoursesView,
@@ -25,13 +9,13 @@ import { fetchRoom } from '../store/dashboard'
   AssociatedCourses,
   EnrolledCourses,
   SingleCourseView,
+  Home,
   Discussion,
 } from './index';
 import { CreateNewCourse } from './createclass';
 import { fetchView } from '../store/view';
 import { fetchClearStudentBreakout } from '../store/student-breakout';
 import { fetchRoom } from '../store/dashboard';
->>>>>>> master
 
 class Landing extends Component {
   constructor(props) {
