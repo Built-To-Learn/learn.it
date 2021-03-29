@@ -55,6 +55,14 @@ form div {
     }
 } */
 
+#class-carousel-wrapper {
+  margin-top: -13%;
+}
+
+.carousel {
+  height: 500px !important;
+}
+
 .landingbtn {
   display: flex;
   align-items: center;
@@ -429,6 +437,10 @@ form div {
   to {
     opacity: 1;
   }
+}
+
+.card-space {
+  margin: 5px;
 }
 
 .modal {

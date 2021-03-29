@@ -9,6 +9,7 @@ import {
   AssociatedCourses,
   EnrolledCourses,
   SingleCourseView,
+  Home,
   Discussion,
 } from './index';
 import { CreateNewCourse } from './createclass';
@@ -104,6 +105,7 @@ class Landing extends Component {
           ) : (
             ''
           )}
+          {view === 'welcome' ? <Home /> : ''}
           {view === 'findAClass' ? <ClassSearch /> : ''}
           {view === 'createAClass' ? <CreateNewCourse /> : ''}
           {view === 'viewClasses' ? <CoursesView /> : ''}

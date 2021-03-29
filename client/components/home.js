@@ -1,26 +1,134 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
+import { loadCourses } from '../store/courses';
+import { Carousel } from 'react-materialize';
+import { enrollInCourse } from '../store/enrollments';
+import { fetchView } from '../store/view';
+import { loadSingleCourse } from '../store/single-course';
+import { Link } from 'react-router-dom'
+export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchView, loadSingleCourse}) => {
 
-/**
- * COMPONENT
- */
-export const Home = props => {
-  const {email} = props
+  useEffect(() => {
+    getCourses()
+  }, [])
+
+  const childrenMapped = courses.map(course => {
+    return (
+      <div className="carousel-item">
+        <div key={course.id} className="card small carousel-card">
+          <div className="card-image waves-effect waves-block waves-light">
+            <img className="activator" src="assets/elearning.png" />
+          </div>
+
+          <div className="card-content">
+            <span className="card-title activator grey-text text-darken-4">
+              {course.title}
+              <i className="material-icons right three_dots">more_vert</i>
+            </span>
+
+            <div>
+              <p>
+                <a
+                  className="hover_text"
+                  onClick={() => enrollInCourse(course.id, userId, course.title) }
+                >
+                  Enroll
+                </a>
+              </p>
+
+              <p
+                className="hover_text"
+                onClick={() => {
+                  fetchView('viewSingleCourse');
+                  loadSingleCourse(course);
+                }}
+              >
+                <a>View More Details</a>
+              </p>
+            </div>
+
+          </div>
+
+
+
+          <div className="card-reveal">
+            <span className="card-title grey-text text-darken-4">
+              {course.title}
+              <i className="material-icons right close_X">close</i>
+            </span>
+            <p>
+              Here is some more information about this product that is only
+              revealed once clicked on.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  })
 
   return (
-    <div>
-      <h3>Welcome, {email}</h3>
+    <div className="section center">
+      <div className="container section">
+        {auth.onboarded ?
+        <div className="left-align">
+          {/* <h4>Your Earnings</h4> */}
+          <p>Congratulations on setting up your teaching profile with stripe!</p>
+        </div>
+        :
+        <div>
+          <p>
+            Setup your teaching profile by onboarding with <a className="btn" href={payment.onboardUrl}>Stripe</a>
+          </p>
+
+        </div> }
+      </div>
+
+      <div className="section container">
+        <h4 className="left-align">Top Picks</h4>
+        <div id="class-carousel-wrapper">
+          {childrenMapped.length > 0 ?
+          <Carousel
+            children={
+              childrenMapped
+            }
+
+            options={{
+              dist: 0,
+              duration: 200,
+              fullWidth: false,
+              indicators: false,
+              noWrap: false,
+              numVisible: 3,
+              onCycleTo: null,
+              padding: 50,
+              shift: 0
+            }}
+
+          />
+          : ""
+          }
+        </div>
+      </div>
     </div>
   )
 }
 
-/**
- * CONTAINER
- */
 const mapState = state => {
   return {
-    email: state.auth.email
+    auth: state.auth,
+    courses: state.courses.all.slice(0, 3),
+    payment: state.payment
   }
 }
 
-export default connect(mapState)(Home)
+const mapDispatch = dispatch => {
+  return {
+    getCourses: () => dispatch(loadCourses()),
+    enrollInCourse: (courseId, userId, courseTitle) =>
+      dispatch(enrollInCourse(courseId, userId, courseTitle)),
+    fetchView: (view) => dispatch(fetchView(view)),
+
+    loadSingleCourse: (course) => dispatch(loadSingleCourse(course)),
+  }
+}
+export default connect(mapState, mapDispatch)(Home)

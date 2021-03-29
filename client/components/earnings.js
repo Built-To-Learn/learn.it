@@ -1,17 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { setBalance } from "../store"
 import axios from 'axios'
 
 const Earnings = ({auth, payment, handleClick}) => {
 
   return(
     <div className="">
-      <button className="btn" onClick={() => handleClick(payment.balance.available, auth.stripeAcc)}>
+      {payment.balance.available > 0 ?
+        <button className="btn" onClick={() => handleClick(payment.balance.available, auth.stripeAcc)}>
         Available: ${payment.balance.available}
       </button>
+      : <button className="btn disabled"> Available: ${payment.balance.available} </button>
+      }
 
-
-      <p>You currently have ${payment.balance.pending} pending</p>
     </div>
   )
 
