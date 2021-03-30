@@ -2,6 +2,7 @@ import React from "react"
 import {StripeOnboard, Earnings} from '../components'
 import { connect } from "react-redux"
 import { updateUserInfo } from "../store"
+import ResourceUpload from './resource-upload'
 
 const AccountInfo = ({auth, handleSubmit}) => {
   return (
@@ -40,7 +41,11 @@ const AccountInfo = ({auth, handleSubmit}) => {
           </div>
 
         </form>
+        <div className="col s12 center">
+          <ResourceUpload  isProfilePic = {true}/>
+        </div>
       </div>
+
   )
 }
 

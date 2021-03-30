@@ -5,7 +5,6 @@ import ResourceUpload from './resource-upload'
 import { loadResources } from '../store/resource'
 
 
-// Questions Component
 class Resources extends Component {
     constructor () {
         super();
@@ -29,12 +28,12 @@ class Resources extends Component {
 
           return( <div>
               <h3>{courseTitle} Resources</h3>
-              <ResourceUpload/>
+              <ResourceUpload isProfilePic = {false}/>
               {resources.map((resource,idx) => {
                 const resourceTitle = this.getSecondPart(resource.Key)        
                 return (
                     <div key = {idx}>
-                        <div className="collection" style = {{width: "30vw"}}>
+                        <div className="collection" style = {{width: "75vw"}}>
                             <a className="collection-item" key= {resource.ETag} href= {`https://built-to-learn.s3.us-east-2.amazonaws.com/${resource.Key}`} >{resourceTitle}</a>
                         </div>
                     </div>

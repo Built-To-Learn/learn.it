@@ -369,7 +369,8 @@ form div {
 
 #resource-upload{
   display:flex;
-  align-items: center
+  align-items: center;
+  justify-content: center
 }
 
 #resource-upload > div{

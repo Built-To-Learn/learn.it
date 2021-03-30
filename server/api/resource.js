@@ -25,6 +25,18 @@ AWS.config.update({
     return s3.upload(params).promise();
   };
 
+  const uploadImageFile = (buffer, name, type) => {
+    const params = {
+      ACL: 'public-read',
+      Body: buffer,
+      Bucket: "built-to-learn-profile-pics",
+      ContentType: type.mime,
+      Key: `${name}.${type.ext}`,
+    };
+    return s3.upload(params).promise();
+  };
+
+
   // Define POST route
   router.post('/test-upload/:title', (request, response) => {
     // console.log("inside POST")
@@ -74,6 +86,30 @@ AWS.config.update({
 
       }
   
+  });
+
+  router.post('/profile-pic/:username', (request, response) => {
+    // console.log("inside POST")
+    const form = new multiparty.Form();
+    const username = request.params.username
+    form.parse(request, async (error, fields, files) => {
+      if (error) {
+        return response.status(500).send(error);
+      };
+  
+      try {
+        const path = files.file[0].path;
+        const buffer = fs.readFileSync(path);
+        const type = await FileType.fromBuffer(buffer);
+        const fileName = `${username}/${files.file[0].originalFilename}`;
+        const fileNameNoExt = fileName.split('.').slice(0, -1).join('.')
+        const data = await uploadImageFile(buffer, fileNameNoExt, type);
+        return response.status(200).send(data);
+      } catch (err) {
+        console.log("THIS IS MY ERROR", err)
+        return response.status(500).send(err);
+      }
+    });
   });
    
  
