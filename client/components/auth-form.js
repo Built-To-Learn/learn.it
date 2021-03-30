@@ -8,7 +8,7 @@ const AuthForm = (props) => {
 
     if(name === "login"){
         return (
-            <div className="grey darken-4" style={{height: "100vh"}}>
+            <div className="grey darken-4">
                 <div className="section container center-align" style={{width: "35%"}}>
                     <h1 className="center-align grey-text text-lighten-5">{name}</h1>
                     <div className="z-depth-1 grey darken-3 row"
@@ -43,7 +43,7 @@ const AuthForm = (props) => {
 
     if(name === "signup"){
         return (
-            <div className="grey darken-4" style={{height: "100vh"}}>
+            <div className="grey darken-4" >
                 <div className="section container center-align" style={{width: "35%"}}>
                     <h1 className="center-align  grey-text text-lighten-5">{name}</h1>
                     <div className="z-depth-1 grey darken-3 row"

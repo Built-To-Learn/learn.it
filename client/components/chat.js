@@ -93,11 +93,12 @@ class Chat extends Component {
       <div id="chat">
         <div id="chat-messages">
           {messages.map((message, i) => {
-            return <p key={i}>{message}</p>;
+            return <p className="white-text" key={i}>{message}</p>;
           })}
         </div>
         <div id="chat-input">
           <input
+            className="white-text"
             value={currentMessage}
             onChange={(event) => this.handleChange(event)}
             id="chat-text"
@@ -109,7 +110,7 @@ class Chat extends Component {
           >
             Send
           </button>
-          <button 
+          <button
             onClick={() => this.handleModal()}
           >
             Ask A Question

@@ -17,18 +17,19 @@ class CourseCard extends React.Component {
     const userId = this.props.auth;
 
     return (
-      <div className="card hoverable course_card">
+      <div className="card grey darken-3 hoverable course_card">
         <div className="card-image waves-effect waves-block waves-light">
           <img className="activator" src="assets/elearning.png" />
         </div>
         <div className="card-content">
-          <span className="card-title activator grey-text text-darken-4">
+          <span className="card-title activator grey-text text-lighten-4">
             {course.title}
             <i className="material-icons right three_dots">more_vert</i>
           </span>
+
           <p>
             <a
-              className="hover_text"
+              className="hover_text grey-text"
               onClick={() =>
                 this.props.enrollInCourse(course.id, userId, course.title)
               }
@@ -36,14 +37,15 @@ class CourseCard extends React.Component {
               Enroll
             </a>
           </p>
-          <p
-            className="hover_text"
-            onClick={() => {
-              this.props.fetchView('viewSingleCourse');
-              this.props.loadSingleCourse(course);
-            }}
-          >
-            <a>View More Details</a>
+          <p>
+            <a
+              className="hover_text grey-text"
+              onClick={() => {
+                this.props.fetchView('viewSingleCourse');
+                this.props.loadSingleCourse(course);
+              }}
+            >
+              View More Details</a>
           </p>
         </div>
         <div className="card-reveal">

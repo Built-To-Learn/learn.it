@@ -7,6 +7,7 @@ const ClassOptions = () => {
     <CollapsibleItem
       expanded={false}
       header="Class Options"
+      className="grey darken-2"
       icon={<Icon>assignment</Icon>}
       node="div"
       onSelect={() => {}}
