@@ -56,7 +56,12 @@ form div {
 } */
 
 #class-carousel-wrapper {
-  margin-top: -13%;
+  margin-top: -15%;
+}
+
+#welcome-page-class-options {
+  display: flex;
+  justify-content: space-around;
 }
 
 .carousel {
@@ -372,25 +377,22 @@ form div {
   overflow-wrap: break-word;
 }
 
-
 #resource-upload{
   display:flex;
   align-items: center
+
+#resource-upload > div {
+  height: 70px;
+}
+#resource-upload > button {
+  height: 50px;
 }
 
-#resource-upload > div{
-  height: 70px
-}
-#resource-upload > button{
-  height: 50px
-}
-
-
-#upload-btn{
+#upload-btn {
   height: 50px;
   display: flex;
-  align-items: center;  
-} 
+  align-items: center;
+}
 
 .fuctional_course_list_item {
   width: 100%;
@@ -402,7 +404,6 @@ form div {
 .fuctional_course_list_item > div {
   display: flex;
 }
-
 
 /* Modal Animation */
 @-webkit-keyframes slideIn {
