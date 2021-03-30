@@ -371,6 +371,12 @@ form div {
   padding: 0 1rem;
 }
 
+
+#resource-upload {
+  display: flex;
+  align-items: center;
+}
+
 #question > span {
   width: 65%;
   margin-right: 10%;
@@ -380,6 +386,7 @@ form div {
 #resource-upload{
   display:flex;
   align-items: center
+
 
 #resource-upload > div {
   height: 70px;
@@ -584,6 +591,21 @@ form div {
   min-width: 7rem;
 }
 
+.discussion_post_body_div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.crud_button {
+  width: 1rem;
+  height: 1rem;
+}
+
+.crud_button:hover {
+  cursor: pointer;
+}
+
 #discussion_input {
   flex-grow: 1;
 }
@@ -594,4 +616,18 @@ form div {
 
 .post_date {
   margin-left: 1rem;
+}
+
+.post_text {
+  resize: none;
+  border: none;
+  padding: 0;
+}
+
+.post_text:focus {
+  outline: none;
+}
+
+.hidden_class {
+  visibility: hidden;
 }

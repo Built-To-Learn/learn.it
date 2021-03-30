@@ -10,6 +10,7 @@ const EDIT_DISCUSSION = 'EDIT_DISCUSSION';
 const DELETE_DISCUSSION = 'DELETE_DISCUSSION';
 
 const ADD_EXTERNAL_DISCUSSION = 'ADD_EXTERNAL_DISCUSSION';
+const EDIT_EXTERNAL_DISCUSSION = 'EDIT_EXTERNAL_DISCUSSION';
 
 /**
  * ACTION CREATORS
@@ -29,12 +30,18 @@ const addExternalDiscussion = (discussion) => ({
   discussion,
 });
 
+const editExternalDiscussion = (discussion) => ({
+  type: EDIT_EXTERNAL_DISCUSSION,
+  discussion,
+});
+
 const clearDiscussion = () => ({
   type: CLEAR_DISCUSSION,
 });
 
-const editDiscussion = () => ({
+const editDiscussion = (discussion) => ({
   type: EDIT_DISCUSSION,
+  discussion,
 });
 
 const deleteDiscussion = () => ({
@@ -58,6 +65,10 @@ export const fetchClearDiscussion = () => async (dispatch) => {
 
 export const fetchAddExternalDiscussion = (discussion) => (dispatch) => {
   return dispatch(addExternalDiscussion(discussion));
+};
+
+export const fetchEditExternalDiscussion = (discussion) => (dispatch) => {
+  return dispatch(editExternalDiscussion(discussion));
 };
 
 export const fetchAddDiscussion = (discussion, socket) => async (dispatch) => {
@@ -87,10 +98,29 @@ export const fetchDeleteDiscussion = (discussion) => async (dispatch) => {
   return dispatch(deleteDiscussion(discussion));
 };
 
-export const fetchEditDiscussion = (discussion) => async (dispatch) => {
-  //axios call
-  const _discussion = null;
-  return dispatch(editDiscussion(_discussion));
+export const fetchEditDiscussion = (discussion, socket) => async (dispatch) => {
+  const token = window.localStorage.getItem('token');
+
+  if (token) {
+    const res = (
+      await axios.put(
+        `/api/discussion`,
+        { text: discussion.text, postId: discussion.id },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      )
+    ).data;
+    socket.emit(
+      'discussionMessageEdit',
+      `discussion-${discussion.courseId}`,
+      discussion
+    );
+
+    return dispatch(editDiscussion(res));
+  }
 };
 
 /**
@@ -121,6 +151,13 @@ export default function (state = initialState, action) {
       return initialState;
     case ADD_EXTERNAL_DISCUSSION:
       return { ...state, discussion: [...state.discussion, action.discussion] };
+    case EDIT_EXTERNAL_DISCUSSION:
+      return {
+        ...state,
+        discussion: state.discussion.map((el) =>
+          el.id === action.discussion.id ? action.discussion : el
+        ),
+      };
     default:
       return state;
   }

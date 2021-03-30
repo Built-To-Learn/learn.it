@@ -156,6 +156,10 @@ io.sockets.on('connection', (socket) => {
     socket.to(room).emit('discussionMessage', message);
   });
 
+  socket.on('discussionMessageEdit', (room, message) => {
+    socket.to(room).emit('discussionMessageEdit', message);
+  });
+
   socket.on('leaveDiscussionRoom', (room) => {
     socket.leave(room);
   });

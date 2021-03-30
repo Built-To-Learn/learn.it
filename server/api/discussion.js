@@ -45,11 +45,12 @@ router.post('/', async (req, res, next) => {
 router.put('/', async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
-    const discussion = await Discussion.update(
+
+    await Discussion.update(
       { text: req.body.text },
       {
         where: {
-          courseId: req.body.courseId,
+          id: parseInt(req.body.postId),
           userId: user.id,
         },
       }
@@ -57,10 +58,11 @@ router.put('/', async (req, res, next) => {
 
     const fullPost = await Discussion.findOne({
       where: {
-        id: discussion.id,
+        id: parseInt(req.body.postId),
       },
       include: [User],
     });
+
     res.status(201).send(fullPost);
   } catch (ex) {
     next(ex);
