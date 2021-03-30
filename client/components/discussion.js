@@ -5,6 +5,8 @@ import {
   fetchClearDiscussion,
   fetchDiscussion,
   fetchAddExternalDiscussion,
+  fetchEditDiscussion,
+  fetchEditExternalDiscussion,
 } from '../store/discussion';
 import { io } from 'socket.io-client';
 import {
@@ -34,9 +36,15 @@ month[11] = 'December';
 class Discussion extends Component {
   constructor(props) {
     super(props);
-    this.state = { discussion_input: '' };
+    this.state = {
+      discussion_input: '',
+      posts: [...this.props.discussion.discussion],
+    };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.edit = this.edit.bind(this);
+    this.onPostChange = this.onPostChange.bind(this);
+    this.submitEdits = this.submitEdits.bind(this);
   }
 
   onChange(e) {
@@ -55,6 +63,58 @@ class Discussion extends Component {
     socket.on('discussionMessage', (message) => {
       this.props.fetchAddExternalDiscussion(message);
     });
+
+    socket.on('discussionMessageEdit', (message) => {
+      this.props.fetchEditExternalDiscussion(message);
+    });
+  }
+
+  onPostChange(e) {
+    try {
+      const _post = this.state.posts.filter(
+        (el) => el.id === parseInt(e.target.id.split('_')[1])
+      )[0];
+
+      this.setState({
+        posts: this.state.posts.map((post) =>
+          post.id === _post.id ? { ...post, text: e.target.value } : post
+        ),
+      });
+    } catch (er) {
+      console.log(er);
+    }
+  }
+
+  async submitEdits(e) {
+    try {
+      const tar = e.target.id.split('_')[2];
+      const post = this.state.posts.filter((el) => el.id === parseInt(tar))[0];
+
+      await this.props.fetchEditDiscussion(post, socket);
+
+      const check = document.getElementById(`submit_comment_${tar}`);
+      check.classList.add('hidden_class');
+      const el = document.getElementById(`post_${tar}`);
+      el.readOnly = true;
+      el.style.border = '0px solid gray';
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
+  edit(e) {
+    try {
+      const tar = e.target.id.split('_')[2];
+      const el = document.getElementById(`post_${tar}`);
+      el.readOnly = false;
+      el.style.border = '1px solid gray';
+      el.style.borderRadius = '5px';
+
+      const check = document.getElementById(`submit_comment_${tar}`);
+      check.classList.remove('hidden_class');
+    } catch (er) {
+      console.log(er);
+    }
   }
 
   onSubmit(e) {
@@ -70,7 +130,20 @@ class Discussion extends Component {
     this.setState({ discussion_input: '' });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    const len1 = this.state.posts.length;
+    const len2 = this.props.discussion.discussion.length;
+    let check = [];
+    if (len1 === len2) {
+      check = prevProps.discussion.discussion.filter(
+        (el, idx) => el.text !== this.props.discussion.discussion[idx].text
+      );
+    }
+
+    if (len1 !== len2 || check.length > 0) {
+      this.setState({ posts: [...this.props.discussion.discussion] });
+    }
+
     if (prevProps.discussion.course !== this.props.discussion.course) {
       this.props.fetchDiscussion(this.props.discussion.course);
       socket.emit(
@@ -87,29 +160,6 @@ class Discussion extends Component {
       const chat = document.getElementById('discussion_text');
       chat.scrollTop = chat.scrollHeight;
     }, 100);
-
-    // if (
-    //   this.props.discussion.discussion.length >
-    //   prevProps.discussion.discussion.length
-    // ) {
-    //   const oldIds = prevProps.discussion.discussion.map((el) => el.id);
-    //   const newMessage = this.props.discussion.discussion.filter(
-    //     (el) => !oldIds.includes(el.id)
-    //   );
-    //   if (newMessage.user.id === this.props.auth.id) {
-    //     console.log('hit');
-    //     socket.emit(
-    //       'discussionMessage',
-    //       `discussion-${this.props.discussion.course.id}`,
-    //       newMessage
-    //     );
-    //   }
-    // } else if (
-    //   this.props.discussion.discussion.length <
-    //   prevProps.discussion.discussion.length
-    // ) {
-    // } else {
-    // }
   }
 
   componentWillUnmount() {
@@ -125,7 +175,7 @@ class Discussion extends Component {
     this.props.discussion.discussion.forEach((el) => {
       const temp = new Date(el.createdAt);
       let mins = temp.getMinutes();
-      console.log(mins);
+
       if (mins.toString().length === 1) {
         mins = `0${mins.toString()}`;
       }
@@ -147,22 +197,59 @@ class Discussion extends Component {
         <div id="discussion_body">
           <div id="discussion_text">
             <ul>
-              {this.props.discussion.discussion.map((post) => {
+              {this.state.posts.map((post) => {
                 return (
                   <li key={post.id}>
                     <CardPanel className="white discussion_post_body">
-                      <div>
-                        <span className="black-text post_username">
-                          {post.user.name}
-                        </span>
-                        <span className="black-text post_date">
-                          {post.datestr}
-                        </span>
+                      <div className="discussion_post_body_div">
+                        <div>
+                          <span className="black-text post_username">
+                            {post.user.name}
+                          </span>
+                          <span className="black-text post_date">
+                            {post.datestr}
+                          </span>
+                        </div>
+                        <div>
+                          {this.props.auth.id === post.user.id ? (
+                            <img
+                              className="crud_button edit_button"
+                              id={`edit_comment_${post.id}`}
+                              src="/assets/edit.png"
+                              onClick={(e) => this.edit(e)}
+                            />
+                          ) : (
+                            ''
+                          )}
+                          {this.props.auth.id === post.user.id ? (
+                            <img
+                              className="crud_button delete_button"
+                              id={`delete_comment_${post.id}`}
+                              src="/assets/delete.png"
+                            />
+                          ) : (
+                            ''
+                          )}
+                          {this.props.auth.id === post.user.id ? (
+                            <img
+                              className="crud_button submit_button hidden_class"
+                              id={`submit_comment_${post.id}`}
+                              src="/assets/checkmark.png"
+                              onClick={(e) => this.submitEdits(e)}
+                            />
+                          ) : (
+                            ''
+                          )}
+                        </div>
                       </div>
                       <div>
-                        <span className="black-text post_text">
-                          {post.text}
-                        </span>
+                        <textarea
+                          id={`post_${post.id}`}
+                          readOnly
+                          className="black-text post_text"
+                          value={post.text}
+                          onChange={(e) => this.onPostChange(e)}
+                        ></textarea>
                       </div>
                     </CardPanel>
                   </li>
@@ -205,6 +292,10 @@ export default connect(
       fetchAddExternalDiscussion: (discussion) =>
         dispatch(fetchAddExternalDiscussion(discussion)),
       fetchClearDiscussion: () => dispatch(fetchClearDiscussion()),
+      fetchEditDiscussion: (discussion, socket) =>
+        dispatch(fetchEditDiscussion(discussion, socket)),
+      fetchEditExternalDiscussion: (discussion) =>
+        dispatch(fetchEditExternalDiscussion(discussion)),
     };
   }
 )(Discussion);
