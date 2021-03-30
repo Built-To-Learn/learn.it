@@ -9,26 +9,14 @@ class Questions extends Component {
         super();
 
         const socket = io();
-
         this.state = { socket: socket }
     }
 
     componentDidMount () {
-        const { room, questions, id } = this.props;
+        const { room } = this.props;
         const { socket } = this.state;
-        const likes = {}
-        
+
         this.props.init(room);
-
-        questions.map(question => {
-            let liked = false
-            question.likes.map(like => {
-                if (like.userId === id) { liked = true }
-            })
-            likes[question.id] = liked 
-        })
-
-        this.setState({ ...this.state, likes: likes })
 
         socket.on('connect', () => {
             socket.emit('joinQuestions', room);
@@ -40,8 +28,20 @@ class Questions extends Component {
 
     componentDidUpdate () {
         const { socket } = this.state;
-        const { newQuestion, id, room } = this.props;
-        if (newQuestion) {
+        const { newQuestion, questions, id, room } = this.props;
+        if (!this.state.likes) {
+            const likes = {}
+        
+            questions.map(question => {
+                let liked = false
+                question.likes.map(like => {
+                    if (like.userId === id) { liked = true }
+                })
+                likes[question.id] = liked 
+            })
+
+            this.setState({ ...this.state, likes: likes })
+        } else if (newQuestion) {
             if (newQuestion.userId === id) { socket.emit('newQuestion', room, newQuestion) }
         }
     }
