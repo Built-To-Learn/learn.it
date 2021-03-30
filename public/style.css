@@ -371,10 +371,15 @@ form div {
   padding: 0 1rem;
 }
 
-#resource-upload {
-  display: flex;
-  align-items: center;
+#question > span {
+  width: 65%;
+  margin-right: 10%;
+  overflow-wrap: break-word;
 }
+
+#resource-upload{
+  display:flex;
+  align-items: center
 
 #resource-upload > div {
   height: 70px;

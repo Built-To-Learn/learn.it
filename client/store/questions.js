@@ -17,7 +17,7 @@ const upvoteSort = (questions) => {
 
 // Action Creators
 export const loadQuestions = (questions) => ({ type: LOAD_QUESTIONS, questions })
-export const removeQuestion = (question) => ({ type: DELETE_QUESTION, question })
+export const removeQuestion = (id) => ({ type: DELETE_QUESTION, id })
 export const initQuestion = (question) => ({ type: CREATE_QUESTION, question })
 export const likeToggle = (question) => ({ type: TOGGLE_LIKE, question })
 export const setNew = (question) => ({ type: SET_NEW, question })
@@ -34,8 +34,8 @@ export const fetchQuestions = (courseId) => {
 
 export const deleteQuestion = (questionId) => {
     return async (dispatch) => {
-        const question = (await axios.delete(`/api/questions/delete/${questionId}`)).data
-        dispatch(removeQuestion(question))
+        await axios.delete(`/api/questions/delete/${questionId}`)
+        dispatch(removeQuestion(questionId))
     }
 }
 
@@ -70,7 +70,7 @@ export default function (state=initialState, action) {
         case LOAD_QUESTIONS:
             return { questions: action.questions }
         case DELETE_QUESTION:
-            return { questions: state.questions.filter(question => question !== action.question) }
+            return { questions: state.questions.filter(question => question.id != action.id) }
         case TOGGLE_LIKE:
             const questions = state.questions.filter(question => question.id !== action.question.id)
             const updatedQuestions = upvoteSort([...questions, action.question])
