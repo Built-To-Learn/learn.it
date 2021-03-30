@@ -30,7 +30,7 @@ const Parallax = () => {
               <Link
                 to="/signup"
                 id="download-button"
-                className="btn-large waves-effect waves-light teal lighten-1"
+                className="btn-large grey black-text lighten-4 waves-effect waves-light teal lighten-1"
               >
                 Get Started
               </Link>
@@ -42,7 +42,9 @@ const Parallax = () => {
           <img src="assets/parallax-img.jpg" />
         </div>
       </div>
-      <Icons />
+      <div className="grey darken-4">
+        <Icons />
+      </div>
     </div>
   );
 };

@@ -8,86 +8,90 @@ const AuthForm = (props) => {
 
     if(name === "login"){
         return (
-            <div className="section container center-align" style={{width: "35%"}}>
-                <h1 className="center-align">{name}</h1>
-                <div className="z-depth-1 grey lighten-3 row"
-                    style={{display: "inline-block", padding: "32px 48px 0px 48px"}} >
+            <div className="grey darken-4" style={{height: "100vh"}}>
+                <div className="section container center-align" style={{width: "35%"}}>
+                    <h1 className="center-align grey-text text-lighten-5">{name}</h1>
+                    <div className="z-depth-1 grey darken-3 row"
+                        style={{display: "inline-block", padding: "32px 48px 0px 48px"}} >
 
-                    <form className="row" onSubmit={handleSubmit} name={name}>
-                        <div className="col s12 input-field">
-                            <label htmlFor="email">
-                                <small>Email</small>
-                            </label>
-                            <input name="email" type="text" />
-                        </div>
-                        <div className="col s12 input-field validate">
-                            <label htmlFor="password">
-                                <small>Password</small>
-                            </label>
-                            <input name="password" type="password" />
-                        </div>
-                        <div>
-                            <button className="btn" type="submit">{displayName}</button>
-                        </div>
-                        {error && error.response && <div> {error.response.data} </div>}
-                    </form>
+                        <form className="row" onSubmit={handleSubmit} name={name}>
+                            <div className="col s12 input-field">
+                                <label htmlFor="email">
+                                    <small>Email</small>
+                                </label>
+                                <input name="email" type="text" />
+                            </div>
+                            <div className="col s12 input-field validate">
+                                <label htmlFor="password">
+                                    <small>Password</small>
+                                </label>
+                                <input name="password" type="password" />
+                            </div>
+                            <div>
+                                <button className="btn grey black-text lighten-4" type="submit">{displayName}</button>
+                            </div>
+                            {error && error.response && <div> {error.response.data} </div>}
+                        </form>
+                    </div>
+                    {window.githubURL && (
+                        <a href={window.githubURL}>Login / Register Via Github </a>
+                    )}
                 </div>
-                {window.githubURL && (
-                    <a href={window.githubURL}>Login / Register Via Github </a>
-                )}
             </div>
         )
     }
 
     if(name === "signup"){
         return (
-            <div className="section container center-align" style={{width: "35%"}}>
-                <h1 className="center-align">{name}</h1>
-                <div className="z-depth-1 grey lighten-3 row"
-                    style={{display: "inline-block", padding: "32px 48px 0px 48px"}} >
+            <div className="grey darken-4" style={{height: "100vh"}}>
+                <div className="section container center-align" style={{width: "35%"}}>
+                    <h1 className="center-align  grey-text text-lighten-5">{name}</h1>
+                    <div className="z-depth-1 grey darken-3 row"
+                        style={{display: "inline-block", padding: "32px 48px 0px 48px"}} >
 
-                    <form className="row" onSubmit={handleSubmit} name={name}>
-                    <div className="col s12 input-field">
-                            <label htmlFor="fullname">
-                                <small>Full Name</small>
-                            </label>
-                            <input name="fullname" type="text" />
-                        </div>
+                        <form className="row" onSubmit={handleSubmit} name={name}>
                         <div className="col s12 input-field">
-                            <label htmlFor="username">
-                                <small>Username</small>
-                            </label>
-                            <input name="username" type="text" />
-                        </div>
-                        <div className="col s12 input-field">
-                            <label htmlFor="email">
-                                <small>Email</small>
-                            </label>
-                            <input name="email" type="text" />
-                        </div>
-                        <div className="col s12 input-field">
-                            <label htmlFor="password">
-                                <small>Password</small>
-                            </label>
-                            <input name="password" type="password" />
-                        </div>
+                                <label htmlFor="fullname">
+                                    <small>Full Name</small>
+                                </label>
+                                <input name="fullname" type="text" />
+                            </div>
+                            <div className="col s12 input-field">
+                                <label htmlFor="username">
+                                    <small>Username</small>
+                                </label>
+                                <input name="username" type="text" />
+                            </div>
+                            <div className="col s12 input-field">
+                                <label htmlFor="email">
+                                    <small>Email</small>
+                                </label>
+                                <input name="email" type="text" />
+                            </div>
+                            <div className="col s12 input-field">
+                                <label htmlFor="password">
+                                    <small>Password</small>
+                                </label>
+                                <input name="password" type="password" />
+                            </div>
 
-                        <div>
-                            <button onClick={() => setLoading(true)}className="btn" type="submit">{displayName}</button>
-                        </div>
+                            <div>
+                                <button onClick={() => setLoading(true)}className="btn grey black-text lighten-4" type="submit">{displayName}</button>
+                            </div>
 
-                        {loading ?
-                        <div className="progress">
-                            <div className="indeterminate"></div>
-                        </div>
-                        : ''}
+                            {loading ?
+                            <div className="progress">
+                                <div className="indeterminate"></div>
+                            </div>
+                            : ''}
 
-                        {error && error.response && <div> {error.response.data} </div>}
-                    </form>
+                            {error && error.response && <div> {error.response.data} </div>}
+                        </form>
+                    </div>
+                    {window.githubURL && (
+                        <a href={window.githubURL}>Login / Register Via Github </a>
+                    )}
                 </div>
-                {window.githubURL && (
-                    <a href={window.githubURL}>Login / Register Via Github </a>
-                )}
             </div>
         )
     }
