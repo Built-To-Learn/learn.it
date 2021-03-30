@@ -77,7 +77,7 @@ router.put('/update/:questionId', async (req, res, next) => {
 
 router.delete('/delete/:questionId', async (req, res, next) => {
     try {
-        const question = await Question.findOne({
+        let question = await Question.findOne({
             where: {
                 id: req.params.questionId,
             }

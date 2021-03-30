@@ -56,7 +56,12 @@ form div {
 } */
 
 #class-carousel-wrapper {
-  margin-top: -13%;
+  margin-top: -15%;
+}
+
+#welcome-page-class-options {
+  display: flex;
+  justify-content: space-around;
 }
 
 .carousel {
@@ -366,10 +371,22 @@ form div {
   padding: 0 1rem;
 }
 
+
 #resource-upload {
   display: flex;
   align-items: center;
 }
+
+#question > span {
+  width: 65%;
+  margin-right: 10%;
+  overflow-wrap: break-word;
+}
+
+#resource-upload{
+  display:flex;
+  align-items: center
+
 
 #resource-upload > div {
   height: 70px;
