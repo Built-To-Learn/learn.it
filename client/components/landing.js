@@ -34,6 +34,10 @@ class Landing extends Component {
   //     this.props.fetchView('dashboard');
   //   }
 
+  componentDidMount(){
+    this.props.fetchView('welcome')
+  }
+
   async componentDidUpdate(prevProps) {
     if (
       prevProps.studentBreakout.active !== this.props.studentBreakout.active

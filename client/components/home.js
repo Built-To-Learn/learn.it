@@ -5,6 +5,7 @@ import { Carousel } from 'react-materialize';
 import { enrollInCourse } from '../store/enrollments';
 import { fetchView } from '../store/view';
 import { loadSingleCourse } from '../store/single-course';
+import { FindAClass, CreateAClass, ViewCourses } from './index';
 import { Link } from 'react-router-dom'
 export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchView, loadSingleCourse}) => {
 
@@ -70,8 +71,7 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
     <div className="section center">
       <div className="container section">
         {auth.onboarded ?
-        <div className="left-align">
-          {/* <h4>Your Earnings</h4> */}
+        <div>
           <p>Congratulations on setting up your teaching profile with stripe!</p>
         </div>
         :
@@ -79,12 +79,25 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
           <p>
             Setup your teaching profile by onboarding with <a className="btn" href={payment.onboardUrl}>Stripe</a>
           </p>
-
         </div> }
       </div>
 
       <div className="section container">
-        <h4 className="left-align">Top Picks</h4>
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Get Started</span>
+            <div id="welcome-page-class-options">
+              <FindAClass />
+              <CreateAClass />
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div className="section container">
+        <h4>Top Picks</h4>
         <div id="class-carousel-wrapper">
           {childrenMapped.length > 0 ?
           <Carousel
