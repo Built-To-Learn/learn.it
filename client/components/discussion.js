@@ -7,6 +7,8 @@ import {
   fetchAddExternalDiscussion,
   fetchEditDiscussion,
   fetchEditExternalDiscussion,
+  fetchDeleteDiscussion,
+  fetchDeleteExternalDiscussion,
 } from '../store/discussion';
 import { io } from 'socket.io-client';
 import {
@@ -66,6 +68,10 @@ class Discussion extends Component {
 
     socket.on('discussionMessageEdit', (message) => {
       this.props.fetchEditExternalDiscussion(message);
+    });
+
+    socket.on('deleteDiscussionMessage', (id) => {
+      this.props.fetchDeleteExternalDiscussion(id);
     });
   }
 
@@ -226,6 +232,9 @@ class Discussion extends Component {
                               className="crud_button delete_button"
                               id={`delete_comment_${post.id}`}
                               src="/assets/delete.png"
+                              onClick={() =>
+                                this.props.fetchDeleteDiscussion(post, socket)
+                              }
                             />
                           ) : (
                             ''
@@ -296,6 +305,10 @@ export default connect(
         dispatch(fetchEditDiscussion(discussion, socket)),
       fetchEditExternalDiscussion: (discussion) =>
         dispatch(fetchEditExternalDiscussion(discussion)),
+      fetchDeleteDiscussion: (discussion) =>
+        dispatch(fetchDeleteDiscussion(discussion, socket)),
+      fetchDeleteExternalDiscussion: (id) =>
+        dispatch(fetchDeleteExternalDiscussion(id)),
     };
   }
 )(Discussion);

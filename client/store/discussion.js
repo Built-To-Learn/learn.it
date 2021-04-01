@@ -11,6 +11,7 @@ const DELETE_DISCUSSION = 'DELETE_DISCUSSION';
 
 const ADD_EXTERNAL_DISCUSSION = 'ADD_EXTERNAL_DISCUSSION';
 const EDIT_EXTERNAL_DISCUSSION = 'EDIT_EXTERNAL_DISCUSSION';
+const DELETE_EXTERNAL_DISCUSSION = 'DELETE_EXTERNAL_DISCUSSION';
 
 /**
  * ACTION CREATORS
@@ -44,8 +45,14 @@ const editDiscussion = (discussion) => ({
   discussion,
 });
 
-const deleteDiscussion = () => ({
+const deleteDiscussion = (id) => ({
   type: DELETE_DISCUSSION,
+  id,
+});
+
+const deleteExternalDiscussion = (id) => ({
+  type: DELETE_EXTERNAL_DISCUSSION,
+  id,
 });
 
 /**
@@ -71,6 +78,10 @@ export const fetchEditExternalDiscussion = (discussion) => (dispatch) => {
   return dispatch(editExternalDiscussion(discussion));
 };
 
+export const fetchDeleteExternalDiscussion = (id) => (dispatch) => {
+  return dispatch(deleteExternalDiscussion(id));
+};
+
 export const fetchAddDiscussion = (discussion, socket) => async (dispatch) => {
   //axios call
   const token = window.localStorage.getItem('token');
@@ -92,10 +103,24 @@ export const fetchAddDiscussion = (discussion, socket) => async (dispatch) => {
   }
 };
 
-export const fetchDeleteDiscussion = (discussion) => async (dispatch) => {
-  //axios call
+export const fetchDeleteDiscussion = (discussion, socket) => async (
+  dispatch
+) => {
+  const token = window.localStorage.getItem('token');
+  if (token) {
+    await axios.delete(`/api/discussion/${discussion.id}`, {
+      headers: {
+        authorization: token,
+      },
+    });
 
-  return dispatch(deleteDiscussion(discussion));
+    socket.emit(
+      'deleteDiscussionMessage',
+      `discussion-${discussion.courseId}`,
+      discussion.id
+    );
+    return dispatch(deleteDiscussion(discussion.id));
+  }
 };
 
 export const fetchEditDiscussion = (discussion, socket) => async (dispatch) => {
@@ -136,10 +161,14 @@ export default function (state = initialState, action) {
     case DELETE_DISCUSSION:
       return {
         ...state,
-        discussion: state.discussion.filter(
-          (el) => el.id !== action.discussion
-        ),
+        discussion: state.discussion.filter((el) => el.id !== action.id),
       };
+    case DELETE_EXTERNAL_DISCUSSION:
+      return {
+        ...state,
+        discussion: state.discussion.filter((el) => el.id !== action.id),
+      };
+
     case EDIT_DISCUSSION:
       return {
         ...state,
