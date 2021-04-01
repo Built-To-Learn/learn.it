@@ -15,6 +15,7 @@ import singleCourse from './single-course';
 import questions from './questions';
 import resources from './resource';
 import discussion from './discussion';
+import pictures from './profile-pics'
 
 const reducer = combineReducers({
   auth,
@@ -30,6 +31,7 @@ const reducer = combineReducers({
   questions,
   resources,
   discussion,
+  pictures
 });
 
 const middleware = composeWithDevTools(

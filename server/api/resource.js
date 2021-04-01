@@ -112,7 +112,7 @@ AWS.config.update({
   });
 
 
-  router.get('/:username', async(request, response) => {
+  router.get('/profile-pic/:username', async(request, response) => {
     try {
 
       const username = request.params.username
@@ -124,9 +124,11 @@ AWS.config.update({
         });
         const s3 = new AWS.S3()
         const data = await s3.listObjectsV2({
-            Bucket: "built-to-learn-profile-pic",
-            Prefix: courseTitle
+            Bucket: "built-to-learn-profile-pics",
+            Prefix: username
         }).promise()
+
+        console.log("DATA",data)
 
       return response.status(200).send(data);
     } catch (err) {
