@@ -106,11 +106,35 @@ AWS.config.update({
         const data = await uploadImageFile(buffer, fileNameNoExt, type);
         return response.status(200).send(data);
       } catch (err) {
-        console.log("THIS IS MY ERROR", err)
         return response.status(500).send(err);
       }
     });
   });
+
+
+  router.get('/:username', async(request, response) => {
+    try {
+
+      const username = request.params.username
+
+      AWS.config.setPromisesDependency()
+      AWS.config.update({
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        });
+        const s3 = new AWS.S3()
+        const data = await s3.listObjectsV2({
+            Bucket: "built-to-learn-profile-pic",
+            Prefix: courseTitle
+        }).promise()
+
+      return response.status(200).send(data);
+    } catch (err) {
+        console.log(err)
+
+    }
+
+});
    
  
   module.exports = router
