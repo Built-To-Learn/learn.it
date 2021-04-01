@@ -7,7 +7,6 @@ import { loadProfilePic } from '../store/profile-pics'
 
 const ResourceUpload = (props) => {  
 
-  console.log("PROPSS",props)
   
   const [file, setFile] = useState(null);
 
