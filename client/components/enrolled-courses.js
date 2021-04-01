@@ -42,6 +42,7 @@ class EnrolledCourses extends React.Component {
         <CollapsibleItem
           expanded={false}
           header="Enrolled Classes"
+          className="grey darken-2"
           icon={<Icon>cast_connected</Icon>}
           node="div"
           onSelect={() => {}}
@@ -50,7 +51,7 @@ class EnrolledCourses extends React.Component {
             {enrolledCourses.map((enrollment, idx) => (
               <li
                 key={enrollment.course.id}
-                className="fuctional_course_list_item"
+                className="fuctional_course_list_item grey-text text-lighten-3 "
               >
                 <a
                   className="clickable waves-effect"

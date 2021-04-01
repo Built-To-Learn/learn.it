@@ -43,6 +43,7 @@ class TaughtCourses extends React.Component {
     return (
       <CollapsibleItem
         expanded={false}
+        className="grey darken-2"
         header="Taught Classes"
         icon={<Icon>school</Icon>}
         node="div"
@@ -52,7 +53,7 @@ class TaughtCourses extends React.Component {
           {usersTaughtCourses.map((course) => (
             <li key={course.id} className="fuctional_course_list_item">
               <a
-                className="clickable waves-effect"
+                className="clickable "
                 id={course.id}
                 onClick={(e) => {
                   this.joinRoomBroadcast(course.userId, e);

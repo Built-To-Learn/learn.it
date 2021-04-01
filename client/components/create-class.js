@@ -8,11 +8,11 @@ class CreateAClass extends Component {
         return (
             <div
                 id="create_class"
-                className="landingbtn"
+                className="landingbtn grey-text text-lighten-3"
                 onClick={() => this.props.fetchView('createAClass')}
             >
                 <Icon>add</Icon>
-                <a className="clickable waves-effect">Create a class</a>
+                <a className="clickable grey-text text-lighten-3">Create a class</a>
             </div>
         )
     }

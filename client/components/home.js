@@ -16,13 +16,13 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
   const childrenMapped = courses.map(course => {
     return (
       <div className="carousel-item">
-        <div key={course.id} className="card small carousel-card">
+        <div key={course.id} className="card grey darken-3 small carousel-card">
           <div className="card-image waves-effect waves-block waves-light">
             <img className="activator" src="assets/elearning.png" />
           </div>
 
           <div className="card-content">
-            <span className="card-title activator grey-text text-darken-4">
+            <span className="card-title activator grey-text text-lighten-2">
               {course.title}
               <i className="material-icons right three_dots">more_vert</i>
             </span>
@@ -30,21 +30,23 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
             <div>
               <p>
                 <a
-                  className="hover_text"
+                  className="hover_text grey-text"
                   onClick={() => enrollInCourse(course.id, userId, course.title) }
                 >
                   Enroll
                 </a>
               </p>
 
-              <p
-                className="hover_text"
-                onClick={() => {
-                  fetchView('viewSingleCourse');
-                  loadSingleCourse(course);
-                }}
-              >
-                <a>View More Details</a>
+              <p>
+                <a
+                  className="hover_text grey-text"
+                  onClick={() => {
+                    fetchView('viewSingleCourse');
+                    loadSingleCourse(course);
+                  }}
+                >
+                  View More Details
+                </a>
               </p>
             </div>
 
@@ -71,11 +73,11 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
     <div className="section center">
       <div className="container section">
         {auth.onboarded ?
-        <div>
+        <div className="grey-text text-lighten-3">
           <p>Congratulations on setting up your teaching profile with stripe!</p>
         </div>
         :
-        <div>
+        <div className="grey-text text-lighten-3">
           <p>
             Setup your teaching profile by onboarding with <a className="btn" href={payment.onboardUrl}>Stripe</a>
           </p>
@@ -83,9 +85,9 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
       </div>
 
       <div className="section container">
-        <div class="card">
-          <div class="card-content">
-            <span class="card-title">Get Started</span>
+        <div className="card grey darken-3">
+          <div className="card-content">
+            <span className="card-title grey-text text-lighten-3">Get Started</span>
             <div id="welcome-page-class-options">
               <FindAClass />
               <CreateAClass />
@@ -97,7 +99,7 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
       </div>
 
       <div className="section container">
-        <h4>Top Picks</h4>
+        <h4 className="grey-text text-lighten-3">Top Picks</h4>
         <div id="class-carousel-wrapper">
           {childrenMapped.length > 0 ?
           <Carousel

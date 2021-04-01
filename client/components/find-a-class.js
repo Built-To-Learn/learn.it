@@ -8,11 +8,11 @@ class FindAClass extends Component {
     return (
       <div
         id="find_class"
-        className="landingbtn"
+        className="landingbtn grey-text text-lighten-3"
         onClick={() => this.props.fetchView('findAClass')}
       >
         <Icon>find_in_page</Icon>
-        <a className="clickable waves-effect">Find a class</a>
+        <a className="clickable grey-text text-lighten-3">Find a class</a>
       </div>
     );
   }
