@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux'
 import { loadResources } from '../store/resource'
+import { loadProfilePic } from '../store/profile-pics'
 
 const ResourceUpload = (props) => {  
 
@@ -27,6 +28,7 @@ const ResourceUpload = (props) => {
             'Content-Type': 'multipart/form-data',
           },
         });
+        props.getProfilePic(userName)
       } else{ // just a regular file upload
         const title = props.title
         await axios.post(`/api/resource/test-upload/${title}`, formData, {
@@ -74,6 +76,9 @@ const mapState = state => ({
 const mapDispatch = (dispatch) => ({
   getResources: (courseTitle) => {
     dispatch(loadResources(courseTitle));
+  },
+  getProfilePic: (userName) => {
+    dispatch(loadProfilePic(userName));
   },
 })
 
