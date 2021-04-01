@@ -372,7 +372,6 @@ form div {
   padding: 0 1rem;
 }
 
-
 #resource-upload {
   display: flex;
   align-items: center;
@@ -384,14 +383,15 @@ form div {
   overflow-wrap: break-word;
 }
 
-#resource-upload{
-  display:flex;
-  align-items: center
-
+#resource-upload {
+  display: flex;
+  align-items: center;
+}
 
 #resource-upload > div {
   height: 70px;
 }
+
 #resource-upload > button {
   height: 50px;
 }
