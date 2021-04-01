@@ -103,18 +103,22 @@ class Chat extends Component {
             onChange={(event) => this.handleChange(event)}
             id="chat-text"
           ></input>
-          <button
-            type="submit"
-            id="chat-submit"
-            onClick={(event) => this.handleSubmit(event)}
-          >
-            Send
-          </button>
-          <button
-            onClick={() => this.handleModal()}
-          >
-            Ask A Question
-          </button>
+          <div id="chat-interactions" className="valign-wrapper">
+            <button
+              className="btn-small deep-orange accent-2"
+              type="submit"
+              id="chat-submit"
+              onClick={(event) => this.handleSubmit(event)}
+            >
+              Send
+            </button>
+            <button
+              className="btn-small deep-orange accent-1"
+              onClick={() => this.handleModal()}
+            >
+              Ask A Question
+            </button>
+          </div>
         </div>
       </div>
     );
