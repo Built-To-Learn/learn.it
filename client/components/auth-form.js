@@ -28,7 +28,7 @@ const AuthForm = (props) => {
                                 <input name="password" type="password" />
                             </div>
                             <div>
-                                <button className="btn grey black-text lighten-4" type="submit">{displayName}</button>
+                                <button className="btn deep-orange accent-2" type="submit">{displayName}</button>
                             </div>
                             {error && error.response && <div> {error.response.data} </div>}
                         </form>
@@ -76,7 +76,7 @@ const AuthForm = (props) => {
                             </div>
 
                             <div>
-                                <button onClick={() => setLoading(true)}className="btn grey black-text lighten-4" type="submit">{displayName}</button>
+                                <button onClick={() => setLoading(true)}className="btn deep-orange accent-2" type="submit">{displayName}</button>
                             </div>
 
                             {loading ?

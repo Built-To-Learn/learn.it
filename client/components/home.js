@@ -87,7 +87,7 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
       <div className="section container">
         <div className="card grey darken-3">
           <div className="card-content">
-            <span className="card-title grey-text text-lighten-3">Get Started</span>
+            <span className="card-title deep-orange-text text-accent-1">Get Started</span>
             <div id="welcome-page-class-options">
               <FindAClass />
               <CreateAClass />
@@ -99,7 +99,7 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
       </div>
 
       <div className="section container">
-        <h4 className="grey-text text-lighten-3">Top Picks</h4>
+        <h4 className="deep-orange-text text-accent-1">Top Picks</h4>
         <div id="class-carousel-wrapper">
           {childrenMapped.length > 0 ?
           <Carousel

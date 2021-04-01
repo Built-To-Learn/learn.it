@@ -30,7 +30,7 @@ const Parallax = () => {
               <Link
                 to="/signup"
                 id="download-button"
-                className="btn-large grey black-text lighten-4 waves-effect waves-light teal lighten-1"
+                className="btn-large deep-orange accent-2 waves-effect waves-light teal lighten-1"
               >
                 Get Started
               </Link>

@@ -5,7 +5,7 @@ import { logout } from '../store'
 import { fetchView } from '../store/view'
 
 const Navbar = ({ handleClick, isLoggedIn, fetchView }) => (
-    <nav role="navigation">
+    <nav className='deep-orange accent-2' role="navigation">
         {isLoggedIn ? (
             <div className="nav-wrapper container">
                 {/* The navbar will show these links after you log in */}

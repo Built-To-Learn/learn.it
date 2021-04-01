@@ -1,6 +1,7 @@
 body {
   font-family: sans-serif;
   background: #212121;
+  color: #fafafa;
 }
 
 a {
@@ -34,6 +35,12 @@ form div {
   right: 0;
   bottom: 0;
   z-index: -1;
+}
+.collapsible {
+  margin: 0 !important;
+}
+.collapsible-header {
+  color: black !important;
 }
 
 /* .parallax-container {
@@ -115,7 +122,7 @@ form div {
 }
 
 .border {
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 #dashboard {
@@ -128,6 +135,7 @@ form div {
   width: 25%;
   display: flex;
   flex-direction: column;
+  border-right: 2px solid black;
 }
 
 #find_class {

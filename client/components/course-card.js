@@ -29,7 +29,7 @@ class CourseCard extends React.Component {
 
           <p>
             <a
-              className="hover_text grey-text"
+              className="hover_text deep-orange-text text-accent-1"
               onClick={() =>
                 this.props.enrollInCourse(course.id, userId, course.title)
               }
@@ -39,7 +39,7 @@ class CourseCard extends React.Component {
           </p>
           <p>
             <a
-              className="hover_text grey-text"
+              className="hover_text deep-orange-text text-accent-1"
               onClick={() => {
                 this.props.fetchView('viewSingleCourse');
                 this.props.loadSingleCourse(course);
