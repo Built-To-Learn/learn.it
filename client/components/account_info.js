@@ -36,7 +36,7 @@ const AccountInfo = ({auth, handleSubmit}) => {
 
           <div className="col s12 center">
             <StripeOnboard />
-            <button className="btn" type="submit">Save</button>
+            <button className="btn deep-orange accent-2" type="submit">Save</button>
           </div>
 
         </form>

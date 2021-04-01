@@ -8,7 +8,7 @@ const Earnings = ({auth, payment, handleClick}) => {
   return(
     <div className="">
       {payment.balance.available > 0 ?
-        <button className="btn" onClick={() => handleClick(payment.balance.available, auth.stripeAcc)}>
+        <button className="btn deep-orange accent-2" onClick={() => handleClick(payment.balance.available, auth.stripeAcc)}>
         Available: ${payment.balance.available}
       </button>
       : <button className="btn disabled"> Available: ${payment.balance.available} </button>

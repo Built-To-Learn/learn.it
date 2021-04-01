@@ -240,6 +240,17 @@ form div {
   padding: 1rem;
 }
 
+#chat-text {
+  background-color: #424242;
+  border: none;
+}
+
+#chat-interactions {
+  height: 3.5em;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 #broadcast_watcher_video {
   width: 100%;
   height: 100%;
@@ -286,6 +297,8 @@ form div {
 } */
 
 #right-pane-2-bottom {
+  border-top: 2px solid black;
+  border-left: 2px solid black;
   display: flex;
   flex-direction: column;
   height: 20%;
@@ -366,7 +379,6 @@ form div {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
 }
 
 #questions {

@@ -51,10 +51,10 @@ class EnrolledCourses extends React.Component {
             {enrolledCourses.map((enrollment, idx) => (
               <li
                 key={enrollment.course.id}
-                className="fuctional_course_list_item grey-text text-lighten-3 "
+                className="fuctional_course_list_item"
               >
                 <a
-                  className="clickable waves-effect"
+                  className="clickable"
                   id={enrollment.course.id}
                   onClick={(e) =>
                     this.joinRoomWatch(enrollment.course.userId, e)
@@ -118,6 +118,7 @@ class EnrolledCourses extends React.Component {
         <CollapsibleItem
           expanded={false}
           header="Enrolled Classes"
+          className="grey darken-2"
           icon={<Icon>cast_connected</Icon>}
           node="div"
           onSelect={() => {}}
