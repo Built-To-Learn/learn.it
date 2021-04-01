@@ -18,9 +18,9 @@ const Icons = () => {
               <h2 className="center white-text">
                 <i className="material-icons medium">library_books</i>
               </h2>
-              <h5 className="center grey-text lighten-4">Find your classroom</h5>
+              <h5 className="center deep-orange-text text-accent-1">Find your classroom</h5>
 
-              <p className="light grey-text lighten-2 center">
+              <p className="light grey-text text-lighten-2 center">
                 Learn.it is a free virtual learning platform. Simply join a
                 class of your interest to get started. There are no limits on
                 how many classes you can join or attend. Let your learning
@@ -34,9 +34,9 @@ const Icons = () => {
               <h2 className="center white-text">
                 <i className="material-icons medium">group</i>
               </h2>
-              <h5 className="center grey-text lighten-4">Community of peers</h5>
+              <h5 className="center deep-orange-text text-accent-1">Community of peers</h5>
 
-              <p className="light grey-text lighten-2 center">
+              <p className="light grey-text text-lighten-2 center">
                 You won't be learning alone. Learn.it's platform supports live
                 teacher sessions, interactive breakout sessions, chat, Q&A, and
                 community messaging boards.
@@ -49,9 +49,9 @@ const Icons = () => {
               <h2 className="center white-text">
                 <i className="material-icons medium">assignment_ind</i>
               </h2>
-              <h5 className="center grey-text lighten-4">Become a teacher</h5>
+              <h5 className="center deep-orange-text text-accent-1">Become a teacher</h5>
 
-              <p className="light grey-text lighten-2 center">
+              <p className="light grey-text text-lighten-2 center">
                 Learn.it's members are also teachers. To become a teacher,
                 simply create a course and class schedule. No fancy prepared
                 content is necessary, just you!
