@@ -4,20 +4,21 @@ import { connect } from "react-redux"
 import { updateUserInfo } from "../store"
 import ResourceUpload from './resource-upload'
 import { loadProfilePic } from "../store/profile-pics"
+import { useSelector } from 'react-redux'
 
 const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
 
-  useEffect(()=> {
+ useEffect (()=> {
      getProfilePic(auth.username)
   },[])
 
-  const profilePicture = "/assets/default.jpeg"
-  if(pictures.length > 1){
-    console.log(pictures)
-    profilePicture = `https://built-to-learn-profile-pics.s3.us-east-2.amazonaws.com/${pictures[pictures.length-1].Key}`
+ 
+  let picURL = "/assets/default.jpeg"
+  if (pictures.length >= 1){
+    picURL = `https://built-to-learn-profile-pics.s3.us-east-2.amazonaws.com/${pictures[pictures.length-1].Key}`
+    console.log("FIRED", picURL)
   }
-
-
+    
 
   return (
       <div className="section container">
@@ -58,7 +59,8 @@ const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
         <div className="col s12 center">
           <ResourceUpload  isProfilePic = {true}/>
         </div>
-        <img src= {profilePicture}></img>
+        {pictures.length >= 1 ? <img src = {picURL}></img> : "null"}
+        
       </div>
 
   )
