@@ -160,6 +160,10 @@ io.sockets.on('connection', (socket) => {
     socket.to(room).emit('discussionMessageEdit', message);
   });
 
+  socket.on('deleteDiscussionMessage', (room, id) => {
+    socket.to(room).emit('deleteDiscussionMessage', id);
+  });
+
   socket.on('leaveDiscussionRoom', (room) => {
     socket.leave(room);
   });
