@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Button, Icon } from 'react-materialize';
 
 let socket;
 
@@ -14,7 +15,7 @@ class Chat extends Component {
     this.keyup = this.keyup.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleModal = this.handleModal.bind(this)
+    this.handleModal = this.handleModal.bind(this);
   }
 
   keyup(event) {
@@ -68,9 +69,9 @@ class Chat extends Component {
     });
   }
 
-  handleModal () {
-    const modal = document.getElementById('modal')
-    modal.style.display = 'block'
+  handleModal() {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'block';
   }
 
   componentDidUpdate() {
@@ -93,7 +94,11 @@ class Chat extends Component {
       <div id="chat">
         <div id="chat-messages">
           {messages.map((message, i) => {
-            return <p className="white-text" key={i}>{message}</p>;
+            return (
+              <p className="white-text" key={i}>
+                {message}
+              </p>
+            );
           })}
         </div>
         <div id="chat-input">
@@ -110,11 +115,7 @@ class Chat extends Component {
           >
             Send
           </button>
-          <button
-            onClick={() => this.handleModal()}
-          >
-            Ask A Question
-          </button>
+          <button onClick={() => this.handleModal()}>Ask A Question</button>
         </div>
       </div>
     );
