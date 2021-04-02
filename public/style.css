@@ -392,17 +392,16 @@ form div {
   padding: 0 1rem;
 }
 
-
-#resource-upload{
-  display:flex;
+#resource-upload {
+  display: flex;
   align-items: center;
-  justify-content: center
+  justify-content: center;
+}
 
 #question > span {
   width: 65%;
   margin-right: 10%;
   overflow-wrap: break-word;
-
 }
 
 #resource-upload {
