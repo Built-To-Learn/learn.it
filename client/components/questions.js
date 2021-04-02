@@ -11,6 +11,7 @@ import { io } from 'socket.io-client';
 
 class Questions extends Component {
   constructor(props) {
+    console.log('myprops:', props);
     super(props);
 
     const socket = io();
@@ -20,13 +21,14 @@ class Questions extends Component {
   componentDidMount() {
     const { user } = this.props;
     const { socket } = this.state;
+    console.log(this.state);
 
     this.props.init(this.state.room);
 
     this.setState({ ...this.state, isTeacher: user.role === 'TEACHER' });
 
     socket.on('connect', () => {
-      socket.emit('joinQuestions', room);
+      socket.emit('joinQuestions', this.state.room);
     });
     socket.on('newQuestion', (newQuestion) => {
       this.props.createQuestion(newQuestion, false);
@@ -35,7 +37,8 @@ class Questions extends Component {
 
   componentDidUpdate() {
     const { socket } = this.state;
-    const { newQuestion, questions, user, room } = this.props;
+    const { newQuestion, questions, user } = this.props;
+    const room = this.state.room;
     const { id } = user;
 
     if (!this.state.likes) {

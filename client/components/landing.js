@@ -34,11 +34,11 @@ class Landing extends Component {
   //     this.props.fetchView('dashboard');
   //   }
 
-  componentDidMount(){
-    this.props.fetchView('welcome')
+  componentDidMount() {
+    this.props.fetchView('welcome');
   }
 
-  async componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     if (
       prevProps.studentBreakout.active !== this.props.studentBreakout.active
     ) {
@@ -86,7 +86,7 @@ class Landing extends Component {
 
   render() {
     const view = this.props.view;
-    // console.log(this.props.dashboard);
+    console.log('dashboard', this.props.dashboard);
     return (
       <div id="dashboard" className="border">
         <div id="left" className="border">
