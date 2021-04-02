@@ -44,6 +44,7 @@ const gdmOptions = {
 class Broadcaster extends Component {
   constructor(props) {
     super(props);
+    console.log('broadcaser:', props);
     this.state = { room: props.room };
   }
   componentDidMount() {
