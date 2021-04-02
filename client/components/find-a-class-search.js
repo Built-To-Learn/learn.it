@@ -36,6 +36,7 @@ class ClassSearch extends Component {
       <div>
         <div id="search_for_class">
           <TextInput
+            className="white-text"
             icon={<Icon>search</Icon>}
             value={this.state.text}
             onChange={(e) => this.onChange(e)}

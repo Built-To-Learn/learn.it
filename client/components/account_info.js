@@ -22,7 +22,7 @@ const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
 
   return (
       <div className="section container">
-        <h1 className="center-align">Account Info</h1>
+        <h1 className="center-align grey-text text-lighten-3">Account Info</h1>
         <form style={{width: "50%"}} className="row" onSubmit={(evt) => handleSubmit(auth, evt)}>
 
           <div className="col s12 center">
@@ -33,26 +33,26 @@ const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
               <label htmlFor="fullname">
                   <small>Full Name</small>
               </label>
-              <input name="fullname" type="text" defaultValue={auth.name} />
+              <input className="white-text" name="fullname" type="text" defaultValue={auth.name} />
           </div>
 
           <div className="col s12">
               <label htmlFor="username">
                   <small>username</small>
               </label>
-              <input name="username" type="text" defaultValue={auth.username} />
+              <input className="white-text" name="username" type="text" defaultValue={auth.username} />
           </div>
 
           <div className="col s12">
               <label htmlFor="email">
                   <small>Email</small>
               </label>
-              <input name="email" type="text" defaultValue={auth.email} />
+              <input className="white-text" name="email" type="text" defaultValue={auth.email} />
           </div>
 
           <div className="col s12 center">
             <StripeOnboard />
-            <button className="btn" type="submit">Save</button>
+            <button className="btn deep-orange accent-2" type="submit">Save</button>
           </div>
 
         </form>

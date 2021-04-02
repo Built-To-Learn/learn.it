@@ -25,7 +25,7 @@ class AssociatedCourses extends React.Component {
     // const usersTaughtCourses = this.props.courses;
 
     return (
-      <div style={{ display: 'inline-block' }}>
+      <div style={{ display: 'inline-block'}}>
         <Collapsible accordion>
           <Settings />
           <ClassOptions />

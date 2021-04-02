@@ -42,6 +42,7 @@ class EnrolledCourses extends React.Component {
         <CollapsibleItem
           expanded={false}
           header="Enrolled Classes"
+          className="grey darken-2"
           icon={<Icon>cast_connected</Icon>}
           node="div"
           onSelect={() => {}}
@@ -53,7 +54,7 @@ class EnrolledCourses extends React.Component {
                 className="fuctional_course_list_item"
               >
                 <a
-                  className="clickable waves-effect"
+                  className="clickable"
                   id={enrollment.course.id}
                   onClick={(e) =>
                     this.joinRoomWatch(enrollment.course.userId, e)
@@ -117,6 +118,7 @@ class EnrolledCourses extends React.Component {
         <CollapsibleItem
           expanded={false}
           header="Enrolled Classes"
+          className="grey darken-2"
           icon={<Icon>cast_connected</Icon>}
           node="div"
           onSelect={() => {}}

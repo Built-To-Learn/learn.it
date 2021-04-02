@@ -24,7 +24,7 @@ const Tip = ({ auth, dashboard, handleClick }) => {
       {console.log(auth)}
       <Button
         node="button"
-        className={`blue ${!auth.onboarded ? 'disabled' : ''}`}
+        className={`deep-orange accent-1 ${!auth.onboarded ? 'disabled' : ''}`}
         small
         onClick={() => handleClick(teacher)}
       >

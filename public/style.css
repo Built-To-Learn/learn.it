@@ -1,5 +1,7 @@
 body {
   font-family: sans-serif;
+  background: #212121;
+  color: #fafafa;
 }
 
 a {
@@ -34,6 +36,12 @@ form div {
   bottom: 0;
   z-index: -1;
 }
+.collapsible {
+  margin: 0 !important;
+}
+.collapsible-header {
+  color: black !important;
+}
 
 /* .parallax-container {
     min-height: 380px;
@@ -56,7 +64,12 @@ form div {
 } */
 
 #class-carousel-wrapper {
-  margin-top: -13%;
+  margin-top: -15%;
+}
+
+#welcome-page-class-options {
+  display: flex;
+  justify-content: space-around;
 }
 
 .carousel {
@@ -109,7 +122,7 @@ form div {
 }
 
 .border {
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 #dashboard {
@@ -119,9 +132,10 @@ form div {
 }
 
 #left {
-  width: 20%;
+  width: 25%;
   display: flex;
   flex-direction: column;
+  border-right: 2px solid black;
 }
 
 #find_class {
@@ -226,6 +240,17 @@ form div {
   padding: 1rem;
 }
 
+#chat-text {
+  background-color: #424242;
+  border: none;
+}
+
+#chat-interactions {
+  height: 3.5em;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 #broadcast_watcher_video {
   width: 100%;
   height: 100%;
@@ -272,6 +297,8 @@ form div {
 } */
 
 #right-pane-2-bottom {
+  border-top: 2px solid black;
+  border-left: 2px solid black;
   display: flex;
   flex-direction: column;
   height: 20%;
@@ -352,7 +379,6 @@ form div {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
 }
 
 #questions {
@@ -371,21 +397,32 @@ form div {
   display:flex;
   align-items: center;
   justify-content: center
+
+#question > span {
+  width: 65%;
+  margin-right: 10%;
+  overflow-wrap: break-word;
+
 }
 
-#resource-upload > div{
-  height: 70px
-}
-#resource-upload > button{
-  height: 50px
+#resource-upload {
+  display: flex;
+  align-items: center;
 }
 
+#resource-upload > div {
+  height: 70px;
+}
 
-#upload-btn{
+#resource-upload > button {
+  height: 50px;
+}
+
+#upload-btn {
   height: 50px;
   display: flex;
-  align-items: center;  
-} 
+  align-items: center;
+}
 
 .fuctional_course_list_item {
   width: 100%;
@@ -397,7 +434,6 @@ form div {
 .fuctional_course_list_item > div {
   display: flex;
 }
-
 
 /* Modal Animation */
 @-webkit-keyframes slideIn {
@@ -578,6 +614,21 @@ form div {
   min-width: 7rem;
 }
 
+.discussion_post_body_div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.crud_button {
+  width: 1rem;
+  height: 1rem;
+}
+
+.crud_button:hover {
+  cursor: pointer;
+}
+
 #discussion_input {
   flex-grow: 1;
 }
@@ -588,4 +639,18 @@ form div {
 
 .post_date {
   margin-left: 1rem;
+}
+
+.post_text {
+  resize: none;
+  border: none;
+  padding: 0;
+}
+
+.post_text:focus {
+  outline: none;
+}
+
+.hidden_class {
+  visibility: hidden;
 }

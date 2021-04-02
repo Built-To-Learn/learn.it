@@ -45,7 +45,7 @@ class CreateCourse extends Component {
     const { error, isLoggedIn } = this.props;
     return (
       <div>
-        <h2 className="center-align">Create A Course</h2>
+        <h2 className="center-align grey-text text-lighten-3">Create A Course</h2>
         {isLoggedIn ? (
           <div id="create_a_class_div">
             <form
@@ -58,6 +58,7 @@ class CreateCourse extends Component {
                 </label>
                 <input
                   name="coursename"
+                  className="white-text"
                   value={this.state.coursename}
                   type="text"
                   onChange={(e) => this.handleChange(e)}
@@ -68,6 +69,7 @@ class CreateCourse extends Component {
                   Category
                 </label>
                 <input
+                  className="white-text"
                   name="category"
                   value={this.state.category}
                   type="text"
@@ -82,6 +84,7 @@ class CreateCourse extends Component {
                   Description
                 </label>
                 <textarea
+                  className="white-text"
                   id="create_course_text_area"
                   name="description"
                   value={this.state.description}
@@ -93,7 +96,7 @@ class CreateCourse extends Component {
               <Button
                 id="create_class_btn"
                 node="button"
-                className="blue"
+                className="grey darken-3"
                 type="submit"
               >
                 Create Course

@@ -8,11 +8,11 @@ class ViewCourses extends Component {
     return (
       <div
         id="view_class"
-        className="landingbtn"
+        className="landingbtn grey-text text-lighten-3"
         onClick={() => this.props.fetchView('viewClasses')}
       >
         <Icon>apps</Icon>
-        <a className="clickable waves-effect">View all classes</a>
+        <a className="clickable grey-text text-lighten-3">View all classes</a>
       </div>
     );
   }

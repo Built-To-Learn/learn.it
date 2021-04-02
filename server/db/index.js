@@ -58,6 +58,7 @@ const syncAndSeed = async () => {
       username: 'cody123',
       email: 'cody@email.com',
       password: '123',
+      role: 'TEACHER'
     }),
     User.create({
       name: 'Murphy',
