@@ -1,9 +1,25 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {StripeOnboard, Earnings} from '../components'
 import { connect } from "react-redux"
 import { updateUserInfo } from "../store"
+import ResourceUpload from './resource-upload'
+import { loadProfilePic } from "../store/profile-pics"
+import { useSelector } from 'react-redux'
 
-const AccountInfo = ({auth, handleSubmit}) => {
+const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
+
+ useEffect (()=> {
+     getProfilePic(auth.username)
+  },[])
+
+ 
+  let picURL = "/assets/default.jpeg"
+  if (pictures.length >= 1){
+    picURL = `https://built-to-learn-profile-pics.s3.us-east-2.amazonaws.com/${pictures[pictures.length-1].Key}`
+    console.log("FIRED", picURL)
+  }
+    
+
   return (
       <div className="section container">
         <h1 className="center-align grey-text text-lighten-3">Account Info</h1>
@@ -40,13 +56,20 @@ const AccountInfo = ({auth, handleSubmit}) => {
           </div>
 
         </form>
+        <div className="col s12 center">
+          <ResourceUpload  isProfilePic = {true}/>
+        </div>
+        {pictures.length >= 1 ? <img src = {picURL}></img> : "null"}
+        
       </div>
+
   )
 }
 
-const mapState = ({auth, payment}) => {
+const mapState = ({auth, payment, pictures}) => {
   return {
-    auth
+    auth,
+    pictures
   }
 }
 
@@ -59,6 +82,10 @@ const mapDispatch = dispatch => {
       const email = evt.target.email.value
       const id = auth.id
       dispatch(updateUserInfo(id, {username, name, email}))
+    },
+
+    getProfilePic(username){
+      dispatch(loadProfilePic(username))
     }
   }
 }
