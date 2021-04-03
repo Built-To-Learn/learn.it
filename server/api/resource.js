@@ -128,7 +128,6 @@ AWS.config.update({
             Prefix: username
         }).promise()
 
-        console.log("DATA",data)
 
       return response.status(200).send(data);
     } catch (err) {

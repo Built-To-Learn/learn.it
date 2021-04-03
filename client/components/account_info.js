@@ -16,7 +16,6 @@ const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
   let picURL = "/assets/default.jpeg"
   if (pictures.length >= 1){
     picURL = `https://built-to-learn-profile-pics.s3.us-east-2.amazonaws.com/${pictures[pictures.length-1].Key}`
-    console.log("FIRED", picURL)
   }
     
 
@@ -59,7 +58,9 @@ const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
         <div className="col s12 center">
           <ResourceUpload  isProfilePic = {true}/>
         </div>
-        {pictures.length >= 1 ? <img src = {picURL}></img> : "null"}
+        <div className = 'avatar-div'>
+          {pictures.length >= 1 ? <img className='avatar-pic' src = {picURL}></img> : <img className='avatar-pic' src = '/assets/default.jpeg'></img>}
+        </div>
         
       </div>
 

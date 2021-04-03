@@ -16,9 +16,7 @@ export const _loadProfilePic = (picture) => ({
 
 export const loadProfilePic = (username) => {
     return async (dispatch) => {
-        console.log('fired off')
         const picture = (await axios.get(`/api/resource/profile-pic/${username}`)).data.Contents
-        console.log("PICTURE",picture)
         dispatch(_loadProfilePic(picture))
     }
 }

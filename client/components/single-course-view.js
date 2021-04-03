@@ -122,7 +122,6 @@ class SingleCourseView extends React.Component {
     let picURL = "/assets/default.jpeg"
     if (picturesArr.length >= 1){
       picURL = `https://built-to-learn-profile-pics.s3.us-east-2.amazonaws.com/${picturesArr[picturesArr.length-1].Key}`
-      console.log("FIRED", picURL)
     }
       
     
