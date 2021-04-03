@@ -97,6 +97,7 @@ class Landing extends Component {
             <Dashboard
               room={this.props.dashboard.room}
               type={this.props.dashboard.type}
+              teacher={this.props.dashboard.teacher}
             />
           ) : (
             ''
@@ -105,6 +106,7 @@ class Landing extends Component {
             <Dashboard
               room={this.props.dashboard.room}
               type={this.props.dashboard.type}
+              teacher={this.props.dashboard.teacher}
             />
           ) : (
             ''
