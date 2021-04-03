@@ -20,11 +20,9 @@ class Resources extends Component {
 
 
     render() {
-
         if (this.props.resources.length !== 0) {
           const {resources, singleCourse} = this.props;
           const courseTitle = singleCourse.title
-
 
           return( <div className="">
               <h3 className="center">{courseTitle} Resources</h3>
