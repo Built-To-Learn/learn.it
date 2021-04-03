@@ -11,21 +11,18 @@ import { io } from 'socket.io-client';
 
 class Questions extends Component {
   constructor(props) {
-    console.log('myprops:', props);
     super(props);
 
     const socket = io();
-    this.state = { socket: socket, room: props.room };
+    this.state = { socket: socket, room: props.room, teacher: props.teacher };
   }
 
   componentDidMount() {
     const { user } = this.props;
     const { socket } = this.state;
-    console.log(this.state);
 
     this.props.init(this.state.room);
-
-    this.setState({ ...this.state, isTeacher: user.role === 'TEACHER' });
+    this.setState({ ...this.state, isTeacher: user.id === this.state.teacher });
 
     socket.on('connect', () => {
       socket.emit('joinQuestions', this.state.room);
@@ -118,7 +115,7 @@ class Questions extends Component {
                       className="remove-question btn red"
                       onClick={(event) => this.handleDelete(event)}
                     >
-                      Remove Question
+                      Remove
                     </button>
                   ) : null}
                 </div>

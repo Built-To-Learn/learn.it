@@ -6,11 +6,12 @@ import { Button, Icon } from 'react-materialize';
 let socket;
 
 class Chat extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       messages: [],
       currentMessage: '',
+      type: props.type,
     };
     this.keyup = this.keyup.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -89,7 +90,6 @@ class Chat extends Component {
 
   render() {
     const { messages, currentMessage } = this.state;
-
     return (
       <div id="chat">
         <div id="chat-messages">
@@ -117,12 +117,16 @@ class Chat extends Component {
             >
               Send
             </button>
-            <button
-              className="btn-small deep-orange accent-1"
-              onClick={() => this.handleModal()}
-            >
-              Ask A Question
-            </button>
+            {this.state.type === 'watcher' ? (
+              <button
+                className="btn-small deep-orange accent-2"
+                onClick={() => this.handleModal()}
+              >
+                Ask A Question
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>

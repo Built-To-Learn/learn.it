@@ -5,14 +5,27 @@ const {
 
 router.get('/:courseId', async (req, res, next) => {
   try {
-    const questions = await Question.findAll({
-      where: {
-        courseId: req.params.courseId,
-      },
-      include: [User, Like],
-    });
+    try {
+      const questions = await Question.findAll({
+        where: {
+          courseId: req.params.courseId,
+        },
+        include: [User, Like],
+      });
+      res.send(questions);
+    } catch (ex) {
+      const questions = await Question.findAll({
+        where: {
+          courseId: req.params.courseId.slice(
+            0,
+            req.params.courseId.length - 2
+          ),
+        },
+        include: [User, Like],
+      });
 
-    res.send(questions);
+      res.send(questions);
+    }
   } catch (error) {
     next(error);
   }

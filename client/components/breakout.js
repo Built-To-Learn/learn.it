@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchBreakout } from '../store/breakout';
+import { Button, Icon } from 'react-materialize';
 import { fetchStudentBreakout } from '../store/student-breakout';
 
 class Breakout extends Component {
@@ -70,7 +71,7 @@ class Breakout extends Component {
   render() {
     return (
       <div id="breakout">
-        <ul>
+        <ul id="breakout_ul">
           <li onClick={() => this.shiftTeacher()}>
             {' '}
             Teacher Group {this.state.teacher}
@@ -84,7 +85,16 @@ class Breakout extends Component {
             );
           })}
         </ul>
-        <button onClick={() => this.createRooms()}>Create Rooms</button>
+        <Button
+          node="button"
+          className="deep-orange accent-2 breakout_btn_width"
+          small
+          onClick={() => this.createRooms()}
+        >
+          Create Rooms
+        </Button>
+
+        {/* <button onClick={() => }></button> */}
       </div>
     );
   }

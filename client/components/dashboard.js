@@ -22,6 +22,7 @@ class Dashboard extends Component {
     this.state = {
       room: this.props.room,
       type: this.props.type,
+      teacher: this.props.teacher,
       device: 'camera',
       mute: false,
       broadCastAudio: true,
@@ -78,13 +79,17 @@ class Dashboard extends Component {
             )}
           </div>
           <div id="right-pane-1-bottom" className="border">
-            <Questions room={this.state.room} />
+            {this.state.type !== 'breakout' ? (
+              <Questions room={this.state.room} teacher={this.state.teacher} />
+            ) : (
+              ''
+            )}
           </div>
         </div>
         <div id="right-pane-2" className="border">
           <div id="right-pane-2-top" className="border">
             {this.state.topPanel === 'chat' ? (
-              <Chat room={this.state.room} />
+              <Chat room={this.state.room} type={this.state.type} />
             ) : (
               ''
             )}
@@ -96,7 +101,6 @@ class Dashboard extends Component {
             )}
           </div>
           <div id="right-pane-2-bottom" className="border">
-            {/* <button onClick={() => this.resetRoom()}>Leave Room</button> */}
             {this.state.type === 'broadcast' ? (
               <div>
                 <div>
@@ -104,7 +108,9 @@ class Dashboard extends Component {
                     node="button"
                     className={`
                       ${
-                        this.state.device === 'camera' ? 'deep-orange accent-1' : 'black'
+                        this.state.device === 'camera'
+                          ? 'deep-orange accent-1'
+                          : 'black'
                       } left_btn
                     `}
                     small
@@ -117,7 +123,9 @@ class Dashboard extends Component {
                     node="button"
                     className={`
                       ${
-                        this.state.device === 'screen' ? 'deep-orange accent-1' : 'black'
+                        this.state.device === 'screen'
+                          ? 'deep-orange accent-1'
+                          : 'black'
                       } right_btn
                     `}
                     small
@@ -131,7 +139,9 @@ class Dashboard extends Component {
                   <Button
                     node="button"
                     className={`${
-                      !this.state.broadCastAudio ? 'black' : 'deep-orange accent-1'
+                      !this.state.broadCastAudio
+                        ? 'black'
+                        : 'deep-orange accent-1'
                     } left_btn`}
                     small
                     onClick={() =>
@@ -168,7 +178,9 @@ class Dashboard extends Component {
                     node="button"
                     className={`
                       ${
-                        this.state.topPanel === 'chat' ? 'deep-orange accent-1' : 'black'
+                        this.state.topPanel === 'chat'
+                          ? 'deep-orange accent-1'
+                          : 'black'
                       } left_btn
                     `}
                     small
@@ -207,7 +219,9 @@ class Dashboard extends Component {
                     node="button"
                     className={`
                       ${
-                        this.state.topPanel === 'breakout' ? 'deep-orange accent-1' : 'black'
+                        this.state.topPanel === 'breakout'
+                          ? 'deep-orange accent-1'
+                          : 'black'
                       } right_btn
                     `}
                     small
