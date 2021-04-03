@@ -20,6 +20,7 @@ import {
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 import { loadProfilePic } from '../store/profile-pics';
+import { loadResources } from '../store/resource';
 
 const localizer = momentLocalizer(moment);
 
@@ -42,6 +43,7 @@ class SingleCourseView extends React.Component {
 
     this.setState({ events: events });
     this.props.getProfilePic(this.props.singleCourse.user.username)
+    this.props.getResources(this.props.singleCourse.title)
   }
 
   async editCalendar(e) {
@@ -108,8 +110,9 @@ class SingleCourseView extends React.Component {
           title: this.props.singleCourse.title,
         };
       });
-
       this.setState({ events: events });
+      this.props.getProfilePic(this.props.singleCourse.user.username)
+      this.props.getResources(this.props.singleCourse.title)
     }
   }
 
@@ -272,6 +275,10 @@ const mapDispatch = (dispatch) => {
     getProfilePic: (userName) => {
       dispatch(loadProfilePic(userName));
     },
+    getResources: (courseTitle) => {
+      dispatch(loadResources(courseTitle));
+    },
+  
   };
 };
 

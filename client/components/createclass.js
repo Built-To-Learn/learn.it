@@ -13,7 +13,7 @@ import { loadSingleCourse } from '../store/single-course';
 class CreateCourse extends Component {
   constructor(props) {
     super(props);
-    this.state = { coursename: '', category: '', description: '' };
+    this.state = { coursename: '', category: '', description: '', slogan: '' };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
   }
@@ -88,6 +88,23 @@ class CreateCourse extends Component {
                   id="create_course_text_area"
                   name="description"
                   value={this.state.description}
+                  type="text"
+                  onChange={(e) => this.handleChange(e)}
+                />
+              </div>
+
+              <div>
+                <label
+                  className="create_course_labels"
+                  htmlFor="Course Slogan"
+                >
+                  Description
+                </label>
+                <textarea
+                  className="white-text"
+                  id="create_slogan_text_area"
+                  name="slogan"
+                  value={this.state.slogan}
                   type="text"
                   onChange={(e) => this.handleChange(e)}
                 />
