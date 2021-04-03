@@ -30,7 +30,8 @@ class SingleCourseView extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.editCalendar = this.editCalendar.bind(this);
   }
-  async componentDidMount() {
+
+  componentDidMount() {
     const events = this.props.singleCourse.schedules.map((schedule) => {
       return {
         ...schedule,
@@ -113,19 +114,18 @@ class SingleCourseView extends React.Component {
     }
   }
 
-  
+
   render() {
     const singleCourse = this.props.singleCourse;
     const picturesArr= this.props.pictures
-  
-    
+
+
     let picURL = "/assets/default.jpeg"
     if (picturesArr.length >= 1){
       picURL = `https://built-to-learn-profile-pics.s3.us-east-2.amazonaws.com/${picturesArr[picturesArr.length-1].Key}`
-      console.log("FIRED", picURL)
     }
-      
-    
+
+
     return (
       <div id="single_course_view">
         <div id="single_course_content">
@@ -133,34 +133,30 @@ class SingleCourseView extends React.Component {
             fullscreen={false}
             options={{
               duration: 500,
-              height: 175,
-              indicators: true,
+              height: 200,
+              indicators: false,
               interval: 6000,
             }}
           >
             <Slide
               image={
                 <img
-                  alt=""
+                  className="responsive-image"
+                  alt="notebook"
                   id="single_course_image"
-                  src="http://lorempixel.com/780/580/nature/1"
+                  src="https://i.imgur.com/AM5rZNz_d.webp?maxwidth=760&fidelity=grand"
                 />
               }
             >
               <Caption placement="left">
-                <h4>{singleCourse.title}!</h4>
-                <h6 className="light grey-text text-lighten-3">
-                  Here's our small slogan.
-                </h6>
+                <h4>{singleCourse.title}</h4>
               </Caption>
             </Slide>
             <Slide
               image={
                 <img
                   alt=""
-                  src="http://lorempixel.com/780/580/nature/2"
-                  //   height="50px"
-                  //   width="50px"
+                  src="https://i.imgur.com/AM5rZNz_d.webp?maxwidth=760&fidelity=grand"
                 />
               }
             >
@@ -173,7 +169,7 @@ class SingleCourseView extends React.Component {
           </Slider>
           <Row>
             <Col m={12} s={12}>
-              <CardPanel className="teal">
+              <CardPanel className="deep-orange">
                 <span className="white-text">
                   Description: {singleCourse.description}
                 </span>
@@ -181,11 +177,13 @@ class SingleCourseView extends React.Component {
             </Col>
           </Row>
 
-          <div className="row single_course_info_div">
-            <div className="col s3" id="single_course_owner_image">
-            {picturesArr.length >= 1 ? <img src = {picURL}></img> : "null"}
+          <div className="container row single_course_info_div">
+            <div className="col" id="single_course_owner_image">
+            {picturesArr.length >= 1 ?
+              <img src = {picURL} />
+              : "null"}
             </div>
-            <div className="col s9" id="single_course_info">
+            <div className="col" id="single_course_info">
               <p>Course Creator: {singleCourse.user.name}</p>
               <p>Category: {singleCourse.category}</p>
             </div>
@@ -194,7 +192,7 @@ class SingleCourseView extends React.Component {
           <div id="single_course_btn_control_div">
             <Button
               node="button"
-              className={`${this.state.view === 'calendar' ? 'blue' : 'black'}`}
+              className={`${this.state.view === 'calendar' ? 'deep-orange accent-1' : 'black'}`}
               small
               onClick={() => this.setState({ view: 'calendar' })}
             >
@@ -204,7 +202,7 @@ class SingleCourseView extends React.Component {
             <Button
               node="button"
               className={`${
-                this.state.view === 'resources' ? 'blue' : 'black'
+                this.state.view === 'resources' ? 'deep-orange accent-1' : 'black'
               }`}
               small
               onClick={() => this.setState({ view: 'resources' })}
@@ -217,22 +215,25 @@ class SingleCourseView extends React.Component {
         {this.state.view === 'calendar' ? (
           <div id="single_course_btm_div">
             {this.props.auth.id === this.props.singleCourse.user.id ? (
-              <div id="calendar_container">
-                <div id="calendar_top_text">
-                  Click / Drag to add meeting times. Click on an event to remove
-                  it from the schedule.
+              <div>
+                  <div id="calendar_top_text">
+                    Click / Drag to add meeting times. Click on an event to remove
+                    it from the schedule.
+                  </div>
+
+                <div id="calendar_container">
+                  <Calendar
+                    selectable
+                    id="calendar"
+                    localizer={localizer}
+                    events={this.state.events}
+                    defaultView={Views.WEEK}
+                    startAccessor="start"
+                    endAccessor="end"
+                    onSelectEvent={(e) => this.editCalendar(e)}
+                    onSelectSlot={(e) => this.handleSelect(e)}
+                  />
                 </div>
-                <Calendar
-                  selectable
-                  id="calendar"
-                  localizer={localizer}
-                  events={this.state.events}
-                  defaultView={Views.WEEK}
-                  startAccessor="start"
-                  endAccessor="end"
-                  onSelectEvent={(e) => this.editCalendar(e)}
-                  onSelectSlot={(e) => this.handleSelect(e)}
-                />
               </div>
             ) : (
               // {/* </div> */}
@@ -271,6 +272,7 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     getProfilePic: (userName) => {
+      console.log("LOOKING FOR PIC")
       dispatch(loadProfilePic(userName));
     },
   };

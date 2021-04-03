@@ -5,22 +5,22 @@ import {connect} from 'react-redux'
 import { loadResources } from '../store/resource'
 import { loadProfilePic } from '../store/profile-pics'
 
-const ResourceUpload = (props) => {  
+const ResourceUpload = (props) => {
 
-  
+
   const [file, setFile] = useState(null);
 
   const submitFile = async (event) => {
     try {
       event.preventDefault()
       const userName = props.username
-      
+
       if (!file) {
         throw new Error('Select a file first!');
       }
       const formData = new FormData();
       formData.append('file', file[0]);
-      
+
       if (props.isProfilePic === true){
         await axios.post(`/api/resource/profile-pic/${userName}`, formData, {
           headers: {
@@ -49,7 +49,7 @@ const ResourceUpload = (props) => {
 
         <form onSubmit={submitFile} id = "resource-upload">
           <div className="file-field input-field" >
-            <div className="btn" id="upload-btn" >
+            <div className="btn deep-orange deep-orange accent-1" id="upload-btn" >
               <span>File</span>
               <input id = "resource-upload" type="file" onChange={event => setFile(event.target.files)} />
             </div>
@@ -57,11 +57,11 @@ const ResourceUpload = (props) => {
               <input className="file-path validate" type="text"/>
             </div>
           </div>
-          <button className ='btn' id="upload-btn" type="submit">Send</button>
+          <button className ='btn deep-orange deep-orange accent-2' id="upload-btn" type="submit">Send</button>
         </form>
 
-      
-      
+
+
   );
 };
 
