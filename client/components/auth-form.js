@@ -13,7 +13,7 @@ const AuthForm = (props) => {
           className="section container center-align"
           style={{ width: '35%' }}
         >
-          <h1 className="center-align grey-text text-lighten-5">{name}</h1>
+          <h1 className="center-align grey-text text-lighten-5">{displayName}</h1>
           <div
             className="z-depth-1 grey darken-3 row"
             style={{ display: 'inline-block', padding: '32px 48px 0px 48px' }}

@@ -452,6 +452,20 @@ form div {
   border: 2px solid white ;
 }
 
+.big-card{
+  height: 20vh;
+  width: 20vw;
+}
+
+.small-card{
+  height: 15vh;
+  width: 15vw;
+}
+
+.slogan {
+  color: black
+}
+
 /* Modal Animation */
 @-webkit-keyframes slideIn {
   from {

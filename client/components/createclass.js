@@ -98,7 +98,7 @@ class CreateCourse extends Component {
                   className="create_course_labels"
                   htmlFor="Course Slogan"
                 >
-                  Description
+                  Slogan
                 </label>
                 <textarea
                   className="white-text"
@@ -109,7 +109,18 @@ class CreateCourse extends Component {
                   onChange={(e) => this.handleChange(e)}
                 />
               </div>
-
+              <div>
+                <label className="create_course_labels" htmlFor="coursePicURL">
+                  Enter a Picture URL 
+                </label>
+                <input
+                  className="white-text"
+                  name="coursePicURL"
+                  value={this.state.coursePicURL}
+                  type="text"
+                  onChange={(e) => this.handleChange(e)}
+                />
+              </div>
               <Button
                 id="create_class_btn"
                 node="button"
@@ -141,13 +152,13 @@ const mapCreateCourse = ({ auth, courses }) => {
 const mapDispatch = (dispatch) => {
   return {
     handleSubmit(evt) {
-      //evt.preventDefault();
-      // const formName = evt.target.name
+
       const title = evt.target.coursename.value;
-      // const subject = evt.target.subject.value
       const category = evt.target.category.value;
-      // console.log('formName', formName)
-      const courseObj = { title, category };
+      const slogan = evt.target.slogan.value;
+      const description = evt.target.description.value
+      const coursePicURL = evt.target.coursePicURL.value
+      const courseObj = { title, category, description, slogan, coursePicURL };
       dispatch(createCourse(courseObj));
     },
     fetchClearView: () => dispatch(fetchClearView()),

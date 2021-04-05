@@ -153,6 +153,9 @@ class SingleCourseView extends React.Component {
             >
               <Caption placement="left">
                 <h4>{singleCourse.title}</h4>
+                <h6 className="light grey-text text-lighten-3">
+                 {singleCourse.slogan}
+                </h6>
               </Caption>
             </Slide>
             <Slide

@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { updateUserInfo } from "../store"
 import ResourceUpload from './resource-upload'
 import { loadProfilePic } from "../store/profile-pics"
-import { useSelector } from 'react-redux'
+
 
 const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
 
