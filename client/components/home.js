@@ -18,7 +18,7 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
       <div className="carousel-item">
         <div key={course.id} className="card grey darken-3 small carousel-card">
           <div className="card-image waves-effect waves-block waves-light">
-            <img className="activator" src="assets/elearning.png" />
+          {course.coursePicURL ? <img className="activator small-card" src={course.coursePicURL} /> : <img className="activator" src="assets/elearning.png" />}
           </div>
 
           <div className="card-content">

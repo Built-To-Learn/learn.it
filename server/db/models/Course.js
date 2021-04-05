@@ -21,6 +21,14 @@ const Course = db.define('course', {
         type: Sequelize.TEXT,
         allowNull: true,
     },
+    slogan: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+    },
+    coursePicURL: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+    }
 })
 
 Course.findByTeacher = async function (teacherId) {

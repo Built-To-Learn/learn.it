@@ -98,7 +98,7 @@ class CreateCourse extends Component {
                   className="create_course_labels"
                   htmlFor="Course Slogan"
                 >
-                  Description
+                  Slogan
                 </label>
                 <textarea
                   className="white-text"
@@ -141,13 +141,12 @@ const mapCreateCourse = ({ auth, courses }) => {
 const mapDispatch = (dispatch) => {
   return {
     handleSubmit(evt) {
-      //evt.preventDefault();
-      // const formName = evt.target.name
+
       const title = evt.target.coursename.value;
-      // const subject = evt.target.subject.value
       const category = evt.target.category.value;
-      // console.log('formName', formName)
-      const courseObj = { title, category };
+      const slogan = evt.target.slogan.value;
+      const description = evt.target.description.value
+      const courseObj = { title, category, description, slogan };
       dispatch(createCourse(courseObj));
     },
     fetchClearView: () => dispatch(fetchClearView()),

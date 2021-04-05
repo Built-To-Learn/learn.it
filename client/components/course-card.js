@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { handleEnrollment } from '../store';
 import { enrollInCourse } from '../store/enrollments';
 import { fetchView } from '../store/view';
-import { loadSingleCourse } from '../store/single-course';
+import singleCourse, { loadSingleCourse } from '../store/single-course';
 import { Card, Icon } from 'react-materialize';
 
 class CourseCard extends React.Component {
@@ -19,7 +19,8 @@ class CourseCard extends React.Component {
     return (
       <div className="card grey darken-3 hoverable course_card">
         <div className="card-image waves-effect waves-block waves-light">
-          <img className="activator" src="assets/elearning.png" />
+          {course.coursePicURL ? <img className="activator big-card" src={course.coursePicURL} /> : <img className="activator" src="assets/elearning.png" />}
+          {/* <img className="activator" src="assets/elearning.png" /> */}
         </div>
         <div className="card-content">
           <span className="card-title activator grey-text text-lighten-4">
