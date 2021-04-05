@@ -44,3 +44,4 @@ export { default as SingleCourseView } from './single-course-view';
 export { default as ResourceUpload } from './resource-upload';
 export { default as Resources } from './resources';
 export { default as Discussion } from './discussion';
+export { default as Footer } from './footer';
