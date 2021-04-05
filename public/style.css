@@ -462,6 +462,10 @@ form div {
   width: 15vw;
 }
 
+.slogan {
+  color: black
+}
+
 /* Modal Animation */
 @-webkit-keyframes slideIn {
   from {

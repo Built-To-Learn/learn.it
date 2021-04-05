@@ -54,9 +54,8 @@ class CourseCard extends React.Component {
             {course.title}
             <i className="material-icons right close_X">close</i>
           </span>
-          <p>
-            Here is some more information about this product that is only
-            revealed once clicked on.
+          <p className = "slogan">
+            {course.slogan}
           </p>
         </div>
       </div>
