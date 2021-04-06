@@ -16,6 +16,9 @@ nav a {
   /* display: inline-block;
     margin: 1em; */
 }
+input {
+  color: #fafafa;
+}
 
 form div {
   margin: 1em;
@@ -23,7 +26,6 @@ form div {
 }
 .clickable {
   cursor: pointer;
-  color: black;
 }
 #index-banner {
   font-weight: bold;
@@ -457,7 +459,7 @@ form div {
 .avatar-pic {
   width: 75px;
   height: 75px;
-  border: 2px solid white ;
+  border: 2px solid white;
 }
 
 .big-card {
