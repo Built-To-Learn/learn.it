@@ -11,7 +11,7 @@ Website: https://built-to-learn.herokuapp.com
 - [WebRTC](https://webrtc.org/) for real-time connections containing audio and video streams
 - [Materialize](https://materializecss.com/) for CSS Framwork
 - [Socket.io](https://socket.io/) for peer to peer discussion boards, chat feature, questions, question liking feature, and WebRTC initiation
-- [Amazon S3] (https://aws.amazon.com/s3/) for resource upload storage
+- [Amazon S3](https://aws.amazon.com/s3) for resource upload storage
 - [Stripe](https://stripe.com/) for payment tipping and withdrawals
 
 ## Features
