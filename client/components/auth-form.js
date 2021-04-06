@@ -18,7 +18,7 @@ const AuthForm = (props) => {
             className="z-depth-1 grey darken-3 row"
             style={{ display: 'inline-block', padding: '32px 48px 0px 48px' }}
           >
-            <form className="row" onSubmit={handleSubmit} name={name}>
+            <form className="row white-text" onSubmit={handleSubmit} name={name}>
               <div className="col s12 input-field">
                 <label htmlFor="email">
                   <small>Email</small>
