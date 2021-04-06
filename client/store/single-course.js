@@ -5,6 +5,7 @@ import axios from 'axios'
  */
 const LOAD_SINGLE_COURSE = 'LOAD_SINGLE_COURSE'
 
+
 /**
  * ACTION CREATORS
  */
