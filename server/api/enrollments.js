@@ -29,6 +29,25 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.post('/deenroll', async (req, res, next) => {
+  try {
+    await Enrollment.destroy({
+      where: {
+        userId: req.body.userId,
+        courseId: req.body.courseId,
+      },
+    });
+    const enrollments = await Enrollment.findAll({
+      include: [{ model: Course, include: [User, Schedule] }],
+      where: { userId: req.body.userId },
+    });
+
+    res.send(enrollments);
+  } catch (ex) {
+    next(ex);
+  }
+});
+
 router.get('/:userId', async (req, res, next) => {
   try {
     const enrollments = await Enrollment.findAll({

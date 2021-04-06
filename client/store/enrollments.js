@@ -1,9 +1,15 @@
 import axios from 'axios';
 const ENROLL_IN_COURSE = 'ENROLL_IN_COURSE';
 const LOAD_ENROLLMENTS = 'LOAD_ENROLLMENTS';
+const DEENROLL_IN_COURSE = 'DEENROLL_IN_COURSE';
 
 export const _enrollInCourse = (enrollments) => ({
   type: ENROLL_IN_COURSE,
+  enrollments,
+});
+
+export const _deenrollInCourse = (enrollments) => ({
+  type: DEENROLL_IN_COURSE,
   enrollments,
 });
 
@@ -29,6 +35,23 @@ export const enrollInCourse = (courseId, userId, title) => {
   }
 };
 
+export const deenrollInCourse = (courseId, userId, title) => {
+  try {
+    return async (dispatch) => {
+      const enrollments = (
+        await axios.post(`/api/enrollments/deenroll`, {
+          courseId,
+          userId,
+        })
+      ).data;
+
+      dispatch(_deenrollInCourse(enrollments));
+    };
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const loadEnrollments = (userId) => {
   return async (dispatch) => {
     const enrollments = (await axios.get(`/api/enrollments/${userId}`)).data;
@@ -43,6 +66,8 @@ export default function (state = initialState, action) {
     case LOAD_ENROLLMENTS:
       return action.enrollments;
     case ENROLL_IN_COURSE:
+      return action.enrollments;
+    case DEENROLL_IN_COURSE:
       return action.enrollments;
     // why is this undefeind
     default:

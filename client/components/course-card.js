@@ -2,7 +2,7 @@ import React from 'react';
 import M from 'materialize-css';
 import { connect } from 'react-redux';
 import { handleEnrollment } from '../store';
-import { enrollInCourse } from '../store/enrollments';
+import { enrollInCourse, deenrollInCourse } from '../store/enrollments';
 import { fetchView } from '../store/view';
 import singleCourse, { loadSingleCourse } from '../store/single-course';
 import { Card, Icon } from 'react-materialize';
@@ -10,16 +10,22 @@ import { Card, Icon } from 'react-materialize';
 class CourseCard extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { enrolled: props.enrolled };
   }
 
   render() {
     const course = this.props.course;
     const userId = this.props.auth;
+    console.log('enrolled stae', this.state);
 
     return (
       <div className="card grey darken-3 hoverable course_card">
         <div className="card-image waves-effect waves-block waves-light">
-          {course.coursePicURL ? <img className="activator big-card" src={course.coursePicURL} /> : <img className="activator" src="assets/elearning.png" />}
+          {course.coursePicURL ? (
+            <img className="activator big-card" src={course.coursePicURL} />
+          ) : (
+            <img className="activator" src="assets/elearning.png" />
+          )}
           {/* <img className="activator" src="assets/elearning.png" /> */}
         </div>
         <div className="card-content">
@@ -27,17 +33,32 @@ class CourseCard extends React.Component {
             {course.title}
             <i className="material-icons right three_dots">more_vert</i>
           </span>
+          {!!this.state.enrolled ? (
+            <p>
+              <a
+                key={`${course.id}-${this.state.enrolled}`}
+                className="hover_text deep-orange-text text-accent-1"
+                onClick={() =>
+                  this.props.deenrollInCourse(course.id, userId, course.title)
+                }
+              >
+                Un-enroll
+              </a>
+            </p>
+          ) : (
+            <p>
+              <a
+                key={`${course.id}-${this.state.enrolled}`}
+                className="hover_text deep-orange-text text-accent-1"
+                onClick={() =>
+                  this.props.enrollInCourse(course.id, userId, course.title)
+                }
+              >
+                Enroll
+              </a>
+            </p>
+          )}
 
-          <p>
-            <a
-              className="hover_text deep-orange-text text-accent-1"
-              onClick={() =>
-                this.props.enrollInCourse(course.id, userId, course.title)
-              }
-            >
-              Enroll
-            </a>
-          </p>
           <p>
             <a
               className="hover_text deep-orange-text text-accent-1"
@@ -46,7 +67,8 @@ class CourseCard extends React.Component {
                 this.props.loadSingleCourse(course);
               }}
             >
-              View More Details</a>
+              View More Details
+            </a>
           </p>
         </div>
         <div className="card-reveal">
@@ -54,9 +76,7 @@ class CourseCard extends React.Component {
             {course.title}
             <i className="material-icons right close_X">close</i>
           </span>
-          <p className = "slogan">
-            {course.slogan}
-          </p>
+          <p className="slogan">{course.slogan}</p>
         </div>
       </div>
       //   </div>
@@ -80,6 +100,8 @@ const mapDispatch = (dispatch) => {
     },
     enrollInCourse: (courseId, userId, courseTitle) =>
       dispatch(enrollInCourse(courseId, userId, courseTitle)),
+    deenrollInCourse: (courseId, userId, courseTitle) =>
+      dispatch(deenrollInCourse(courseId, userId, courseTitle)),
     fetchView: (view) => dispatch(fetchView(view)),
 
     loadSingleCourse: (course) => dispatch(loadSingleCourse(course)),
