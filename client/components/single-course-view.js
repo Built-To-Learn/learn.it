@@ -132,62 +132,25 @@ class SingleCourseView extends React.Component {
     return (
       <div id="single_course_view">
         <div id="single_course_content">
-          <Slider
-            fullscreen={false}
-            options={{
-              duration: 500,
-              height: 200,
-              indicators: false,
-              interval: 6000,
-            }}
-          >
-            <Slide
-              image={
-                <img
-                  className="responsive-image"
-                  alt="notebook"
-                  id="single_course_image"
-                  src="https://i.imgur.com/AM5rZNz_d.webp?maxwidth=760&fidelity=grand"
-                />
-              }
-            >
-              <Caption placement="left">
-                <h4>{singleCourse.title}</h4>
-                <h6 className="light grey-text text-lighten-3">
-                 {singleCourse.slogan}
-                </h6>
-              </Caption>
-            </Slide>
-            <Slide
-              image={
-                <img
-                  alt=""
-                  src="https://i.imgur.com/AM5rZNz_d.webp?maxwidth=760&fidelity=grand"
-                />
-              }
-            >
-              <Caption placement="left">
-                <h5 className="light grey-text text-lighten-3">
-                  {singleCourse.description}
-                </h5>
-              </Caption>
-            </Slide>
-          </Slider>
-          <Row>
-            <Col m={12} s={12}>
-              <CardPanel className="deep-orange">
-                <span className="white-text">
-                  Description: {singleCourse.description}
-                </span>
-              </CardPanel>
-            </Col>
-          </Row>
+
+          <div className="container">
+            <h3 >{singleCourse.title}</h3>
+            <Row>
+              <Col m={12} s={12}>
+                <CardPanel className="deep-orange accent-1">
+                  <span className="white-text">
+                    Description: {singleCourse.description}
+                  </span>
+                </CardPanel>
+              </Col>
+            </Row>
+          </div>
 
           <div className="container row single_course_info_div">
             <div className="col" id="single_course_owner_image">
             {picturesArr.length >= 1 ?
               <img src = {picURL} />
-              : "null"}
+              :  <img src = '/assets/default.jpeg'></img>}
             </div>
             <div className="col" id="single_course_info">
               <p>Course Creator: {singleCourse.user.name}</p>
@@ -278,7 +241,6 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     getProfilePic: (userName) => {
-      console.log("LOOKING FOR PIC")
       dispatch(loadProfilePic(userName));
     },
     getResources: (courseTitle) => {

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import CourseCard from './course-card';
 import { TextInput, Icon } from 'react-materialize';
+import enrollments from '../store/enrollments';
 
 class ClassSearch extends Component {
   constructor(props) {
@@ -16,7 +17,6 @@ class ClassSearch extends Component {
     const selectedClass = this.state.results.find(
       (el) => el.id.toString() === e.target.id
     );
-    console.log(selectedClass);
   }
   async onChange(e) {
     const text = e.target.value;
@@ -32,6 +32,7 @@ class ClassSearch extends Component {
   }
 
   render() {
+    const enrollments = this.props.enrollments.map((enroll) => enroll.courseId);
     return (
       <div>
         <div id="search_for_class">
@@ -47,7 +48,12 @@ class ClassSearch extends Component {
           <ul id="find_a_class_course_list">
             {this.state.results.map((course, idx) => {
               return (
-                <CourseCard className="course_list" course={course} key={idx} />
+                <CourseCard
+                  className="course_list"
+                  course={course}
+                  key={`${idx}-${!!enrollments.includes(course.id)}`}
+                  enrolled={!!enrollments.includes(course.id)}
+                />
               );
             })}
           </ul>
@@ -57,9 +63,10 @@ class ClassSearch extends Component {
   }
 }
 
-const mapStateToProps = ({ view }) => {
+const mapStateToProps = ({ view, enrollments }) => {
   return {
     view: view,
+    enrollments: enrollments,
   };
 };
 

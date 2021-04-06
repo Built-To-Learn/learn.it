@@ -22,6 +22,9 @@ const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
   return (
       <div className="section container">
         <h1 className="center-align grey-text text-lighten-3">Account Info</h1>
+        <div className = 'avatar-div'>
+          {pictures.length >= 1 ? <img className='avatar-pic' src = {picURL}></img> : <img className='avatar-pic' src = '/assets/default.jpeg'></img>}
+        </div>
         <form style={{width: "50%"}} className="row" onSubmit={(evt) => handleSubmit(auth, evt)}>
 
           <div className="col s12 center">
@@ -55,12 +58,11 @@ const AccountInfo = ({auth, handleSubmit,getProfilePic,pictures}) => {
           </div>
 
         </form>
+        <p style={{textAlign : "center"}}>Change Your Avatar Picture</p>
         <div className="col s12 center">
           <ResourceUpload  isProfilePic = {true}/>
         </div>
-        <div className = 'avatar-div'>
-          {pictures.length >= 1 ? <img className='avatar-pic' src = {picURL}></img> : <img className='avatar-pic' src = '/assets/default.jpeg'></img>}
-        </div>
+     
         
       </div>
 
