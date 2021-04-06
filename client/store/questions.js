@@ -12,7 +12,7 @@ const initialState = { questions: [], newQuestion: null }
 
 // Helper Functions
 const upvoteSort = (questions) => {
-    return questions.sort((a, b) => a.upvotes < b.upvotes ? 1 : b.upvotes < a.upvotes ? -1 : 0)
+    return questions.sort((a, b) => a.likes.length < b.likes.length ? 1 : b.likes.length < a.likes.length ? -1 : 0)
 }
 
 // Action Creators

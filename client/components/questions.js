@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { connect } from "react-redux";
 import { createQuestion, deleteQuestion, fetchQuestions, toggleLike } from "../store/questions";
 import { io } from 'socket.io-client';
+import { AskQuestion } from './index'
 
 class Questions extends Component {
     constructor () {
@@ -10,6 +11,9 @@ class Questions extends Component {
 
         const socket = io();
         this.state = { socket: socket }
+
+        this.handleToggle = this.handleToggle.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount () {
@@ -76,23 +80,27 @@ class Questions extends Component {
         return (
             <div id='questions-container'>
                 <div id='questions'>
-                { questions.map( (question, idx) => {
-                    const style = likes[question.id] ? 'favorite' : 'favorite_border'
-                    return (
-                        <div key={question.id}>
-                            <div id='question'>
-                                <small>{question.likes.length}</small>
-                                <button id='question-like'><i className='material-icons' id={'question' + question.id} onClick={(event) => this.handleToggle(event)}>{style}</i></button>
-                                <span>{question.user.name}: {question.text}</span>
-                                { isTeacher ? 
-                                <button id={'button' + question.id} className='remove-question btn red' onClick={(event) => this.handleDelete(event)}>Remove Question</button>
-                                : null}
+                    <div>
+                        <h1 style={{width: '100%', fontSize: '4.0rem', textAlign: 'center'}}>Class Questions</h1>
+                    </div>
+                    { questions.map( (question, idx) => {
+                        const style = likes[question.id] ? 'favorite' : 'favorite_border'
+                        return (
+                            <div key={question.id}>
+                                <div id='question'>
+                                    <small>{question.likes.length}</small>
+                                    <button id='question-like'><i className='material-icons' id={'question' + question.id} onClick={(event) => this.handleToggle(event)}>{style}</i></button>
+                                    <span>{question.user.name}: {question.text}</span>
+                                    { isTeacher ? 
+                                    <button id={'button' + question.id} className='remove-question btn red' onClick={(event) => this.handleDelete(event)}>Remove Question</button>
+                                    : null}
+                                </div>
+                                {idx === questions.length - 1 ? null : <hr></hr>}
                             </div>
-                            {idx === questions.length - 1 ? null : <hr></hr>}
-                        </div>
-                    )
-                })}
+                        )
+                    })}
                 </div>
+                <AskQuestion/>
             </div>
         )
     }
