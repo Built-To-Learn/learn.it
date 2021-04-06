@@ -16,7 +16,6 @@ class Chat extends Component {
     this.keyup = this.keyup.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleModal = this.handleModal.bind(this);
   }
 
   keyup(event) {
@@ -68,11 +67,6 @@ class Chat extends Component {
         `${userName}: ${this.state.currentMessage}`,
       ],
     });
-  }
-
-  handleModal() {
-    const modal = document.getElementById('modal');
-    modal.style.display = 'block';
   }
 
   componentDidUpdate() {

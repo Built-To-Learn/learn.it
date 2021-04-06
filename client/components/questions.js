@@ -8,6 +8,7 @@ import {
   toggleLike,
 } from '../store/questions';
 import { io } from 'socket.io-client';
+import { AskQuestion } from './index'
 
 class Questions extends Component {
   constructor(props) {
@@ -91,6 +92,9 @@ class Questions extends Component {
     return (
       <div id="questions-container">
         <div id="questions">
+          <div>
+              <h1 style={{width: '100%', fontSize: '4.0rem', textAlign: 'center'}}>Class Questions</h1>
+          </div>
           {questions.map((question, idx) => {
             const style = likes[question.id] ? 'favorite' : 'favorite_border';
             return (
@@ -124,6 +128,7 @@ class Questions extends Component {
             );
           })}
         </div>
+        <AskQuestion/>
       </div>
     );
   }
