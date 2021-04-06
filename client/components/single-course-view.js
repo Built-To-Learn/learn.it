@@ -187,7 +187,7 @@ class SingleCourseView extends React.Component {
             <div className="col" id="single_course_owner_image">
             {picturesArr.length >= 1 ?
               <img src = {picURL} />
-              : "null"}
+              :  <img src = '/assets/default.jpeg'></img>}
             </div>
             <div className="col" id="single_course_info">
               <p>Course Creator: {singleCourse.user.name}</p>
