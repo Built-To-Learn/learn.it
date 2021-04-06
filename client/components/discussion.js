@@ -194,7 +194,7 @@ class Discussion extends Component {
     return (
       <div id="discussion">
         <div id="discussion_header">
-          <CardPanel className="blue">
+          <CardPanel className="deep-orange accent-2">
             <span className="white-text discussion_course_header">
               {this.props.discussion.course.title} Discussion Board
             </span>
@@ -275,7 +275,7 @@ class Discussion extends Component {
               placeholder="Create a discussion item"
               icon="comment"
             ></TextInput>
-            <Button node="button" className="blue discussion_post_btn" small>
+            <Button node="button" className="deep-orange accent-1 discussion_post_btn" small>
               Post
               <Icon right>keyboard_return</Icon>
             </Button>
