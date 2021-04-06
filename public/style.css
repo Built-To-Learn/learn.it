@@ -88,6 +88,8 @@ form div {
 .video_player {
   /* width: 20%; */
   height: 100%;
+  padding: 0.5rem;
+  /* flex-shrink: 3; */
   /* position: absolute; */
   /* display: block; */
   /* top: 0; */
@@ -104,11 +106,12 @@ form div {
 }
 
 #mini_videos {
-  height: 25%;
+  height: 20%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  /* flex-wrap: wrap; */
 }
 
 #focus {
@@ -119,10 +122,6 @@ form div {
 
 #focus_video_div {
   height: 75%;
-}
-
-.border {
-  /* border: 1px solid black; */
 }
 
 #dashboard {
@@ -240,6 +239,17 @@ form div {
   padding: 1rem;
 }
 
+#chat-text {
+  background-color: #424242;
+  border: none;
+}
+
+#chat-interactions {
+  height: 3.5em;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 #broadcast_watcher_video {
   width: 100%;
   height: 100%;
@@ -286,6 +296,8 @@ form div {
 } */
 
 #right-pane-2-bottom {
+  border-top: 2px solid black;
+  border-left: 2px solid black;
   display: flex;
   flex-direction: column;
   height: 20%;
@@ -302,6 +314,12 @@ form div {
   margin: 3px;
 }
 
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .left_btn {
   width: 40%;
 }
@@ -313,6 +331,7 @@ form div {
   width: 100%;
   height: 100%;
 }
+
 #single_course_image {
   object-fit: cover;
 }
@@ -322,7 +341,7 @@ form div {
 }
 
 #single_course_owner_image {
-  width: 10%;
+  width: 30%;
 }
 
 #single_course_btn_control_div {
@@ -338,7 +357,6 @@ form div {
 }
 
 #single_course_info {
-  width: 90%;
   display: flex;
   flex-direction: column;
 }
@@ -354,6 +372,8 @@ form div {
   padding: 1rem;
 }
 #calendar_container {
+  background-color: #fafafa;
+  color: black;
   height: 95%;
 }
 
@@ -366,12 +386,11 @@ form div {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #questions {
   padding-top: 0.5rem;
-  overflow-y: scroll;
 }
 
 #question {
@@ -383,6 +402,7 @@ form div {
 #resource-upload {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 #question > span {
@@ -419,6 +439,31 @@ form div {
 
 .fuctional_course_list_item > div {
   display: flex;
+}
+
+.avatar-div{
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-pic {
+  width: 75px;
+  height: 75px;
+  border: 2px solid white ;
+}
+
+.big-card{
+  height: 20vh;
+  width: 20vw;
+}
+
+.small-card{
+  height: 15vh;
+  width: 15vw;
+}
+
+.slogan {
+  color: black
 }
 
 .card-space {
@@ -549,4 +594,22 @@ form div {
 
 .hidden_class {
   visibility: hidden;
+}
+
+#breakout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+#breakout_ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.breakout_btn_width {
+  width: 50%;
 }

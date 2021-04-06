@@ -18,7 +18,7 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
       <div className="carousel-item">
         <div key={course.id} className="card grey darken-3 small carousel-card">
           <div className="card-image waves-effect waves-block waves-light">
-            <img className="activator" src="assets/elearning.png" />
+          {course.coursePicURL ? <img className="activator small-card" src={course.coursePicURL} /> : <img className="activator" src="assets/elearning.png" />}
           </div>
 
           <div className="card-content">
@@ -59,9 +59,8 @@ export const Home = ({auth, payment, courses, getCourses, enrollInCourse, fetchV
               {course.title}
               <i className="material-icons right close_X">close</i>
             </span>
-            <p>
-              Here is some more information about this product that is only
-              revealed once clicked on.
+            <p className = 'slogan'>
+              {course.slogan}
             </p>
           </div>
         </div>

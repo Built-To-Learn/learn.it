@@ -1,94 +1,107 @@
-const router = require('express').Router()
+const router = require('express').Router();
 const {
-    models: { Question, User, Like },
-  } = require('../db');
+  models: { Question, User, Like },
+} = require('../db');
 
 router.get('/:courseId', async (req, res, next) => {
+  try {
     try {
-        const questions = await Question.findAll({
-            where: {
-               courseId: req.params.courseId 
-            },
-            include: [ User, Like ]
-        })
+      const questions = await Question.findAll({
+        where: {
+          courseId: req.params.courseId,
+        },
+        include: [User, Like],
+      });
+      res.send(questions);
+    } catch (ex) {
+      const questions = await Question.findAll({
+        where: {
+          courseId: req.params.courseId.slice(
+            0,
+            req.params.courseId.length - 2
+          ),
+        },
+        include: [User, Like],
+      });
 
-        res.send(questions)
-    } catch (error) {
-        next(error)
+      res.send(questions);
     }
-})
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get('/question/:questionId', async (req, res, next) => {
-    try {
-        const question = await Question.findOne({
-            where: {
-                id: req.params.questionId
-            },
-            include: [ User, Like ]
-        })
+  try {
+    const question = await Question.findOne({
+      where: {
+        id: req.params.questionId,
+      },
+      include: [User, Like],
+    });
 
-        res.send(question)
-    } catch (error) {
-        next(error)
-    }
-})
+    res.send(question);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/create', async (req, res, next) => {
-    try {
-        const id = (await Question.create(req.body)).id
+  try {
+    const id = (await Question.create(req.body)).id;
 
-        const question = await Question.findOne({
-            where: {
-                id: id
-            },
-            include: [ User, Like ]
-        })
+    const question = await Question.findOne({
+      where: {
+        id: id,
+      },
+      include: [User, Like],
+    });
 
-        res.status(201).send(question)
-    } catch (error) {
-        next(error)
-    }
-})
+    res.status(201).send(question);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.put('/update/:questionId', async (req, res, next) => {
-    try {
-        let question = await Question.findOne({
-            where: {
-                id: req.params.questionId
-            }
-        })
+  try {
+    let question = await Question.findOne({
+      where: {
+        id: req.params.questionId,
+      },
+    });
 
-        question.upvotes = question.upvotes + req.body.modifier
+    question.upvotes = question.upvotes + req.body.modifier;
 
-        await question.save();
+    await question.save();
 
-        question = await Question.findOne({
-            where: {
-                id: req.params.questionId
-            },
-            include: [ User, Like ]
-        })
+    question = await Question.findOne({
+      where: {
+        id: req.params.questionId,
+      },
+      include: [User, Like],
+    });
 
-        res.send(question)
-    } catch (error) {
-        next(error)
-    }
-})
+    res.send(question);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.delete('/delete/:questionId', async (req, res, next) => {
-    try {
-        let question = await Question.findOne({
-            where: {
-                id: req.params.questionId,
-            }
-        })
+  try {
+    let question = await Question.findOne({
+      where: {
+        id: req.params.questionId,
+      },
+    });
 
-        await question.destroy()
+    await question.destroy();
 
-        res.sendStatus(204)
-    } catch (error) {
-        next(error)
-    }
-})
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

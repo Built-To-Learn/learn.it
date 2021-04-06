@@ -19,6 +19,8 @@ import {
 
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
+import { loadProfilePic } from '../store/profile-pics';
+import { loadResources } from '../store/resource';
 
 const localizer = momentLocalizer(moment);
 
@@ -29,7 +31,8 @@ class SingleCourseView extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.editCalendar = this.editCalendar.bind(this);
   }
-  async componentDidMount() {
+
+  componentDidMount() {
     const events = this.props.singleCourse.schedules.map((schedule) => {
       return {
         ...schedule,
@@ -40,6 +43,8 @@ class SingleCourseView extends React.Component {
     });
 
     this.setState({ events: events });
+    this.props.getProfilePic(this.props.singleCourse.user.username)
+    this.props.getResources(this.props.singleCourse.title)
   }
 
   async editCalendar(e) {
@@ -93,7 +98,7 @@ class SingleCourseView extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if (
       prevProps.singleCourse &&
       prevProps.singleCourse.id !== this.props.singleCourse.id
@@ -106,80 +111,57 @@ class SingleCourseView extends React.Component {
           title: this.props.singleCourse.title,
         };
       });
-
       this.setState({ events: events });
+      await this.props.getProfilePic(this.props.singleCourse.user.username)
+      await this.props.getResources(this.props.singleCourse.title)
     }
   }
 
+
   render() {
     const singleCourse = this.props.singleCourse;
+    const picturesArr= this.props.pictures
+
+
+    let picURL = "/assets/default.jpeg"
+    if (picturesArr.length >= 1){
+      picURL = `https://built-to-learn-profile-pics.s3.us-east-2.amazonaws.com/${picturesArr[picturesArr.length-1].Key}`
+    }
+
+
     return (
       <div id="single_course_view">
         <div id="single_course_content">
-          <Slider
-            fullscreen={false}
-            options={{
-              duration: 500,
-              height: 175,
-              indicators: true,
-              interval: 6000,
-            }}
-          >
-            <Slide
-              image={
-                <img
-                  alt=""
-                  id="single_course_image"
-                  src="http://lorempixel.com/780/580/nature/1"
-                />
-              }
-            >
-              <Caption placement="left">
-                <h4>{singleCourse.title}!</h4>
-                <h6 className="light grey-text text-lighten-3">
-                  Here's our small slogan.
-                </h6>
-              </Caption>
-            </Slide>
-            <Slide
-              image={
-                <img
-                  alt=""
-                  src="http://lorempixel.com/780/580/nature/2"
-                  //   height="50px"
-                  //   width="50px"
-                />
-              }
-            >
-              <Caption placement="left">
-                <h5 className="light grey-text text-lighten-3">
-                  {singleCourse.description}
-                </h5>
-              </Caption>
-            </Slide>
-          </Slider>
-          <Row>
-            <Col m={12} s={12}>
-              <CardPanel className="teal">
-                <span className="white-text">
-                  Description: {singleCourse.description}
-                </span>
-              </CardPanel>
-            </Col>
-          </Row>
-          <div id="single_course_info_div">
-            <div id="single_course_owner_image">
-              <img src="/assets/default.jpeg"></img>
+
+          <div className="container">
+            <h3 >{singleCourse.title}</h3>
+            <Row>
+              <Col m={12} s={12}>
+                <CardPanel className="deep-orange accent-1">
+                  <span className="white-text">
+                    Description: {singleCourse.description}
+                  </span>
+                </CardPanel>
+              </Col>
+            </Row>
+          </div>
+
+          <div className="container row single_course_info_div">
+            <div className="col" id="single_course_owner_image">
+            {picturesArr.length >= 1 ?
+              <img src = {picURL} />
+              :  <img src = '/assets/default.jpeg'></img>}
             </div>
-            <div id="single_course_info">
+            <div className="col" id="single_course_info">
               <p>Course Creator: {singleCourse.user.name}</p>
               <p>Category: {singleCourse.category}</p>
             </div>
+
           </div>
           <div id="single_course_btn_control_div">
             <Button
               node="button"
-              className={`${this.state.view === 'calendar' ? 'blue' : 'black'}`}
+              className={`${this.state.view === 'calendar' ? 'deep-orange accent-1' : 'black'}`}
               small
               onClick={() => this.setState({ view: 'calendar' })}
             >
@@ -189,7 +171,7 @@ class SingleCourseView extends React.Component {
             <Button
               node="button"
               className={`${
-                this.state.view === 'resources' ? 'blue' : 'black'
+                this.state.view === 'resources' ? 'deep-orange accent-1' : 'black'
               }`}
               small
               onClick={() => this.setState({ view: 'resources' })}
@@ -202,22 +184,25 @@ class SingleCourseView extends React.Component {
         {this.state.view === 'calendar' ? (
           <div id="single_course_btm_div">
             {this.props.auth.id === this.props.singleCourse.user.id ? (
-              <div id="calendar_container">
-                <div id="calendar_top_text">
-                  Click / Drag to add meeting times. Click on an event to remove
-                  it from the schedule.
+              <div>
+                  <div id="calendar_top_text">
+                    Click / Drag to add meeting times. Click on an event to remove
+                    it from the schedule.
+                  </div>
+
+                <div id="calendar_container">
+                  <Calendar
+                    selectable
+                    id="calendar"
+                    localizer={localizer}
+                    events={this.state.events}
+                    defaultView={Views.WEEK}
+                    startAccessor="start"
+                    endAccessor="end"
+                    onSelectEvent={(e) => this.editCalendar(e)}
+                    onSelectSlot={(e) => this.handleSelect(e)}
+                  />
                 </div>
-                <Calendar
-                  selectable
-                  id="calendar"
-                  localizer={localizer}
-                  events={this.state.events}
-                  defaultView={Views.WEEK}
-                  startAccessor="start"
-                  endAccessor="end"
-                  onSelectEvent={(e) => this.editCalendar(e)}
-                  onSelectSlot={(e) => this.handleSelect(e)}
-                />
               </div>
             ) : (
               // {/* </div> */}
@@ -249,11 +234,20 @@ const mapState = (state) => {
     courses: state.courses,
     singleCourse: state.singleCourse,
     auth: state.auth,
+    pictures: state.pictures
   };
 };
 
 const mapDispatch = (dispatch) => {
-  return {};
+  return {
+    getProfilePic: (userName) => {
+      dispatch(loadProfilePic(userName));
+    },
+    getResources: (courseTitle) => {
+      dispatch(loadResources(courseTitle));
+    },
+
+  };
 };
 
 export default connect(mapState, mapDispatch)(SingleCourseView);

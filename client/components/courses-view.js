@@ -17,14 +17,18 @@ class CoursesView extends React.Component {
   render() {
     if (this.props.courses.length !== 0) {
       const courses = this.props.courses.all;
+      const enrollments = this.props.enrollments.map(
+        (enroll) => enroll.courseId
+      );
       return (
         <ul id="find_a_class_course_list">
-          {courses.map((course) => {
+          {courses.map((course, idx) => {
             return (
               <CourseCard
                 className="course_list"
                 course={course}
-                key={course.id}
+                key={`${idx}-${!!enrollments.includes(course.id)}`}
+                enrolled={!!enrollments.includes(course.id)}
               />
             );
           })}
@@ -43,6 +47,7 @@ const mapState = (state) => {
   return {
     isLoggedIn: !!state.auth.id,
     courses: state.courses,
+    enrollments: state.enrollments,
   };
 };
 

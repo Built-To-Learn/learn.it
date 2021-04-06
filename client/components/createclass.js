@@ -13,7 +13,7 @@ import { loadSingleCourse } from '../store/single-course';
 class CreateCourse extends Component {
   constructor(props) {
     super(props);
-    this.state = { coursename: '', category: '', description: '' };
+    this.state = { coursename: '', category: '', description: '', slogan: '' };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmitForm = this.handleSubmitForm.bind(this);
   }
@@ -93,6 +93,34 @@ class CreateCourse extends Component {
                 />
               </div>
 
+              <div>
+                <label
+                  className="create_course_labels"
+                  htmlFor="Course Slogan"
+                >
+                  Slogan
+                </label>
+                <textarea
+                  className="white-text"
+                  id="create_slogan_text_area"
+                  name="slogan"
+                  value={this.state.slogan}
+                  type="text"
+                  onChange={(e) => this.handleChange(e)}
+                />
+              </div>
+              <div>
+                <label className="create_course_labels" htmlFor="coursePicURL">
+                  Enter a Picture URL 
+                </label>
+                <input
+                  className="white-text"
+                  name="coursePicURL"
+                  value={this.state.coursePicURL}
+                  type="text"
+                  onChange={(e) => this.handleChange(e)}
+                />
+              </div>
               <Button
                 id="create_class_btn"
                 node="button"
@@ -124,13 +152,13 @@ const mapCreateCourse = ({ auth, courses }) => {
 const mapDispatch = (dispatch) => {
   return {
     handleSubmit(evt) {
-      //evt.preventDefault();
-      // const formName = evt.target.name
+
       const title = evt.target.coursename.value;
-      // const subject = evt.target.subject.value
       const category = evt.target.category.value;
-      // console.log('formName', formName)
-      const courseObj = { title, category };
+      const slogan = evt.target.slogan.value;
+      const description = evt.target.description.value
+      const coursePicURL = evt.target.coursePicURL.value
+      const courseObj = { title, category, description, slogan, coursePicURL };
       dispatch(createCourse(courseObj));
     },
     fetchClearView: () => dispatch(fetchClearView()),

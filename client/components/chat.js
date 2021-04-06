@@ -1,15 +1,17 @@
 import { io } from 'socket.io-client';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Button, Icon } from 'react-materialize';
 
 let socket;
 
 class Chat extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       messages: [],
       currentMessage: '',
+      type: props.type,
     };
     this.keyup = this.keyup.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -82,12 +84,15 @@ class Chat extends Component {
 
   render() {
     const { messages, currentMessage } = this.state;
-
     return (
       <div id="chat">
         <div id="chat-messages">
           {messages.map((message, i) => {
-            return <p className="white-text" key={i}>{message}</p>;
+            return (
+              <p className="white-text" key={i}>
+                {message}
+              </p>
+            );
           })}
         </div>
         <div id="chat-input">
@@ -97,13 +102,26 @@ class Chat extends Component {
             onChange={(event) => this.handleChange(event)}
             id="chat-text"
           ></input>
-          <button
-            type="submit"
-            id="chat-submit"
-            onClick={(event) => this.handleSubmit(event)}
-          >
-            Send
-          </button>
+          <div id="chat-interactions" className="valign-wrapper">
+            <button
+              className="btn-small deep-orange accent-2"
+              type="submit"
+              id="chat-submit"
+              onClick={(event) => this.handleSubmit(event)}
+            >
+              Send
+            </button>
+            {this.state.type === 'watcher' ? (
+              <button
+                className="btn-small deep-orange accent-2"
+                onClick={() => this.handleModal()}
+              >
+                Ask A Question
+              </button>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
       </div>
     );

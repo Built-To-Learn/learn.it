@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../store';
 import Icons from './icons';
+import Footer from './footer'
 import M from 'materialize-css';
 
 const Parallax = () => {
@@ -44,6 +45,9 @@ const Parallax = () => {
       </div>
       <div className="grey darken-4">
         <Icons />
+      </div>
+      <div className="grey darken-4">
+        <Footer />
       </div>
     </div>
   );

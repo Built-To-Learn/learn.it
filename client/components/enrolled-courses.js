@@ -20,13 +20,13 @@ class EnrolledCourses extends React.Component {
     this.props.getEnrollments(this.props.auth);
   }
 
-  async joinRoomWatch(teacher, e) {
+  async joinRoomWatch(teacher, courseId) {
     // this.setState({ room: e.target.id, type: 'watcher' });
-    e.persist();
+    // e.persist();
     await this.props.fetchClearView();
     // console.log('this is hte orom', e.target.id, teacher);
     this.props.fetchRoom({
-      room: e.target.id,
+      room: courseId,
       type: 'watcher',
       teacher: teacher,
     });
@@ -51,13 +51,16 @@ class EnrolledCourses extends React.Component {
             {enrolledCourses.map((enrollment, idx) => (
               <li
                 key={enrollment.course.id}
-                className="fuctional_course_list_item grey-text text-lighten-3 "
+                className="fuctional_course_list_item"
               >
                 <a
-                  className="clickable waves-effect"
+                  className="clickable"
                   id={enrollment.course.id}
                   onClick={(e) =>
-                    this.joinRoomWatch(enrollment.course.userId, e)
+                    this.joinRoomWatch(
+                      enrollment.course.userId,
+                      enrollment.course.id
+                    )
                   }
                 >
                   {enrollment.course.title}
@@ -97,7 +100,10 @@ class EnrolledCourses extends React.Component {
                     data-tip
                     data-for="func_video_btn"
                     onClick={(e) =>
-                      this.joinRoomWatch(enrollment.course.userId, e)
+                      this.joinRoomWatch(
+                        enrollment.course.userId,
+                        enrollment.course.id
+                      )
                     }
                     className="hover_text"
                   >
@@ -118,6 +124,7 @@ class EnrolledCourses extends React.Component {
         <CollapsibleItem
           expanded={false}
           header="Enrolled Classes"
+          className="grey darken-2"
           icon={<Icon>cast_connected</Icon>}
           node="div"
           onSelect={() => {}}

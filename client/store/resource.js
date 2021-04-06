@@ -4,6 +4,7 @@ import axios from 'axios'
  */
 const LOAD_RESOURCES = 'LOAD_RESOURCES'
 
+
 /**
  * ACTION CREATORS
  */
@@ -24,15 +25,13 @@ export const loadResources = (courseTitle) => {
     }
 }
 
-/**
- * REDUCER
- */
+
 const initialState = []
 
 export default function (state = initialState, action) {
     switch (action.type) {
         case LOAD_RESOURCES:
-            return  action.resources
+            return action.resources
 
         default:
             return state

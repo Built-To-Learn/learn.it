@@ -18,12 +18,13 @@ class TaughtCourses extends React.Component {
     this.joinRoomBroadcast = this.joinRoomBroadcast.bind(this);
   }
 
-  async joinRoomBroadcast(teacher, e) {
+  async joinRoomBroadcast(teacher, courseId) {
     // this.setState({ room: e.target.id, type: 'broadcast' });
-    e.persist();
+    // e.persist();
+    // console.log(e.target);
     await this.props.fetchClearView();
     this.props.fetchRoom({
-      room: e.target.id,
+      room: courseId,
       type: 'broadcast',
       teacher: teacher,
     });
@@ -56,7 +57,7 @@ class TaughtCourses extends React.Component {
                 className="clickable "
                 id={course.id}
                 onClick={(e) => {
-                  this.joinRoomBroadcast(course.userId, e);
+                  this.joinRoomBroadcast(course.userId, course.id);
                 }}
               >
                 {course.title}
@@ -95,8 +96,8 @@ class TaughtCourses extends React.Component {
                 <Icon
                   data-tip
                   data-for="func_video_btn"
-                  onClick={(e) => {
-                    this.joinRoomBroadcast(course.userId, e);
+                  onClick={() => {
+                    this.joinRoomBroadcast(course.userId, course.id);
                   }}
                   className="hover_text"
                 >
