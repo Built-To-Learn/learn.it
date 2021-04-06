@@ -201,8 +201,8 @@ class Dashboard extends Component {
                     small
                     onClick={() => this.setState({ topPanel: 'participants' })}
                   >
-                    Participants
-                    <Icon left>people</Icon>
+                     Viewers: {this.props.participants.length > 0 ? this.props.participants.length : '0'}
+                    <Icon left>visibility</Icon>
                   </Button>
                 </div>
                 <div>
@@ -320,8 +320,8 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = ({ studentBreakout, dashboard, auth }) => {
-  return { studentBreakout: studentBreakout, dashboard: dashboard, auth: auth };
+const mapStateToProps = ({ studentBreakout, dashboard, auth, participants }) => {
+  return { studentBreakout: studentBreakout, dashboard, auth, participants };
 };
 
 const mapDispatch = (dispatch) => {
