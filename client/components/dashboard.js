@@ -79,7 +79,7 @@ class Dashboard extends Component {
           </div>
           <div id="right-pane-1-bottom" className="border">
             {this.state.type !== 'breakout' ? (
-              <Questions room={this.state.room} teacher={this.state.teacher} />
+              <Questions room={this.state.room} teacher={this.state.teacher} type={this.state.type}/>
             ) : (
               ''
             )}
@@ -88,7 +88,7 @@ class Dashboard extends Component {
         <div id="right-pane-2" className="border">
           <div id="right-pane-2-top" className="border">
             {this.state.topPanel === 'chat' ? (
-              <Chat room={this.state.room} type={this.state.type} />
+              <Chat room={this.state.room} />
             ) : (
               ''
             )}

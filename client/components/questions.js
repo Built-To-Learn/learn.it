@@ -15,7 +15,7 @@ class Questions extends Component {
     super(props);
 
     const socket = io();
-    this.state = { socket: socket, room: props.room, teacher: props.teacher };
+    this.state = { socket: socket, room: props.room, teacher: props.teacher, type: props.type };
   }
 
   componentDidMount() {
@@ -128,7 +128,11 @@ class Questions extends Component {
             );
           })}
         </div>
-        <AskQuestion/>
+        {this.state.type === 'watcher' ? (
+            <AskQuestion/>
+            ) : (
+              ''
+            )}
       </div>
     );
   }
