@@ -1,5 +1,5 @@
 body {
-  font-family: sans-serif;
+  font-family: Helvetica, sans-serif;
   background: #212121;
   color: #fafafa;
 }
@@ -26,6 +26,7 @@ form div {
 }
 .clickable {
   cursor: pointer;
+  color: #fafafa;
 }
 #index-banner {
   font-weight: bold;
@@ -457,9 +458,9 @@ form div {
 }
 
 .avatar-pic {
-  width: 75px;
-  height: 75px;
-  border: 2px solid white;
+  width: 100px;
+  height: 100px;
+  /* border: 2px solid white; */
 }
 
 .big-card {

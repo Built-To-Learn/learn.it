@@ -22,10 +22,10 @@ const Parallax = () => {
               Learn It
             </h1>
             <div className="row center">
-              <h4 className="header col s12 light white-text">
+              <h5 className="header col s12 light white-text">
                 Bringing the best teachers to every student... one live stream
                 at a time.
-              </h4>
+              </h5>
             </div>
             <div className="row center">
               <Link
@@ -40,7 +40,7 @@ const Parallax = () => {
           </div>
         </div>
         <div className="parallax">
-          <img src="assets/parallax-img.jpg" />
+          <img src="assets/blackboard.jpg" />
         </div>
       </div>
       <div className="grey darken-4">
