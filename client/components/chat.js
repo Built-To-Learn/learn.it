@@ -111,16 +111,6 @@ class Chat extends Component {
             >
               Send
             </button>
-            {this.state.type === 'watcher' ? (
-              <button
-                className="btn-small deep-orange accent-2"
-                onClick={() => this.handleModal()}
-              >
-                Ask A Question
-              </button>
-            ) : (
-              ''
-            )}
           </div>
         </div>
       </div>
