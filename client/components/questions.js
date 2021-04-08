@@ -92,41 +92,45 @@ class Questions extends Component {
     return (
       <div id="questions-container">
         <div id="questions">
-          <div>
-              <h1 style={{width: '100%', fontSize: '4.0rem', textAlign: 'center'}}>Class Questions</h1>
-          </div>
-          {questions.map((question, idx) => {
-            const style = likes[question.id] ? 'favorite' : 'favorite_border';
-            return (
-              <div key={question.id}>
-                <div id="question">
-                  <small>{question.likes.length}</small>
-                  <button id="question-like">
-                    <i
-                      className="material-icons"
-                      id={'question' + question.id}
-                      onClick={(event) => this.handleToggle(event)}
-                    >
-                      {style}
-                    </i>
-                  </button>
-                  <span>
-                    {question.user.name}: {question.text}
-                  </span>
-                  {isTeacher ? (
-                    <button
-                      id={'button' + question.id}
-                      className="remove-question btn red"
-                      onClick={(event) => this.handleDelete(event)}
-                    >
-                      Remove
-                    </button>
-                  ) : null}
+            {
+                questions.length !== 0 ?
+                questions.map((question, idx) => {
+                    const style = likes[question.id] ? 'favorite' : 'favorite_border';
+                    return (
+                      <div key={question.id}>
+                        <div id="question">
+                          <small>{question.likes.length}</small>
+                          <button id="question-like">
+                            <i
+                              className="material-icons"
+                              id={'question' + question.id}
+                              onClick={(event) => this.handleToggle(event)}
+                            >
+                              {style}
+                            </i>
+                          </button>
+                          <span>
+                            {question.user.name}: {question.text}
+                          </span>
+                          {isTeacher ? (
+                            <button
+                              id={'button' + question.id}
+                              className="remove-question btn red"
+                              onClick={(event) => this.handleDelete(event)}
+                            >
+                              Remove
+                            </button>
+                          ) : null}
+                        </div>
+                        {idx === questions.length - 1 ? null : <hr></hr>}
+                      </div>
+                    );
+                  }) :
+                <div>
+                  <h5 style={{width: '100%', fontSize: '2.5rem', textAlign: 'center'}}>No Questions Yet</h5>
                 </div>
-                {idx === questions.length - 1 ? null : <hr></hr>}
-              </div>
-            );
-          })}
+            }
+
         </div>
         {this.state.type === 'watcher' ? (
             <AskQuestion/>
