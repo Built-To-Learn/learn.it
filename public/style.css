@@ -411,6 +411,10 @@ form div {
   padding: 0 1rem;
 }
 
+.icon-orange {
+  color: #ec6f75;
+}
+
 #resource-upload {
   display: flex;
   align-items: center;

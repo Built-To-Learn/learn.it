@@ -102,7 +102,7 @@ class Questions extends Component {
                           <small>{question.likes.length}</small>
                           <button id="question-like">
                             <i
-                              className="material-icons"
+                              className="material-icons icon-orange"
                               id={'question' + question.id}
                               onClick={(event) => this.handleToggle(event)}
                             >
