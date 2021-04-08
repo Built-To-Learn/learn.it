@@ -107,7 +107,7 @@ const syncAndSeed = async () => {
       description:
         'Geometry is a branch of mathematics that studies the sizes, shapes, positions angles and dimensions of things. Flat shapes like squares, circles, and triangles are a part of flat geometry and are called 2D shapes. These shapes have only 2 dimensions, the length and the width.',
       slogan: 'Geometry is just plane fun.',
-      coursePicURL: 'https://images.theconversation.com/files/355476/original/file-20200831-14-174eny.jpg?ixlib=rb-1.1.0&rect=5%2C214%2C3480%2C1740&q=45&auto=format&w=668&h=324&fit=crop'  
+      coursePicURL: 'https://images.theconversation.com/files/355476/original/file-20200831-14-174eny.jpg?ixlib=rb-1.1.0&rect=5%2C214%2C3480%2C1740&q=45&auto=format&w=668&h=324&fit=crop'
     }),
     Course.create({
       title: 'Basket Weaving 101',
@@ -125,7 +125,7 @@ const syncAndSeed = async () => {
       description:
         'JavaScript is the most popular programming language for both front-end and back-end web development. Applications for JavaScript span from interactive websites to the Internet of Things, making it a great choice for beginners and experienced developers looking to learn a new programming language.',
       slogan: 'Dive in head first to modern web development!',
-      coursePicURL: "https://miro.medium.com/max/800/1*bxEkHw1xewxOFjmGunb-Cw.png" 
+      coursePicURL: "https://miro.medium.com/max/800/1*bxEkHw1xewxOFjmGunb-Cw.png"
     }),
     Course.create({
       title: 'Math is Fun',
@@ -154,12 +154,12 @@ const syncAndSeed = async () => {
       coursePicURL: "https://ih1.redbubble.net/image.903694108.7336/st,small,507x507-pad,600x600,f8f8f8.jpg"
     }),
     Course.create({
-      title: 'Pay me!',
-      category: 'Enrichment',
+      title: 'Learn to Paint',
+      category: 'art',
       userId: admin.id,
-      description: 'Give me money',
-      slogan: "Hey, donate today!",
-      coursePicURL: "http://www.reactiongifs.com/r/jlpm.gif"
+      description: 'learn to make flawless art like the masters!',
+      slogan: "Hey, lets make some cool stuff!",
+      coursePicURL: "https://www.iscreamsundae.com/wp-content/uploads/2019/05/3-1.jpg"
     }),
   ]);
 
