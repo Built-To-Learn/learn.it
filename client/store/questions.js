@@ -16,15 +16,10 @@ const upvoteSort = (questions) => {
 }
 
 // Action Creators
-export const loadQuestions = (questions) => ({
-  type: LOAD_QUESTIONS,
-  questions,
-});
+export const loadQuestions = (questions) => ({ type: LOAD_QUESTIONS, questions });
 export const removeQuestion = (id) => ({ type: DELETE_QUESTION, id });
 export const initQuestion = (question) => ({ type: CREATE_QUESTION, question });
 export const likeToggle = (question) => ({ type: TOGGLE_LIKE, question });
-export const setNew = (question) => ({ type: SET_NEW, question });
-export const deselectNew = () => ({ type: DESELECT_NEW });
 
 // Thunks
 export const fetchQuestions = (courseId) => {
@@ -35,14 +30,15 @@ export const fetchQuestions = (courseId) => {
   };
 };
 
-export const deleteQuestion = (questionId) => {
+export const deleteQuestion = (questionId, socket, room) => {
   return async (dispatch) => {
     await axios.delete(`/api/questions/delete/${questionId}`);
+    socket.emit('deleteQuestion', room, questionId)
     dispatch(removeQuestion(questionId));
   };
 };
 
-export const toggleLike = (questionId, userId, isLiked) => {
+export const toggleLike = (questionId, userId, isLiked, room, socket) => {
   return async (dispatch) => {
     if (isLiked) {
       await axios.delete('/api/likes/delete', {
@@ -56,22 +52,19 @@ export const toggleLike = (questionId, userId, isLiked) => {
       });
     }
 
-    const question = (await axios.get(`/api/questions/question/${questionId}`))
-      .data;
+    const question = (await axios.get(`/api/questions/question/${questionId}`)).data;
+
+    socket.emit('toggleLike', room, question)
     dispatch(likeToggle(question));
   };
 };
 
-export const createQuestion = (question, createLocally) => {
+export const createQuestion = (question, socket, room) => {
   return async (dispatch) => {
-    if (createLocally) {
-      const newQuestion = (await axios.post('/api/questions/create', question))
-        .data;
-      dispatch(setNew(newQuestion));
-      dispatch(initQuestion(newQuestion));
-    } else {
-      dispatch(initQuestion(question));
-    }
+    const newQuestion = (await axios.post('/api/questions/create', question)).data;
+
+    socket.emit('newQuestion', room, newQuestion)
+    dispatch(initQuestion(newQuestion));
   };
 };
 
@@ -94,10 +87,6 @@ export default function (state = initialState, action) {
       return { questions: updatedQuestions };
     case CREATE_QUESTION:
       return { questions: [...state.questions, action.question] };
-    case SET_NEW:
-      return { ...state, newQuestion: action.question };
-    case DESELECT_NEW:
-      return { ...state, newQuestion: null };
     default:
       return state;
   }

@@ -2,7 +2,6 @@ import React from "react";
 import { Component } from 'react';
 import { connect } from "react-redux";
 import { createQuestion } from "../store/questions";
-import { io } from 'socket.io-client';
 import { Dropdown, Button } from 'react-materialize';
 
 class AskQuestion extends Component {
@@ -11,7 +10,7 @@ class AskQuestion extends Component {
 
         this.input = ''
 
-        this.state = { room: props.room }
+        this.state = { room: props.room, socket: props.socket }
 
         this.handleChange = this.handleChange.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -24,11 +23,13 @@ class AskQuestion extends Component {
 
     handleSubmit (event) {
         event.preventDefault();
-        const socket = io();
-        this.props.createQuestion({ userId: this.props.id, courseId: this.state.room, text: this.input }, true)
-        this.input = ''
         this.setState({ ...this.state })
-        socket.emit('newQuestion')
+        this.props.createQuestion(
+            { userId: this.props.id, courseId: this.state.room, text: this.input },
+            this.state.socket,
+            this.state.room
+        )
+        this.input = ''
     }
 
     render () {
@@ -73,7 +74,7 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = (dispatch) => ({
-    createQuestion: (question, createLocally) => dispatch(createQuestion(question, createLocally))
+    createQuestion: (question, socket, room) => dispatch(createQuestion(question, socket, room))
 })
 
 export default connect(mapState, mapDispatch)(AskQuestion);

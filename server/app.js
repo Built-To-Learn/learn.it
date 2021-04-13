@@ -144,9 +144,18 @@ io.sockets.on('connection', (socket) => {
   socket.on('newMessage', (message, room) => {
     socket.to(room).emit('newMessage', message);
   });
+
   socket.on('newQuestion', (room, newQuestion) => {
     socket.to(room).emit('newQuestion', newQuestion);
   });
+
+  socket.on('toggleLike', (room, question) => {
+    socket.to(room).emit('toggleLike', question)
+  })
+
+  socket.on('deleteQuestion', (room, id) => {
+    socket.to(room).emit('deleteQuestion', id)
+  })
 
   socket.on('joinDiscussionRoom', (room) => {
     socket.join(room);

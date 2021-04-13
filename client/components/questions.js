@@ -2,10 +2,12 @@ import React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  createQuestion,
   deleteQuestion,
   fetchQuestions,
-  toggleLike,
+  initQuestion,
+  likeToggle,
+  removeQuestion,
+  toggleLike
 } from '../store/questions';
 import { io } from 'socket.io-client';
 import { AskQuestion } from './index'
@@ -29,14 +31,18 @@ class Questions extends Component {
       socket.emit('joinQuestions', this.state.room);
     });
     socket.on('newQuestion', (newQuestion) => {
-      this.props.createQuestion(newQuestion, false);
+        this.props.initQuestion(newQuestion)
     });
+    socket.on('toggleLike', (question) => {
+        this.props.likeToggle(question)
+    });
+    socket.on('deleteQuestion', (id) => {
+        this.props.removeQuestion(id)
+    })
   }
 
   componentDidUpdate() {
-    const { socket } = this.state;
-    const { newQuestion, questions, user } = this.props;
-    const room = this.state.room;
+    const { questions, user } = this.props;
     const { id } = user;
 
     if (!this.state.likes) {
@@ -53,10 +59,6 @@ class Questions extends Component {
       });
 
       this.setState({ ...this.state, likes: likes });
-    } else if (newQuestion) {
-      if (newQuestion.userId === id) {
-        socket.emit('newQuestion', room, newQuestion);
-      }
     }
   }
 
@@ -67,7 +69,9 @@ class Questions extends Component {
     this.props.toggleLike(
       questionId,
       this.props.user.id,
-      this.state.likes[questionId]
+      this.state.likes[questionId],
+      this.state.room,
+      this.state.socket
     );
 
     likes[questionId] = !likes[questionId];
@@ -78,7 +82,7 @@ class Questions extends Component {
   handleDelete(event) {
     const questionId = event.target.id.slice(6);
 
-    this.props.deleteQuestion(questionId);
+    this.props.deleteQuestion(questionId, this.state.socket, this.state.room);
   }
 
   render() {
@@ -133,7 +137,7 @@ class Questions extends Component {
 
         </div>
         {this.state.type === 'watcher' ? (
-            <AskQuestion/>
+            <AskQuestion socket={this.state.socket} room={this.state.room}/>
             ) : (
               ''
             )}
@@ -144,17 +148,17 @@ class Questions extends Component {
 
 const mapState = (state) => ({
   questions: state.questions.questions,
-  newQuestion: state.questions.newQuestion,
-  user: state.auth,
+  user: state.auth
 });
 
 const mapDispatch = (dispatch) => ({
   init: (courseId) => dispatch(fetchQuestions(courseId)),
-  toggleLike: (questionId, userId, isLiked) =>
-    dispatch(toggleLike(questionId, userId, isLiked)),
-  createQuestion: (question, createLocally) =>
-    dispatch(createQuestion(question, createLocally)),
-  deleteQuestion: (questionId) => dispatch(deleteQuestion(questionId)),
+  toggleLike: (questionId, userId, isLiked, room, socket) =>
+    dispatch(toggleLike(questionId, userId, isLiked, room, socket)),
+  initQuestion: (question) => dispatch(initQuestion(question)),
+  deleteQuestion: (questionId, socket, room) => dispatch(deleteQuestion(questionId, socket, room)),
+  likeToggle: (question) => dispatch(likeToggle(question)),
+  removeQuestion: (id) => dispatch(removeQuestion(id))
 });
 
 export default connect(mapState, mapDispatch)(Questions);
